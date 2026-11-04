@@ -30,12 +30,21 @@
 
 # 4. Archivos CAD locales, entregables y bloqueos de AutoCAD.
 # Excepción: el mapa base reutilizable y recursos CAD canónicos sí se versionan.
+# CAD: ignorar por defecto
 *.dwg
 *.dxf
 *.dws
-!AuditoriaCFE/recursos/**/*.dwg
-!AuditoriaCFE/recursos/**/*.dxf
-!AuditoriaCFE/recursos/**/*.dws
+*.dwt
+
+# Excepciones: recursos canónicos aprobados
+!/AuditoriaCFE/recursos/Mapa_Tijuana_Vectorial.dwg
+!/AuditoriaCFE/recursos/Plantilla_Auditoria_CFE_Tijuana.dwt
+
+# DXF editable de referencia aprobado
+!/AuditoriaCFE/recursos/MARCO_DATRA_A1_EMPRESA_v0_2.dxf
+
+# PDF operativos en recursos
+/AuditoriaCFE/recursos/**/*.pdf
 # No ignorar *.dwt: las plantillas oficiales del proyecto son código/recursos base.
 *.dwl
 *.dwl2

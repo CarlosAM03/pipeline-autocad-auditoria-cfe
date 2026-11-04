@@ -1,0 +1,11 @@
+Abre como workspace la raiz del repositorio:
+C:\Users\Carl0\Desktop\Datra\CFE\PipeLineDeAuditoria
+
+Lee AGENTS.md y ejecuta exclusivamente el encargo:
+AuditoriaCFE/Codex/01_Implementacion_Proceso1/ENCARGO_CODEX_PROCESO1_PREPARACION_v0.1.md
+
+Consulta como autoridad el ADR-000 y la TO-BE v0.2 en AuditoriaCFE/Docs/, asi como los 7 entregables de auditoria XLSX. Respeta la ubicacion real de carpetas. Implementa en Python la CLI y el Proceso 1 de preparacion (XLSX a CSV normalizado + trazabilidad + resumen + preparacion espacial condicionada a CRS) con pruebas automatizadas y checkpoint de revision.
+
+Los libros originales y auditorias historicas son estrictamente de SOLO LECTURA. No utilices valores del maestro para eliminar elementos de planos individuales. No infieras enlaces de fibra por proximidad. No generes ni modifiques scripts SCR, planos DWG, plantillas DWT o PDFs finales. Si falta evidencia aprobada de CRS, no declares validado el CSV proyectado; indica claramente el bloqueo P-06 sin detener el ETL.
+
+Antes de modificar codigo, muestra un plan breve y un inventario de carpetas validado. Implementa y ejecuta todas las pruebas que sea posible con fixtures pequenos, y al finalizar presenta exactamente los resultados del CHECKLIST_REVISION_PROCESO1.md, archivos cambiados, comandos de prueba, bloqueos y decisiones para mi aprobacion. Detente al finalizar. No hagas commit ni comiences la siguiente etapa.

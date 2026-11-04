@@ -1,0 +1,567 @@
+CFE / DATRA - REPORTE ESTRUCTURAL DWG
+SOLO LECTURA: los datos se extrajeron del dibujo actualmente abierto.
+ADVERTENCIA: la ausencia de XREF no acredita que el mapa no este anidado en bloques.
+Las cantidades de SELECTED ENTITIES no incluyen geometria interna anidada en INSERT/XREF.
+Formato: SECCION TAB CLAVE TAB VALOR
+FILE	DWGNAME	Auditoria-STD-OTAY-FLORIDO.dwg
+FILE	DWGPREFIX	C:\Users\Carl0\Desktop\Datra\CFE\PipeLineDeAuditoria\AuditoriaCFE\Codex\00_Diagnostico\02_CAD_Origen\tmp\
+SYSVAR	ACADVER	25.1s (LMS Tech)
+SYSVAR	INSUNITS	6
+SYSVAR	MEASUREMENT	0
+SYSVAR	LUNITS	2
+SYSVAR	LUPREC	2
+SYSVAR	AUNITS	0
+SYSVAR	UCSNAME	
+SYSVAR	TILEMODE	1
+SYSVAR	CTAB	Model
+SYSVAR	EXTMIN	(456142.0 3.58187e+06 0.0)
+SYSVAR	EXTMAX	(548374.0 4.80326e+07 0.0)
+SYSVAR	LIMMIN	(0.0 0.0)
+SYSVAR	LIMMAX	(12.0 9.0)
+SYSVAR	INSBASE	(0.0 0.0 0.0)
+SYSVAR	CANNOSCALE	1:1
+
+[LAYOUTS]
+LAYOUT	Layout1	Media=Letter_(8.50_x_11.00_Inches) | PaperUnits=0 | Rotation=1 | PlotType=5 | TabOrder=1 | PlotDevice=None
+LAYOUT	Model	Media=Letter | PaperUnits=0 | Rotation=1 | PlotType=4 | TabOrder=0 | PlotDevice=HP Deskjet 9800 Series
+
+[LAYERS]
+LAYER	0	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	DREN	Color=132 | Freeze=:vlax-false | LayerOn=:vlax-false | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	ALCANTARILLA	Color=2 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	TERRACERIA	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	MANZANA	Color=30 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	LAGO_LAGUNA	Color=140 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CERCA	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	MANZANA_IND	Color=3 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CARRETERA	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	PUENTE	Color=3 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CARRETERA_S_PUENTE	Color=3 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CAMELLON	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	BANQUETA	Color=30 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CANAL	Color=132 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	EDIFICIO_PUBLICO	Color=30 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	NUM_DE_MANZANAS	Color=3 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	NUM_DE_MANZANAS_2	Color=45 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	NOMBRES_DE_CALLE	Color=53 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	DIV_CULTIVO	Color=36 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CONST_IND	Color=3 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	INSTAL_DEP	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	1000	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	EDIFICIO_COM	Color=6 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	PREDIOS	Color=21 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	FFCC	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	43	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	LINEA_ELECTRICA	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CONST	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	TORRE_ALTA_TENSION	Color=3 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	LINDERO_FISICO	Color=6 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	1206	Color=6 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	1102	Color=170 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	1016	Color=30 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	DATO_INSTAL_DEP	Color=3 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	DATO_EDIF	Color=5 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	1212	Color=245 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	BORDE_PAV	Color=30 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CALLES	Color=53 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	BRECHA	Color=32 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	manz	Color=30 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	RIO_ARROYO	Color=150 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	ALBERCA	Color=5 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	TRAZA-URBANA	Color=243 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CONSTRUCCIONES	Color=61 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	LIMITE-INTERNACIONAL	Color=30 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CIMENTACION_RUINA	Color=2 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	ZANJA	Color=132 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	AREA_ARBOLADA	Color=80 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CORREDOR TIJUANA 2000	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	PIEPLANO	Color=6 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	LOT-VS1-634	Color=8 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	REVISION	Color=5 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	MZA	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	MANZANAS	Color=45 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	LIMITE-DE-PREDIOS	Color=41 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	PRESA	Color=140 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	RUSTICO	Color=45 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CLAVES	Color=23 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	KEJE	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CERCO	Color=96 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	PASO-DESNIVEL	Color=230 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	TANQUE	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	MASS_PT	Color=4 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	COTA_ELEV	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	POLIGONOS	Color=5 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	TEXTOS	Color=6 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	POL-COL	Color=5 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	DELEG	Color=220 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	DELEG-TXT	Color=141 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	DELEGACION	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	a-poste	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	DISTANCIA_INTERPOSTAL	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CFE_POSTE_DE_CONCRETO_CON_TRANSFORMADOR	Color=6 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	a-logo CFE	Color=98 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	a-norte	Color=6 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	a-pie	Color=250 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	a-text poste	Color=6 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	a-logo Bestel	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	a-RFO aereo exist Lash	Color=10 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	PLANO (Cajillo_Simbología)	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CFE_POSTE_DE_ACERO	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CFE_POSTE_DE_ACERO_CON_TRANSFORMADOR	Color=6 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	a-croquis	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CAJAS_DE_EMPALME_DE_LINEA	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	COTAS	Color=10 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	TEXTO	Color=204 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	a-detalles	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	DET_DIB	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	ATT	Color=153 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	Defpoints	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-false | Lock=:vlax-false | Plottable=:vlax-false
+LAYER	48 PIE DE PLANO	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	POSTES	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	EXCEDENTE	Color=3 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CAJAS	Color=5 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	RUTA	Color=3 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	2LIMDECOL	Color=4 | Freeze=:vlax-false | LayerOn=:vlax-false | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	3NOMFRACC	Color=2 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	MAR	Color=5 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	DNOMBRESDECALLES	Color=6 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	FTRAZA	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	1NUMDEMANZCATS	Color=2 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	C-AVERDES	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	MRIOSYLAGUNA	Color=2 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	CUADRO	Color=3 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	COLECTORES	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	ESCALA	Color=3 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	AVERDES	Color=3 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	NLUZ	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	LIMDE	Color=1 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+LAYER	S-SHBD	Color=7 | Freeze=:vlax-false | LayerOn=:vlax-true | Lock=:vlax-false | Plottable=:vlax-true
+
+[BLOCK_DEFINITIONS_AND_XREFS]
+BLOCK	*Model_Space	IsXRef=:vlax-false | IsLayout=:vlax-true | EntityCount=98820 | Path=<no disponible>
+BLOCK	*Paper_Space	IsXRef=:vlax-false | IsLayout=:vlax-true | EntityCount=217 | Path=<no disponible>
+BLOCK	1c69g8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=614 | Path=<no disponible>
+BLOCK	1c69g9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1178 | Path=<no disponible>
+BLOCK	1c69h8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1641 | Path=<no disponible>
+BLOCK	1c69h9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=2150 | Path=<no disponible>
+BLOCK	1c69i8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1077 | Path=<no disponible>
+BLOCK	c69i9_	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=706 | Path=<no disponible>
+BLOCK	1c69i9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=2004 | Path=<no disponible>
+BLOCK	1c79g0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=405 | Path=<no disponible>
+BLOCK	1c69j8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1414 | Path=<no disponible>
+BLOCK	1c69j9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1604 | Path=<no disponible>
+BLOCK	P52	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=17 | Path=<no disponible>
+BLOCK	1c79g1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=662 | Path=<no disponible>
+BLOCK	1c79h0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1720 | Path=<no disponible>
+BLOCK	1c79g2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=246 | Path=<no disponible>
+BLOCK	1c79h1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=919 | Path=<no disponible>
+BLOCK	1c79h2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=852 | Path=<no disponible>
+BLOCK	1c79h3	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=585 | Path=<no disponible>
+BLOCK	1c79i0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1816 | Path=<no disponible>
+BLOCK	1c79i1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=926 | Path=<no disponible>
+BLOCK	1c79i3	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1360 | Path=<no disponible>
+BLOCK	1c79i2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=790 | Path=<no disponible>
+BLOCK	1c79j0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1839 | Path=<no disponible>
+BLOCK	1c79j1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=781 | Path=<no disponible>
+BLOCK	1c79j2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1045 | Path=<no disponible>
+BLOCK	1c79j3	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=500 | Path=<no disponible>
+BLOCK	1d61a8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1621 | Path=<no disponible>
+BLOCK	1d61a9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1973 | Path=<no disponible>
+BLOCK	1d61b8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1027 | Path=<no disponible>
+BLOCK	1d61b7	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=122 | Path=<no disponible>
+BLOCK	A$C20F23959	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1 | Path=<no disponible>
+BLOCK	1d61b9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1357 | Path=<no disponible>
+BLOCK	1d61c7	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=59 | Path=<no disponible>
+BLOCK	1d61c8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1205 | Path=<no disponible>
+BLOCK	1d61c9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1508 | Path=<no disponible>
+BLOCK	1d61d7	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=310 | Path=<no disponible>
+BLOCK	1d61d8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1123 | Path=<no disponible>
+BLOCK	1d61d9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=2194 | Path=<no disponible>
+BLOCK	1d61e7	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=103 | Path=<no disponible>
+BLOCK	1d61e8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=624 | Path=<no disponible>
+BLOCK	1d61e9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1696 | Path=<no disponible>
+BLOCK	1d61f7	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=98 | Path=<no disponible>
+BLOCK	1d61f8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=250 | Path=<no disponible>
+BLOCK	1d61f9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=189 | Path=<no disponible>
+BLOCK	1d61g7	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=142 | Path=<no disponible>
+BLOCK	1d61g8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=402 | Path=<no disponible>
+BLOCK	1d61g9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=516 | Path=<no disponible>
+BLOCK	1d61h7	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=133 | Path=<no disponible>
+BLOCK	1d61h8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=549 | Path=<no disponible>
+BLOCK	1d61h9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=447 | Path=<no disponible>
+BLOCK	1d61i7	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=183 | Path=<no disponible>
+BLOCK	1d61i8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=269 | Path=<no disponible>
+BLOCK	1d61i9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=384 | Path=<no disponible>
+BLOCK	1d61j7	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=131 | Path=<no disponible>
+BLOCK	1d61j8	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=265 | Path=<no disponible>
+BLOCK	1d61j9	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=155 | Path=<no disponible>
+BLOCK	1d71a0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=2466 | Path=<no disponible>
+BLOCK	1d71a1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1780 | Path=<no disponible>
+BLOCK	1d71a3	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=441 | Path=<no disponible>
+BLOCK	1d71a2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1214 | Path=<no disponible>
+BLOCK	1d71a4	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=63 | Path=<no disponible>
+BLOCK	A$C25447EA2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1 | Path=<no disponible>
+BLOCK	1d71b0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=2468 | Path=<no disponible>
+BLOCK	1d71b1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=2531 | Path=<no disponible>
+BLOCK	1d71b2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=838 | Path=<no disponible>
+BLOCK	1d71b3	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=834 | Path=<no disponible>
+BLOCK	1d71b4	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=77 | Path=<no disponible>
+BLOCK	1d71c0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1657 | Path=<no disponible>
+BLOCK	1d71c2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=629 | Path=<no disponible>
+BLOCK	1d71c1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1898 | Path=<no disponible>
+BLOCK	1d71c3	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=362 | Path=<no disponible>
+BLOCK	1d71c4	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=49 | Path=<no disponible>
+BLOCK	1d71d0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1744 | Path=<no disponible>
+BLOCK	1d71d1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1712 | Path=<no disponible>
+BLOCK	1d71d2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=517 | Path=<no disponible>
+BLOCK	1d71d3	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=243 | Path=<no disponible>
+BLOCK	1d71d4	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=29 | Path=<no disponible>
+BLOCK	1d71e0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1654 | Path=<no disponible>
+BLOCK	1d71e1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1640 | Path=<no disponible>
+BLOCK	1d71e2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=253 | Path=<no disponible>
+BLOCK	1d71e3	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=233 | Path=<no disponible>
+BLOCK	1d71f0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1343 | Path=<no disponible>
+BLOCK	1d71f1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=662 | Path=<no disponible>
+BLOCK	1d71g0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=573 | Path=<no disponible>
+BLOCK	1d71g1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=362 | Path=<no disponible>
+BLOCK	1d71h0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=473 | Path=<no disponible>
+BLOCK	1d71h1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=456 | Path=<no disponible>
+BLOCK	1d71i0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=414 | Path=<no disponible>
+BLOCK	1d71i1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=191 | Path=<no disponible>
+BLOCK	1d71j0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=124 | Path=<no disponible>
+BLOCK	1d71j1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=83 | Path=<no disponible>
+BLOCK	1d71f2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=237 | Path=<no disponible>
+BLOCK	SU1	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=2 | Path=<no disponible>
+BLOCK	1d71f3	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=21 | Path=<no disponible>
+BLOCK	1d71g2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=71 | Path=<no disponible>
+BLOCK	plano actualizado febrero 2005	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=89 | Path=<no disponible>
+BLOCK	COLONIAS	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=1438 | Path=<no disponible>
+BLOCK	LEYENDA DE LAS NUEVAS DELEGACIONES	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=5 | Path=<no disponible>
+BLOCK	DELEG_NUEVAS	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=65 | Path=<no disponible>
+BLOCK	CFE_POSTE_DE_CONCRETO_CON_TRANSFORMADOR	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=3 | Path=<no disponible>
+BLOCK	NORTE	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=24 | Path=<no disponible>
+BLOCK	cfe	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=102 | Path=<no disponible>
+BLOCK	Post Madera	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=4 | Path=<no disponible>
+BLOCK	CFE_POSTE_DE_ACERO	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=2 | Path=<no disponible>
+BLOCK	CFE_POSTE_DE_ACERO_CON_TRANSFORMADOR	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=5 | Path=<no disponible>
+BLOCK	MACRO	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=160 | Path=<no disponible>
+BLOCK	A$C45FC5AF0	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=86 | Path=<no disponible>
+BLOCK	ATT2	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=2 | Path=<no disponible>
+BLOCK	55	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=5 | Path=<no disponible>
+BLOCK	A$C8a913961	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=90 | Path=<no disponible>
+BLOCK	*T109	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=211 | Path=<no disponible>
+BLOCK	puntos	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=4319 | Path=<no disponible>
+BLOCK	calles	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=154 | Path=<no disponible>
+BLOCK	DIVINA	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=58 | Path=<no disponible>
+BLOCK	*X113	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=38 | Path=<no disponible>
+BLOCK	*X114	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=42 | Path=<no disponible>
+BLOCK	LOMABONI	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=69 | Path=<no disponible>
+BLOCK	*X116	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=19 | Path=<no disponible>
+BLOCK	*X117	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=15 | Path=<no disponible>
+BLOCK	SANTAFE	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=179 | Path=<no disponible>
+BLOCK	*X119	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=21 | Path=<no disponible>
+BLOCK	*X120	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=18 | Path=<no disponible>
+BLOCK	*X121	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=15 | Path=<no disponible>
+BLOCK	*X122	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=13 | Path=<no disponible>
+BLOCK	*X123	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X124	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=15 | Path=<no disponible>
+BLOCK	*X125	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=8 | Path=<no disponible>
+BLOCK	*X126	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=7 | Path=<no disponible>
+BLOCK	*X127	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=62 | Path=<no disponible>
+BLOCK	*X128	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X129	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=3 | Path=<no disponible>
+BLOCK	*X130	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=9 | Path=<no disponible>
+BLOCK	*X131	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=8 | Path=<no disponible>
+BLOCK	*X132	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=8 | Path=<no disponible>
+BLOCK	*X133	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=9 | Path=<no disponible>
+BLOCK	*X134	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X135	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=28 | Path=<no disponible>
+BLOCK	*X136	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=12 | Path=<no disponible>
+BLOCK	*X137	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=24 | Path=<no disponible>
+BLOCK	*X138	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=15 | Path=<no disponible>
+BLOCK	*X139	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=13 | Path=<no disponible>
+BLOCK	*X140	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=10 | Path=<no disponible>
+BLOCK	*X141	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=21 | Path=<no disponible>
+BLOCK	*X142	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=37 | Path=<no disponible>
+BLOCK	*X143	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=13 | Path=<no disponible>
+BLOCK	*X144	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X145	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=3 | Path=<no disponible>
+BLOCK	*X146	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=31 | Path=<no disponible>
+BLOCK	*X147	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=9 | Path=<no disponible>
+BLOCK	*X148	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=59 | Path=<no disponible>
+BLOCK	*X149	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=27 | Path=<no disponible>
+BLOCK	*X150	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=36 | Path=<no disponible>
+BLOCK	*X151	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=13 | Path=<no disponible>
+BLOCK	*X152	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=20 | Path=<no disponible>
+BLOCK	*X153	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=17 | Path=<no disponible>
+BLOCK	*X154	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=9 | Path=<no disponible>
+BLOCK	*X155	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=3 | Path=<no disponible>
+BLOCK	*X156	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=11 | Path=<no disponible>
+BLOCK	*X157	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=10 | Path=<no disponible>
+BLOCK	*X158	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X159	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=4 | Path=<no disponible>
+BLOCK	*X160	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=3 | Path=<no disponible>
+BLOCK	*X161	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=12 | Path=<no disponible>
+BLOCK	*X162	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=19 | Path=<no disponible>
+BLOCK	*X163	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=14 | Path=<no disponible>
+BLOCK	*X164	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X165	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=14 | Path=<no disponible>
+BLOCK	*X166	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=26 | Path=<no disponible>
+BLOCK	*X167	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=76 | Path=<no disponible>
+BLOCK	*X168	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=16 | Path=<no disponible>
+BLOCK	*X169	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=5 | Path=<no disponible>
+BLOCK	*X170	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=12 | Path=<no disponible>
+BLOCK	*X171	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=12 | Path=<no disponible>
+BLOCK	*X172	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=5 | Path=<no disponible>
+BLOCK	*X173	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=12 | Path=<no disponible>
+BLOCK	*X174	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=16 | Path=<no disponible>
+BLOCK	*X175	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=7 | Path=<no disponible>
+BLOCK	*X176	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=10 | Path=<no disponible>
+BLOCK	*X177	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=4 | Path=<no disponible>
+BLOCK	*X178	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=15 | Path=<no disponible>
+BLOCK	*X179	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=15 | Path=<no disponible>
+BLOCK	*X180	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=14 | Path=<no disponible>
+BLOCK	*X181	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=8 | Path=<no disponible>
+BLOCK	*X182	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=8 | Path=<no disponible>
+BLOCK	*X183	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=4 | Path=<no disponible>
+BLOCK	*X184	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=7 | Path=<no disponible>
+BLOCK	*X185	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=5 | Path=<no disponible>
+BLOCK	*X186	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X187	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=408 | Path=<no disponible>
+BLOCK	LOGO-INZ	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=55 | Path=<no disponible>
+BLOCK	*D189	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=10 | Path=<no disponible>
+BLOCK	A$Cc80398a3	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=95845 | Path=<no disponible>
+BLOCK	*X191	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=38 | Path=<no disponible>
+BLOCK	*X192	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=42 | Path=<no disponible>
+BLOCK	*X193	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=19 | Path=<no disponible>
+BLOCK	*X194	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=15 | Path=<no disponible>
+BLOCK	*X195	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=21 | Path=<no disponible>
+BLOCK	*X196	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=18 | Path=<no disponible>
+BLOCK	*X197	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=15 | Path=<no disponible>
+BLOCK	*X198	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=13 | Path=<no disponible>
+BLOCK	*X199	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X200	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=15 | Path=<no disponible>
+BLOCK	*X201	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=8 | Path=<no disponible>
+BLOCK	*X202	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=7 | Path=<no disponible>
+BLOCK	*X203	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=62 | Path=<no disponible>
+BLOCK	*X204	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X205	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=3 | Path=<no disponible>
+BLOCK	*X206	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=9 | Path=<no disponible>
+BLOCK	*X207	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=8 | Path=<no disponible>
+BLOCK	*X208	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=8 | Path=<no disponible>
+BLOCK	*X209	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=9 | Path=<no disponible>
+BLOCK	*X210	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X211	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=28 | Path=<no disponible>
+BLOCK	*X212	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=12 | Path=<no disponible>
+BLOCK	*X213	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=24 | Path=<no disponible>
+BLOCK	*X214	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=15 | Path=<no disponible>
+BLOCK	*X215	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=13 | Path=<no disponible>
+BLOCK	*X216	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=10 | Path=<no disponible>
+BLOCK	*X217	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=21 | Path=<no disponible>
+BLOCK	*X218	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=37 | Path=<no disponible>
+BLOCK	*X219	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=13 | Path=<no disponible>
+BLOCK	*X220	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X221	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=3 | Path=<no disponible>
+BLOCK	*X222	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=31 | Path=<no disponible>
+BLOCK	*X223	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=9 | Path=<no disponible>
+BLOCK	*X224	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=59 | Path=<no disponible>
+BLOCK	*X225	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=27 | Path=<no disponible>
+BLOCK	*X226	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=36 | Path=<no disponible>
+BLOCK	*X227	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=13 | Path=<no disponible>
+BLOCK	*X228	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=20 | Path=<no disponible>
+BLOCK	*X229	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=17 | Path=<no disponible>
+BLOCK	*X230	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=9 | Path=<no disponible>
+BLOCK	*X231	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=3 | Path=<no disponible>
+BLOCK	*X232	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=11 | Path=<no disponible>
+BLOCK	*X233	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=10 | Path=<no disponible>
+BLOCK	*X234	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X235	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=4 | Path=<no disponible>
+BLOCK	*X236	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=3 | Path=<no disponible>
+BLOCK	*X237	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=12 | Path=<no disponible>
+BLOCK	*X238	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=19 | Path=<no disponible>
+BLOCK	*X239	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=14 | Path=<no disponible>
+BLOCK	*X240	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*X241	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=14 | Path=<no disponible>
+BLOCK	*X242	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=26 | Path=<no disponible>
+BLOCK	*X243	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=76 | Path=<no disponible>
+BLOCK	*X244	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=16 | Path=<no disponible>
+BLOCK	*X245	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=5 | Path=<no disponible>
+BLOCK	*X246	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=12 | Path=<no disponible>
+BLOCK	*X247	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=12 | Path=<no disponible>
+BLOCK	*X248	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=5 | Path=<no disponible>
+BLOCK	*X249	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=12 | Path=<no disponible>
+BLOCK	*X250	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=16 | Path=<no disponible>
+BLOCK	*X251	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=7 | Path=<no disponible>
+BLOCK	*X252	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=10 | Path=<no disponible>
+BLOCK	*X253	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=4 | Path=<no disponible>
+BLOCK	*X254	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=15 | Path=<no disponible>
+BLOCK	*X255	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=15 | Path=<no disponible>
+BLOCK	*X256	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=14 | Path=<no disponible>
+BLOCK	*X257	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=8 | Path=<no disponible>
+BLOCK	*X258	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=8 | Path=<no disponible>
+BLOCK	*X259	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=4 | Path=<no disponible>
+BLOCK	*X260	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=7 | Path=<no disponible>
+BLOCK	*X261	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=5 | Path=<no disponible>
+BLOCK	*X262	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=6 | Path=<no disponible>
+BLOCK	*D263	IsXRef=:vlax-false | IsLayout=:vlax-false | EntityCount=10 | Path=<no disponible>
+ENTITY	TOTAL_TOP_LEVEL_SELECTION	99037
+
+[COUNTS_BY_LAYOUT]
+COUNT	Model	98820
+COUNT	Layout1	217
+
+[COUNTS_BY_LAYOUT_AND_TYPE]
+COUNT	Model | MTEXT	4
+COUNT	Model | LEADER	16
+COUNT	Model | POINT	965
+COUNT	Model | DIMENSION	1
+COUNT	Model | SOLID	56
+COUNT	Model | POLYLINE	84
+COUNT	Model | TRACE	8
+COUNT	Model | INSERT	80
+COUNT	Model | TEXT	7104
+COUNT	Model | LWPOLYLINE	4406
+COUNT	Model | CIRCLE	47
+COUNT	Model | HATCH	36
+COUNT	Model | LINE	85709
+COUNT	Model | ARC	304
+COUNT	Layout1 | HATCH	2
+COUNT	Layout1 | CIRCLE	2
+COUNT	Layout1 | INSERT	6
+COUNT	Layout1 | ARC	54
+COUNT	Layout1 | LWPOLYLINE	19
+COUNT	Layout1 | LINE	72
+COUNT	Layout1 | VIEWPORT	4
+COUNT	Layout1 | OLE2FRAME	1
+COUNT	Layout1 | MTEXT	5
+COUNT	Layout1 | TEXT	52
+
+[COUNTS_BY_LAYOUT_AND_LAYER]
+COUNT	Model | a-detalles	387
+COUNT	Model | DET_DIB	1
+COUNT	Model | COTAS	147
+COUNT	Model | 0	490
+COUNT	Model | 48 PIE DE PLANO	12
+COUNT	Model | EXCEDENTE	200
+COUNT	Model | CAJAS	23
+COUNT	Model | POSTES	742
+COUNT	Model | TEXTO	966
+COUNT	Model | RUTA	7
+COUNT	Model | MRIOSYLAGUNA	41
+COUNT	Model | 3NOMFRACC	590
+COUNT	Model | DNOMBRESDECALLES	5282
+COUNT	Model | MAR	1262
+COUNT	Model | ESCALA	17
+COUNT	Model | NLUZ	19976
+COUNT	Model | CUADRO	89
+COUNT	Model | C-AVERDES	63
+COUNT	Model | LIMDE	5
+COUNT	Model | COLECTORES	2
+COUNT	Model | AVERDES	813
+COUNT	Model | FTRAZA	67705
+COUNT	Layout1 | a-logo CFE	4
+COUNT	Layout1 | a-logo Bestel	1
+COUNT	Layout1 | CFE_POSTE_DE_CONCRETO_CON_TRANSFORMADOR	1
+COUNT	Layout1 | a-poste	4
+COUNT	Layout1 | a-text poste	2
+COUNT	Layout1 | CFE_POSTE_DE_ACERO	1
+COUNT	Layout1 | CFE_POSTE_DE_ACERO_CON_TRANSFORMADOR	1
+COUNT	Layout1 | a-RFO aereo exist Lash	1
+COUNT	Layout1 | DISTANCIA_INTERPOSTAL	1
+COUNT	Layout1 | a-pie	121
+COUNT	Layout1 | 0	80
+
+[BLOCK_INSERT_COUNTS]
+COUNT	A$C45FC5AF0	1
+COUNT	55	1
+COUNT	ATT2	1
+COUNT	LEYENDA DE LAS NUEVAS DELEGACIONES	1
+COUNT	*X192	1
+COUNT	*X191	1
+COUNT	DIVINA	1
+COUNT	LOMABONI	1
+COUNT	*X195	1
+COUNT	*X193	1
+COUNT	*X194	1
+COUNT	SANTAFE	1
+COUNT	*X196	1
+COUNT	*X197	1
+COUNT	*X198	1
+COUNT	*X199	1
+COUNT	*X200	1
+COUNT	*X201	1
+COUNT	*X202	1
+COUNT	*X203	1
+COUNT	*X204	1
+COUNT	*X205	1
+COUNT	*X206	1
+COUNT	*X207	1
+COUNT	*X208	1
+COUNT	*X209	1
+COUNT	*X210	1
+COUNT	*X211	1
+COUNT	*X212	1
+COUNT	*X213	1
+COUNT	*X214	1
+COUNT	*X215	1
+COUNT	*X216	1
+COUNT	*X217	1
+COUNT	*X218	1
+COUNT	*X219	1
+COUNT	*X220	1
+COUNT	*X221	1
+COUNT	*X222	1
+COUNT	*X223	1
+COUNT	*X224	1
+COUNT	*X225	1
+COUNT	*X226	1
+COUNT	*X227	1
+COUNT	*X228	1
+COUNT	*X229	1
+COUNT	*X230	1
+COUNT	*X231	1
+COUNT	*X232	1
+COUNT	*X233	1
+COUNT	*X234	1
+COUNT	*X235	1
+COUNT	*X236	1
+COUNT	*X237	1
+COUNT	*X238	1
+COUNT	*X239	1
+COUNT	*X240	1
+COUNT	*X241	1
+COUNT	*X242	1
+COUNT	*X243	1
+COUNT	*X244	1
+COUNT	*X245	1
+COUNT	*X246	1
+COUNT	*X247	1
+COUNT	*X248	1
+COUNT	*X249	1
+COUNT	*X250	1
+COUNT	*X251	1
+COUNT	*X252	1
+COUNT	*X253	1
+COUNT	*X254	1
+COUNT	*X255	1
+COUNT	*X256	1
+COUNT	*X257	1
+COUNT	*X258	1
+COUNT	*X259	1
+COUNT	*X260	1
+COUNT	*X261	1
+COUNT	*X262	1
+COUNT	LOGO-INZ	1
+COUNT	NORTE	1
+COUNT	cfe	1
+COUNT	Post Madera	1
+COUNT	CFE_POSTE_DE_CONCRETO_CON_TRANSFORMADOR	1
+COUNT	CFE_POSTE_DE_ACERO	1
+COUNT	CFE_POSTE_DE_ACERO_CON_TRANSFORMADOR	1
+
+[REQUIRES_MANUAL_VERIFICATION]
+- Unidades reales del MAPA, CRS geodesico y minimo dos puntos de control.
+- Si el marco y cajetin son entidades editables de Paper Space o bloques externos.
+- Si existen fuentes, SHX, CTB/STB, imagenes o rutas XREF faltantes.
+- Configuracion efectiva de impresion A1 y legibilidad de una sola lamina.
+- Separacion de cartografia estatica y entidades de auditoria anterior.
