@@ -1,1 +1,127 @@
-Auditorias-20261104T035633Z-1-001/
+# =============================================================================
+# PipeLineDeAuditoria — .gitignore (raíz del repositorio)
+# Proyecto versionado: AuditoriaCFE/
+# Histórico / originales: solo lectura y fuera de Git.
+# =============================================================================
+
+# 1. Archivo histórico completo: XLSX, fotos, DWG, PDF, scripts y respaldos.
+/Auditorias-20261104T035633Z-1-001/
+
+# 2. Fuentes de campo y respaldos binarios: nunca subir información operativa.
+*.xlsx
+*.xls
+*.xlsm
+*.xlsb
+*.ods
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+
+# 3. Datos de entrada y resultados por auditoría (reproducibles y locales).
+# Archivos de configuración/manifiestos fuera de entrada/ y salida/ sí se versionan.
+/AuditoriaCFE/auditorias/**/entrada/
+/AuditoriaCFE/auditorias/**/fuente_original/
+/AuditoriaCFE/auditorias/**/salida/
+/AuditoriaCFE/auditorias/**/temporales/
+/AuditoriaCFE/auditorias/**/preliminares/
+
+# 4. Archivos CAD locales, entregables y bloqueos de AutoCAD.
+# Excepción: el mapa base reutilizable y recursos CAD canónicos sí se versionan.
+*.dwg
+*.dxf
+*.dws
+!AuditoriaCFE/recursos/**/*.dwg
+!AuditoriaCFE/recursos/**/*.dxf
+!AuditoriaCFE/recursos/**/*.dws
+# No ignorar *.dwt: las plantillas oficiales del proyecto son código/recursos base.
+*.dwl
+*.dwl2
+*.bak
+*.ac$
+*.sv$
+*.bkp
+*.err
+*.pc3.bak
+*.ctb.bak
+
+# 5. Python (ETL, topología, generador de SCR).
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyright/
+.hypothesis/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.egg-info/
+.eggs/
+*.egg
+pip-wheel-metadata/
+
+# 6. Node.js / JavaScript (scripts históricos o herramientas auxiliares).
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+.pnpm-store/
+.yarn/cache/
+
+# 7. Salidas de compilación, cachés y archivos temporales.
+build/
+dist/
+tmp/
+temp/
+.cache/
+*.tmp
+*.temp
+*.log
+*.pid
+*.seed
+*~
+*.swp
+*.swo
+*.orig
+*.rej
+
+# 8. Información sensible/configuración exclusiva de cada equipo.
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.p12
+*.pfx
+*.key
+credentials.json
+
+# 9. IDE, sistema operativo y archivos de sesión.
+.vs/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# 10. IMPORTANTE: NO ignorar documentación ni contratos de proyecto:
+#     AuditoriaCFE/Codex/ (diagnósticos y encargos)
+#     AuditoriaCFE/Docs/ADRs/ y AuditoriaCFE/Docs/Specs/
+#     Archivos de código Python/JS, pruebas, configs, CSV de mapeo
+#     y las plantillas DWT/DWG canónicas de AuditoriaCFE/recursos/.
