@@ -1,3 +1,3 @@
-"""Preparación local de auditorías CFE. No contiene generación CAD."""
+"""Preparación local CFE y compilación determinista de dos SCR AutoCAD."""
 
-__version__ = "0.1.0"
+__version__ = "0.3.0"

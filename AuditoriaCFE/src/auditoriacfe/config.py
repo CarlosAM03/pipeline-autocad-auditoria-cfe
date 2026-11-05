@@ -9,7 +9,8 @@ AUDITS = PROJECT / "auditorias"
 DEFAULTS = dict(hojas_por_fuente={}, excepciones_cabecera={}, maestro_informativo=None,
                 baseline_historica=None, geografia_permitida=None, ids_confiables=[],
                 crs_candidato="EPSG:32611", crs_validado=False, evidencia_crs=None,
-                cercanos_m=None)
+                cercanos_m=None, schema_02=1, cad=None, kmz=None, mapa_ids=None,
+                diagnostico=False, pipeline_integral=None)
 
 
 def audit_path(name):
@@ -33,6 +34,11 @@ def load(audit):
     if set(raw) - allowed:
         raise PipelineError(f"Claves de configuración no reconocidas: {sorted(set(raw) - allowed)}")
     cfg = {**DEFAULTS, **raw}
+    if cfg['pipeline_integral'] is None:
+        # Compatibilidad de perfiles anteriores; los nuevos declaran el flag.
+        cfg['pipeline_integral']=cfg['schema_02']==2
+    if type(cfg['pipeline_integral']) is not bool:
+        raise PipelineError('pipeline_integral requiere booleano')
     if cfg.get("auditoria") != audit.name:
         raise PipelineError("auditoria debe coincidir con nombre de carpeta")
     sources = cfg.get("fuentes_en_orden")
@@ -56,7 +62,11 @@ def load(audit):
     if type(cfg["crs_validado"]) is not bool:
         raise PipelineError("crs_validado debe ser booleano")
     geo = cfg["geografia_permitida"]
-    if geo is not None:
+    if geo is not None and (not isinstance(geo,dict) or type(geo.get('aprobada')) is not bool):
+        raise PipelineError('geografia_permitida requiere objeto y aprobada booleana')
+    if type(cfg['schema_02']) is not int or cfg['schema_02'] not in (1,2) or type(cfg['diagnostico']) is not bool:
+        raise PipelineError('schema_02 debe ser 1/2 y diagnostico booleano')
+    if geo is not None and not geo.get('archivo'):
         try:
             bounds = [Decimal(str(geo[k])) for k in ("lat_min", "lat_max", "lon_min", "lon_max")]
             if not all(v.is_finite() for v in bounds) or not (-90 <= bounds[0] < bounds[1] <= 90 and -180 <= bounds[2] < bounds[3] <= 180):
