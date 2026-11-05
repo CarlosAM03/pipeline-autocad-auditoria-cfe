@@ -11,7 +11,10 @@ MAX_XML = 16 * 1024 * 1024
 def safe_xml(data):
     if len(data) > MAX_XML or b'<!DOCTYPE' in data.upper() or b'<!ENTITY' in data.upper():
         raise PipelineError('XML espacial inseguro o excede límite')
-    return ET.fromstring(data)
+    class NoDTD(ET.TreeBuilder):
+        def doctype(self,name,pubid,system):
+            raise PipelineError('DTD espacial prohibida, incluida codificación UTF-16')
+    return ET.fromstring(data,parser=ET.XMLParser(target=NoDTD()))
 
 
 def coordinate(text):
@@ -43,6 +46,9 @@ def load_geofence(audit, spec):
         return None, None
     if not all(spec.get(k) for k in ('evidencia','responsable','fecha','version')) or spec.get('crs') != 'EPSG:4326':
         raise PipelineError('Ámbito espacial requiere evidencia/responsable/fecha/versión y EPSG:4326')
+    from datetime import date
+    try:date.fromisoformat(spec['fecha'])
+    except (ValueError,TypeError) as exc:raise PipelineError('Fecha de ámbito inválida') from exc
     path = within(audit / 'entrada' / spec['archivo'], audit / 'entrada')
     if path.stat().st_size > MAX_XML:
         raise PipelineError('Ámbito excede límite')

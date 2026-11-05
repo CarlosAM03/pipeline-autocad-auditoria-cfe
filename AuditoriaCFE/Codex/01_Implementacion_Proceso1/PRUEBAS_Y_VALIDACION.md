@@ -1,3 +1,15 @@
+## Actualización de pruebas — 2026-11-05
+
+Suite ampliada ejecutada: **79 aprobadas / 79 ejecutadas, 0 fallidas, 0 omitidas**, 66.953 s. Las 43 anteriores siguen intactas. Comando: `python -m unittest discover -s AuditoriaCFE/tests -v`. Se ejecutaron `compileall`, `pip check`, Ruff E9/F821/F822/F823 y verificador de custodia/oráculo. Logs locales en tests/_runtime; evidencias/errores corregidos en [acta fase 6](../02_Harness_Integral/acta_fase_6.md).
+
+Pruebas añadidas cubren resoluciones y conflictos de IDs, polígonos/huecos/corredor, v1/v2, diagnóstico, migración/rollback/crash, KMZ traversal/bomb/XML DTD incluso UTF-16, grafos, dos SCR, custodia de copia e idempotencia, batch y actualización legítima de entradas/configuración. La publicación conserva artefactos anteriores tras un fallo.
+
+Individual Natura, demo (01/02 de cuatro filas), cuatro auditorías batch y repetición reproducible ejecutados. 00: Natura 438, Mirador 493, Otay 747, General 4131; todos con 01=0 por P-03 y sin 02 productivo. Propuestas KMZ sin confirmar y sin líneas de producción. Regresiones históricas 533/965 y 494/749 son controles AS-IS, no cifras impuestas a los nuevos inventarios. Ver conciliación en acta.
+
+Benchmark 1M filas XML/10k componentes: 9.871 s, CPU 9.344 s, RSS pico 88,862,720 bytes. Native Core Console ensayado con errores descritos en fase 5; no equivale a prueba GUI ni impresión validada. CI pública debe mostrar explícitamente nueve omisiones sin originales. El resultado remoto y último ensayo nativo se anexan en el cierre del arnés.
+
+---
+
 # Pruebas y validación — Proceso 1
 
 ## Extensión 0.2.0 — verificación vigente

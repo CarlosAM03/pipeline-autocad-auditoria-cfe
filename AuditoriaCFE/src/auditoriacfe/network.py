@@ -85,21 +85,29 @@ def propose(audit,elements,features,tolerance=0,map_file=None):
             if row['id_externo'] in mapping or row['elemento_id'] not in nodes or not all(row.values()):
                 raise PipelineError('Mapa de ID externo inválido/ambiguo')
             mapping[row['id_externo']]=row['elemento_id']
-    matches=[];proposals=[];seen=set();mapped_positions={}
+    from bisect import bisect_left,bisect_right
+    exact_index=defaultdict(list)
+    ordered=sorted(nodes.values(),key=lambda r:float(r['latitud']))
+    latitudes=[float(r['latitud']) for r in ordered]
+    for r in nodes.values():exact_index[(Decimal(r['longitud']),Decimal(r['latitud']))].append(r)
+    matches=[];proposals=[];seen=set();mapped_positions={};cache={}
     def match(point):
         if tuple(point) in mapped_positions:return mapped_positions[tuple(point)],1.0
+        if tuple(point) in cache:return cache[tuple(point)]
         lon,lat=point
-        exact=[r for r in nodes.values() if Decimal(r['latitud'])==Decimal(str(lat)) and Decimal(r['longitud'])==Decimal(str(lon))]
+        exact=exact_index.get((Decimal(str(lon)),Decimal(str(lat))),[])
         if len(exact)==1:return exact[0]['elemento_id'],1.0
         if not tolerance:return None,0
         candidates=[]
-        for r in nodes.values():
+        delta=tolerance/100000+0.001
+        for r in ordered[bisect_left(latitudes,lat-delta):bisect_right(latitudes,lat+delta)]:
             # Prefiltro angular solo acelera; Geod decide la distancia.
             if abs(float(r['latitud'])-lat)>tolerance/100000+0.001:continue
             _,_,distance=geod.inv(lon,lat,float(r['longitud']),float(r['latitud']))
             if distance<=tolerance:candidates.append((r['elemento_id'],distance))
-        if len(candidates)!=1:return None,0
-        return candidates[0][0],max(0,1-candidates[0][1]/max(tolerance,1e-12))
+        answer=(None,0) if len(candidates)!=1 else (candidates[0][0],max(0,1-candidates[0][1]/max(tolerance,1e-12)))
+        cache[tuple(point)]=answer
+        return answer
     for feature in sorted(features,key=lambda f:f['tipo']!='Point'):
         if feature['tipo']=='Point':
             selected=mapping.get(feature['id_externo'])

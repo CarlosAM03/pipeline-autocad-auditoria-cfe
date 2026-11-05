@@ -1,5 +1,4 @@
-# ETL y pruebas: biblioteca estándar, Python >=3.10.
-# Solo la proyección acreditada necesita esta dependencia.
+# Python >=3.10. ETL OOXML estándar; geodesia y polígonos con bibliotecas estándar del dominio.
 pyproj==3.7.2; python_version >= '3.11'
 pyproj==3.6.1; python_version < '3.11'
 shapely==2.1.2

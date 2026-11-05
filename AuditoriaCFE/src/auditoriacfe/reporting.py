@@ -202,7 +202,7 @@ def publish(audit, stage, manifest):
     if canonical:
         # Verificar el lote anterior antes de migrar/copiar sus manifestaciones.
         if output.exists() and ((output/'manifiesto_ejecucion.json').exists() or (audit/'manifiesto_ejecucion.json').exists()):
-            verify(audit)
+            verify(audit,inputs=False)
         # Resultados nativos son mutables y se preservan; nunca reemplazar un DWG
         # editado por el operador al regenerar el paquete de instrucciones.
         native=output/'resultados_cad'
@@ -210,6 +210,11 @@ def publish(audit, stage, manifest):
             within(native,output)
             for child in native.rglob('*'):within(child,native)
             shutil.copytree(native,stage/'resultados_cad')
+        failures=output/'fallos'
+        if failures.exists():
+            within(failures,output)
+            for child in failures.rglob('*'):within(child,failures)
+            shutil.copytree(failures,stage/'fallos')
         histories = [audit/'manifiestos',output/'manifiestos']
         archive=stage/'manifiestos';archive.mkdir()
         for directory in histories:
@@ -244,11 +249,17 @@ def publish(audit, stage, manifest):
         if had_output:
             replace_retry(previous, output)
         raise
-    if previous.exists():
-        within(previous, audit / "temporales")
-        shutil.rmtree(previous)
     if canonical:
-        verify(audit)
+        try:
+            verify(audit)
+        except BaseException:
+            # Hasta verificar el lote publicado, conservar la copia anterior.
+            # stage vuelve a ser temporal propio; finally del llamador lo limpia.
+            replace_retry(output,stage)
+            if had_output:replace_retry(previous,output)
+            raise
+        if previous.exists():
+            within(previous,audit/'temporales');shutil.rmtree(previous)
         # El archivo nuevo ya contiene toda la historia. Retirar solo JSON
         # propios copiados idénticos, nunca carpetas arbitrarias del operador.
         for old in manifest_dir.glob('*.json'):
@@ -258,6 +269,8 @@ def publish(audit, stage, manifest):
         active=output_path(audit/'manifiesto_ejecucion.json',audit)
         if active.exists():active.unlink()
         return output/'manifiesto_ejecucion.json'
+    if previous.exists():
+        within(previous,audit/'temporales');shutil.rmtree(previous)
     active = output_path(audit / "manifiesto_ejecucion.json", audit)
     active_tmp = output_path(audit / "temporales" / "manifiesto_actual.tmp", audit)
     active_tmp.write_text(json_text(manifest), encoding="utf-8")
@@ -265,7 +278,7 @@ def publish(audit, stage, manifest):
     return manifest_path
 
 
-def verify(audit):
+def verify(audit,inputs=True):
     """Consumidores deben verificar antes de usar un lote; rechaza mezcla o edición."""
     output = within(audit / "salida", audit)
     canonical=(output/'manifiesto_ejecucion.json').exists()
@@ -274,13 +287,15 @@ def verify(audit):
     output = within(audit / "salida", audit)
     actual={p.name for p in output.iterdir()}
     if canonical:
-        actual -= {'manifiesto_ejecucion.json','manifiestos'}
-        if manifest.get('cad',{}).get('copia_relativa'):
-            actual.discard('resultados_cad')
-            native=output/'resultados_cad'
-            if native.exists():
-                within(native,output)
-                for child in native.rglob('*'):within(child,native)
+        actual -= {'manifiesto_ejecucion.json','manifiestos','fallos'}
+        if (output/'fallos').exists():
+            for child in (output/'fallos').rglob('*'):within(child,output/'fallos')
+        # Se conserva también al retirar CAD de una configuración posterior.
+        actual.discard('resultados_cad')
+        native=output/'resultados_cad'
+        if native.exists():
+            within(native,output)
+            for child in native.rglob('*'):within(child,native)
         if manifest.get('schema_version',{}).get('manifiesto') != 2:
             raise PipelineError('Versión de manifiesto canónico inválida')
         identity={k:v for k,v in manifest.items() if k not in ('ejecucion_id','criterio_publicacion')}
@@ -295,9 +310,11 @@ def verify(audit):
         path = within(output / name, output)
         if sha256(path) != meta["sha256"] or path.stat().st_size != meta["bytes"]:
             raise PipelineError(f"Hash/tamaño no coincide: {name}")
-    if canonical:
+    if canonical and inputs:
         for source in manifest.get('entradas',[]):
             source_path=within(audit/'entrada'/source['archivo'],audit/'entrada')
             if sha256(source_path) != source['sha256']:
                 raise PipelineError('Entrada operativa cambió después de preparar el lote')
+        if manifest.get('config_archivo_sha256') and sha256(audit/'configuracion.json')!=manifest['config_archivo_sha256']:
+            raise PipelineError('Configuración cambió después de preparar el lote')
     return manifest

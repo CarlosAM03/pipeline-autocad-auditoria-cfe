@@ -38,6 +38,8 @@ class NetworkIntegralTests(unittest.TestCase):
                 with zipfile.ZipFile(p,'w',zipfile.ZIP_DEFLATED) as z:z.writestr(name,data)
                 with self.assertRaises((PipelineError,ValueError)):read_spatial(p)
         self.assertFalse((self.audit.path/'outside.kml').exists())
+        from auditoriacfe.geofence import safe_xml
+        with self.assertRaises(PipelineError):safe_xml('<?xml version="1.0" encoding="UTF-16"?><!DOCTYPE a [<!ENTITY x "boom">]><kml/>'.encode('utf-16'))
 
     def write_edges(self,pairs,**changes):
         with (self.audit.path/'entrada/topologia_confirmada.csv').open('w',encoding='utf-8',newline='') as f:

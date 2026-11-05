@@ -1,3 +1,17 @@
+## Actualización del checklist — 2026-11-05
+
+La sección original inferior conserva su fecha y evidencia; sus referencias a “futuro SCR”, P-09 propuesto o manifiestos fuera de salida fueron sustituidas por ADR-001/P-09 v1.
+
+- OK: CP-01/02, revisión/manual por hash/fila, cuatro familias, dedup exacta/IDs, linaje y múltiples rutas, geofence y reader 02 v1/v2.
+- OK: KMZ seguro y propuestas NO_CONFIRMADAS; aristas humanas verificables con ciclos/ramas y sin atajos DFS.
+- OK técnico: dos SCR, LISP empaquetado, guard de copia, bloques/capas/etiquetas/ID, conteos reales, distancias confirmadas, A1, idempotencia; falta aceptación CAD física.
+- OK: manifiestos v2 en salida, migración y fallos recuperables; CLI individual y batch independiente; 79 pruebas locales aprobadas, compile/lint/custodia.
+- OK local: Natura/Mirador/Otay/General con 438/493/747/4131 grupos y hashes reproducibles; 01 sin admitidos y 02 real ausente por gates acreditables.
+- PENDIENTE EVIDENCIA: P-03, P-06, aristas definitivas, impresión legible A1/DWT y aceptación humana. [Checklist CAD nativo](../02_Harness_Integral/CHECKLIST_CAD_NATIVO.md).
+- CI/PR/protección y último intento nativo: resultado final en cierre del arnés; no marcar OK sin ejecución.
+
+---
+
 # Checkpoint de revisión — Codex, Proceso 1
 
 Marcar cada ítem como `OK`, `NO`, `BLOQUEADO` y asociar prueba, comando o evidencia. **Ninguna casilla pasa por declaración del agente sin evidencia.**

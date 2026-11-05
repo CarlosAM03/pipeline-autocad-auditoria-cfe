@@ -1,3 +1,21 @@
+## Pendientes vigentes — 2026-11-05 / ADR-001
+
+Las tablas inferiores son evidencia de entregas anteriores; no reabren Q01–Q75. P-01 fuentes/precedencia, P-09 contratos, P-10 AutoCAD 2026 inglés y autorización CP-03/04 quedaron definidos. El oráculo ya no requiere Git/historial y README raíz está versionado. Las nuevas funciones y migración ya están implementadas.
+
+| Clase | Gate vigente | Decisión o evidencia exacta del responsable |
+|---|---|---|
+| BLOQUEANTE para datos productivos | P-03 | Entregar y aprobar perímetro/corredor por auditoría y excepciones individuales justificadas. CP-01 no se bloquea. |
+| BLOQUEANTE para proyección real | P-06 | Identificar dos controles físicos distintos de la base DATRA en WCS y WGS84, metros efectivos y tolerancia medida; registrar fecha/aprobador/evidencia. INSUNITS=4 y WCS activo no acreditan CRS ni justifican escalar. |
+| BLOQUEANTE para líneas finales | P-05 | Aportar topologia_confirmada.csv con IDs, ruta/tramo y aprobación humana; validar correspondencias KMZ. Sin ello, puntos preliminares; no inventar tres anillos. |
+| BLOQUEANTE para FINAL | P-07/P-08/P-04 | Aceptar marco/detalles aplicables/estilos, ejecución y persistencia DWG/DWT y legibilidad PDF A1 único. General requiere comprobar miles de etiquetas; si falla, owner debe aprobar una excepción antes de cambiar la regla. |
+| NO BLOQUEANTE | P-02 | Aportar baseline histórica datada si requiere NUEVO/EXISTENTE; de lo contrario conservar NO_DETERMINADO. |
+| NO BLOQUEANTE para software | Publicación CAD | Acreditar licencia/permiso antes de publicar nuevos DWG/DWT/raster; se conservan localmente con hash. |
+| MEJORA | Rendimiento | Fijar SLA con mediciones representativas si se necesita; baseline medido, sin presupuesto inventado. |
+
+Q24 se aplicó mediante resoluciones locales por hash/fila, preservando fuentes y descartes. P-11 56/58 se concilia por definiciones y evidencia histórica, no impide CP-02 ni autoriza modificar datos. Nuevos conteos y gates por auditoría en [acta fase 6](../02_Harness_Integral/acta_fase_6.md). Resultado del último ensayo nativo y CI/PR/protección: cierre del arnés; no se certifican aquí por anticipado.
+
+---
+
 # Pendientes para revisión — Proceso 1
 
 ## Extensión CP-01 vigente

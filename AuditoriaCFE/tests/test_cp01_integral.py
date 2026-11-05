@@ -60,6 +60,18 @@ class CP01IntegralTests(unittest.TestCase):
         self.assertEqual(m['conteos']['POSTE'],1)
         self.assertEqual(m['conteos']['DUPLICADO'],1)
 
+    def test_conflicting_manual_and_config_equipment_ids(self):
+        self.source([(2,record(typ='caja_emp'),False)])
+        # Identificador original vacío es válido para acreditar el primero,
+        # pero no puede sustituir silenciosamente un ID ya acreditado diferente.
+        from auditoriacfe.quality import prepare
+        from auditoriacfe.schemas import extract
+        rows,_,_=extract(self.audit.path/'entrada/a.xlsx','a.xlsx',sha256(self.audit.path/'entrada/a.xlsx'))
+        rows[0]['resolucion_manual']=dict(accion='ID_EQUIPO_ACREDITADO',aprobada='true',valor_nuevo='OTHER',
+            resolucion_id='R',motivo='TEST',evidencia='TEST')
+        cfg=dict(auditoria=self.audit.path.name,ids_confiables=[dict(archivo='a.xlsx',hoja='Datos',fila=2,id='FIRST',evidencia='TEST')],geografia_permitida=GEO)
+        with self.assertRaises(PipelineError):prepare(rows,cfg)
+
     def area(self,geometry):
         (self.audit.path/'entrada/area.geojson').write_text(json.dumps(geometry),encoding='utf-8')
         return dict(archivo='area.geojson',aprobada=True,crs='EPSG:4326',version='TEST-v1',

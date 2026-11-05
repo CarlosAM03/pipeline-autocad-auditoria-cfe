@@ -1,0 +1,39 @@
+name: Pipeline CFE DATRA
+
+on:
+  push:
+    branches: [main, codex/etl-unificado-auditoria-js]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: tests (${{ matrix.os }}, py${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: AuditoriaCFE/requirements.txt
+      - run: python -m pip install -r AuditoriaCFE/requirements.txt ruff==0.14.3
+      - run: python -m compileall -q AuditoriaCFE/src AuditoriaCFE/tests AuditoriaCFE/herramientas
+      - run: python -m ruff check --select E9,F821,F822,F823 AuditoriaCFE/src AuditoriaCFE/tests AuditoriaCFE/herramientas
+      - name: Verificar oráculo y custodia pública
+        run: python AuditoriaCFE/herramientas/verificar_publicacion.py
+      - name: Pruebas sintéticas y regresiones disponibles
+        run: python -m unittest discover -s AuditoriaCFE/tests -v
+      - name: Benchmark sintético limitado (sin SLA inventado)
+        run: python AuditoriaCFE/herramientas/benchmark.py --filas-xml 100000 --elementos 1000

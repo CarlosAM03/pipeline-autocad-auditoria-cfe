@@ -42,6 +42,9 @@ def prepare(records, cfg):
         if action == 'CORREGIR_TIPO':
             r['tipo_canonico'] = canonical_type(resolution['valor_nuevo'])
         if action == 'ID_EQUIPO_ACREDITADO':
+            if trusted and trusted['id']!=resolution['valor_nuevo']:
+                from .util import PipelineError
+                raise PipelineError('ID acreditado contradice resolución manual: resolver conflicto explícitamente')
             r['id_confiable'] = dict(id=resolution['valor_nuevo'],evidencia=resolution['evidencia'])
         if r["tipo_canonico"] == "REGISTRO":
             r["estado"] = "FUERA_ALCANCE"

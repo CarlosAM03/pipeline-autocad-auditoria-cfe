@@ -150,7 +150,7 @@ def package(stage, audit, cfg, crs_info, edges):
                  evidencia_legibilidad=None)
     report = dict(estado='COMPLETADO_TECNICO',ejecucion_nativa='PENDIENTE_EVIDENCIA',modo=mode,
                   cp04='COMPILADO_PRELIMINAR' if rows else 'PENDIENTE_EVIDENCIA',
-                  archivo_base=base.name,base_sha256=sha256(base),copia_relativa='resultados_cad/'+copy_name,
+                  archivo_base=base.relative_to(audit/'entrada').as_posix(),base_sha256=sha256(base),copia_relativa='resultados_cad/'+copy_name,
                   elementos=len(rows),aristas=len(drawn_edges),distancias=drawn_edges,conteos=dict(counts),
                   controles_crs=crs_info['estado'],unidades_acreditadas=spec.get('unidades_verificadas',False),
                   etiquetas='P/C/E + número estable digest40bits; ID completo conservado en XDATA, colisiones bloqueantes',

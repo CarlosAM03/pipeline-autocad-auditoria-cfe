@@ -1,3 +1,15 @@
+## Actualización integral — 2026-11-05 / v0.3.0
+
+Este apartado reemplaza el estado operativo de las entregas anteriores, que se conservan abajo como registro histórico. Autoridad nueva: ADR-001, TO-BE v0.3 y P-09 v1; ADR-000/v0.2 intactos.
+
+Implementados: resoluciones por SHA/fila/evidencia y revisión separada; GeoJSON/KML y corredores; CSV02 v2 con reader v1; migración de manifiestos a salida recuperable; KMZ seguro y mapa de IDs; grafo de aristas humanas con ciclos/ramas; compilador de exactamente dos SCR y LISP sin dependencia COM; bloques, etiquetas, distancias, conteos, copia protegida y A1; CLI individual/batch, actas y checklists; CI y benchmark RSS/CPU/IO.
+
+Instalación: `python -m pip install -r AuditoriaCFE/requirements.txt`. Ejecución desde raíz: `python AuditoriaCFE/preparar_auditoria.py --auditoria Natura`, `--batch`, `--batch --diagnostico`, `--batch --verificar-paquete`. Detalle en AuditoriaCFE/README.md.
+
+79 pruebas locales aprobadas. Cuatro auditorías corridas en diagnóstico: 438/493/747/4131 filas 00; CSV01 sin admitidos por P-03 pendiente; CSV02 productivo ausente por P-06. Se generan paquetes de puntos diagnósticos, reportes y manifiestos; no hay plano FINAL ni aceptación humana. Informe completo: [acta fase 6](../02_Harness_Integral/acta_fase_6.md). El último ensayo AutoCAD y estado remoto se registran en el cierre del arnés.
+
+---
+
 # Resultado de implementación — Proceso 1
 
 ## Extensión vigente desde 7baa82c — CSV 00 y auditoría JS
