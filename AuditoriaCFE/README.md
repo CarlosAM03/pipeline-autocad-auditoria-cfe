@@ -95,3 +95,41 @@ La única autoridad de líneas es `entrada/topologia_confirmada.csv` con contrat
 `python AuditoriaCFE/herramientas/verificar_publicacion.py --staged` bloquea nuevos paths privados/binarios/salidas. Nunca usar `git add .`; revisar staging. Los tres perfiles demo antiguos y PDF de referencia heredado se conservan, no autorizan publicar nuevos datos. Los recursos reales DWG/DWT/KMZ son locales con hashes; pedir acceso al responsable. No se fuerza la transcripción privada al índice.
 
 Cierre nativo y CI: [CIERRE_INTEGRAL_2026-11-05.md](Codex/02_Harness_Integral/CIERRE_INTEGRAL_2026-11-05.md). Los dos SCR cargan automáticamente `cad_runtime.lsp` y `cad_datos.lsp`; este último evita líneas SCRIPT gigantes en General. SCR01 configura **PDFSHX=0** en el perfil AutoCAD para conservar los glifos visibles sin generar decenas de miles de comentarios SHX. Es una preferencia de exportación persistente, documentada; no desactiva texto ni controles de seguridad.
+# Revisión PR #1 y trazabilidad adicional
+
+El [piloto focalizado](Codex/03_PR1_Piloto_Mirador/ACTA_TRABAJO.md) extiende
+la validación del cierre previo sin alterar sus actas históricas. Añade dos
+[libros de trazabilidad](Docs/Specs/Contrato_Adicional_Trazabilidad_XLSX_v1.md)
+por perfil integral; todos los CSV conservan su contrato.
+
+Para preparar solo una auditoría: `--preparar-entradas --auditoria Mirador`.
+La preparación de las cuatro requiere `--preparar-entradas --batch`. El piloto
+de revisión ejecuta únicamente Mirador y un fixture ficticio aislado.
+
+En `configuracion.json`, `pipeline_integral: true` habilita trazabilidad,
+topología, manifiesto v2 y compilación CAD, con independencia de `schema_02`.
+Omitir el flag mantiene la inferencia de perfiles antiguos; declararlo elimina
+esa ambigüedad. `cad.copia_nombre` permite una nueva copia de ensayo sin
+sobrescribir la copia de trabajo previa del operador.
+
+`--verificar-paquete` verifica entradas/configuración/artefactos inmutables.
+`--verificar-evidencia-cad` verifica el acta nativa y hashes mutables por separado.
+La firma humana y los datos físicos deben inspeccionarse; un hash no los aprueba.
+`salida/evidencias_review/` y los ZIP privados de revisión son contenedores
+externos al lote reproducible: tienen su propio manifiesto y SHA256SUMS. No
+quedan aprobados ni verificados por `--verificar-paquete`.
+
+Recuperación: ejecutar una corrida bajo el lock habitual. Si solo existe
+`temporales/salida_anterior`, se restaura tras verificar su manifiesto canónico.
+Si existen ambas carpetas y la activa es inválida, solo se restaura la anterior
+si es íntegra; la activa se conserva en `temporales/salida_cuarentena_<uuid>`.
+Si ninguna es íntegra, se bloquea sin eliminar ninguna. Revisar y recuperar
+manualmente trabajo mutable de la cuarentena antes de eliminarla.
+
+Ensayo nativo opt-in, únicamente en la copia declarada: `python
+AuditoriaCFE/herramientas/ensayo_nativo.py --auditoria Mirador --pdf
+MIRADOR_DIAGNOSTICO_A1.pdf`. El driver verifica doble SCR02, reapertura, XDATA,
+conteos y atributos reales del cajetín; no habilita proyección sin controles.
+`--rollback` es una prueba destructiva controlada de geometría **propia** en
+copias de ensayo, recomendada solo para fixtures; nunca ejecutarla sobre el
+archivo editado del operador. No prueba cortes físicos ni aceptación GUI.

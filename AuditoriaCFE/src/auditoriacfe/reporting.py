@@ -175,7 +175,23 @@ def recover(audit):
     previous = output_path(audit / "temporales" / "salida_anterior", audit)
     output = output_path(audit / "salida", audit)
     if previous.exists() and not output.exists():
+        if (previous/'manifiesto_ejecucion.json').exists():
+            verify(audit,inputs=False,directory=previous)
         replace_retry(previous, output)
+    elif previous.exists() and output.exists():
+        # No mezclar ni borrar trabajo mutable. Elegir por integridad del lote,
+        # sin exigir que las entradas/config actuales sean las de aquel lote.
+        try:
+            verify(audit,inputs=False)
+        except (PipelineError,OSError,ValueError,KeyError):
+            verify(audit,inputs=False,directory=previous)
+            import uuid
+            quarantine=output_path(audit/'temporales'/('salida_cuarentena_'+uuid.uuid4().hex),audit)
+            replace_retry(output,quarantine)
+            try:replace_retry(previous,output)
+            except BaseException:
+                replace_retry(quarantine,output)
+                raise
     return output, previous
 
 
@@ -205,11 +221,14 @@ def publish(audit, stage, manifest):
             verify(audit,inputs=False)
         # Resultados nativos son mutables y se preservan; nunca reemplazar un DWG
         # editado por el operador al regenerar el paquete de instrucciones.
-        native=output/'resultados_cad'
-        if native.exists():
-            within(native,output)
-            for child in native.rglob('*'):within(child,native)
-            shutil.copytree(native,stage/'resultados_cad')
+        for name in ('resultados_cad','evidencias_review'):
+            native=output/name
+            if native.exists():
+                within(native,output)
+                for child in native.rglob('*'):within(child,native)
+                shutil.copytree(native,stage/name)
+        for package in output.glob('EVIDENCIAS_CODE_REVIEW_MIRADOR_*.zip'):
+            shutil.copyfile(within(package,output),stage/package.name)
         failures=output/'fallos'
         if failures.exists():
             within(failures,output)
@@ -232,7 +251,8 @@ def publish(audit, stage, manifest):
         (stage/'manifiesto_ejecucion.json').write_text(json_text(manifest),encoding='utf-8')
     if previous.exists():
         within(previous, audit / "temporales")
-        shutil.rmtree(previous)
+        import uuid
+        replace_retry(previous,audit/'temporales'/('salida_respaldo_'+uuid.uuid4().hex))
     manifest_dir = output_path(audit / "manifiestos", audit)
     manifest_dir.mkdir(exist_ok=True)
     manifest_path = output_path(manifest_dir / (manifest["ejecucion_id"] + ".json"), audit)
@@ -278,16 +298,19 @@ def publish(audit, stage, manifest):
     return manifest_path
 
 
-def verify(audit,inputs=True):
+def verify(audit,inputs=True,directory=None):
     """Consumidores deben verificar antes de usar un lote; rechaza mezcla o edición."""
-    output = within(audit / "salida", audit)
+    output = within(directory if directory is not None else audit / "salida", audit)
     canonical=(output/'manifiesto_ejecucion.json').exists()
     active = within(output / 'manifiesto_ejecucion.json' if canonical else audit / "manifiesto_ejecucion.json", audit)
     manifest = json.loads(active.read_text(encoding="utf-8"))
-    output = within(audit / "salida", audit)
     actual={p.name for p in output.iterdir()}
     if canonical:
-        actual -= {'manifiesto_ejecucion.json','manifiestos','fallos'}
+        actual -= {'manifiesto_ejecucion.json','manifiestos','fallos','evidencias_review'}
+        actual -= {p.name for p in output.glob('EVIDENCIAS_CODE_REVIEW_MIRADOR_*.zip') if p.is_file()}
+        evidence=output/'evidencias_review'
+        if evidence.exists():
+            for child in evidence.rglob('*'):within(child,evidence)
         if (output/'fallos').exists():
             for child in (output/'fallos').rglob('*'):within(child,output/'fallos')
         # Se conserva también al retirar CAD de una configuración posterior.

@@ -46,14 +46,15 @@ def graph_report(nodes,edges):
                 inicio_final='NO_DETERMINADO')
 
 
-def confirmed_edges(audit,elements,route_names=None):
+def confirmed_edges(audit,elements,memberships=None):
     path=within(audit/'entrada/topologia_confirmada.csv',audit/'entrada')
     nodes={r['elemento_id']:r for r in elements if r['tipo_canonico']=='POSTE'}
     if not path.exists():return [],dict(estado='SOLO_PUNTOS_PRELIMINAR',**graph_report(nodes,[]))
     result={};ids=set();pending=0
     # La ruta prevalente no agota las pertenencias de un poste compartido.
-    names=route_names if route_names is not None else {r['ruta_salida'] for r in elements}
-    routes={route_id(audit.name,name) for name in names}
+    routes={eid:{route_id(audit.name,r['ruta_salida'])} for eid,r in nodes.items()}
+    if memberships is not None:
+        routes={eid:set(memberships.get(eid,())) for eid in nodes}
     from datetime import date
     for row in read_csv(path,CONFIRMED):
         if row['estado']!='CONFIRMADA':pending+=1;continue
@@ -64,8 +65,8 @@ def confirmed_edges(audit,elements,route_names=None):
         except ValueError as exc:raise PipelineError('Fecha de aprobación inválida') from exc
         if row['origen_id'] not in nodes or row['destino_id'] not in nodes:
             raise PipelineError('Arista debe unir POSTE admitidos existentes')
-        if row['ruta_id'] not in routes or row['clase'] not in ('TRONCAL','RAMAL','ENLACE'):
-            raise PipelineError('Ruta/clase de arista no declarada')
+        if row['clase'] not in ('TRONCAL','RAMAL','ENLACE') or any(row['ruta_id'] not in routes[n] for n in (row['origen_id'],row['destino_id'])):
+            raise PipelineError('Ruta/clase de arista no pertenece a ambos POSTE; transferencia requiere evidencia explícita')
         key=tuple(sorted((row['origen_id'],row['destino_id'])))
         if key in result:
             result[key]['asociaciones'].append(row)

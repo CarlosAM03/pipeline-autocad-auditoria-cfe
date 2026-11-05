@@ -12,16 +12,40 @@
           (strcase (vl-string-translate "\\" "/" expected)))
     (datra:fail "DATRA: abra unicamente la COPIA indicada en el reporte CAD")))
 
-(defun datra:run (fn / result)
+(defun datra:snapshot (/ s i e d a result)
+  (setq s (ssget "_X" '((-4 . "<OR") (-3 ("DATRA_CFE"))
+    (0 . "VIEWPORT") (2 . "DATRA_CAJETIN_A1") (-4 . "OR>"))) i 0)
+  (if s (repeat (sslength s)
+    (setq e (ssname s i) i (1+ i) d (entget e '("DATRA_CFE")) result (cons (cons e d) result))
+    (if (and (= (cdr (assoc 0 d)) "INSERT") (= (cdr (assoc 66 d)) 1))
+      (progn (setq a (entnext e))
+        (while (and a (/= "SEQEND" (cdr (assoc 0 (entget a)))))
+          (setq result (cons (cons a (entget a)) result) a (entnext a)))))))
+  result)
+
+(defun datra:restore (snapshot / e item d)
+  ; Core Console puede mantener un grupo SCRIPT activo aun tras UNDO END.
+  ; Diario explícito de entidades propias: no confiar en un mensaje de UNDO.
+  (foreach e datra:*created* (if (entget e) (entdel e)))
+  (foreach item snapshot
+    (setq e (car item) d (cdr item))
+    (if (not (entget e)) (entdel e))
+    ; VIEWPORT no admite entmod; el viewport anterior solo se había eliminado.
+    (if (/= "VIEWPORT" (cdr (assoc 0 d))) (entmod d)))
+  (command "_.REGENALL"))
+
+(defun datra:run (fn / result snapshot)
   (setq datra:*ready* nil datra:*failure* nil)
-  (command-s "_.UNDO" "_Begin")
+  (setq snapshot (datra:snapshot) datra:*created* nil)
+  (command "_.UNDO" "_Begin")
   (setq result (vl-catch-all-apply fn nil))
-  (command-s "_.UNDO" "_End")
-  (if (vl-catch-all-error-p result)
+  (command "_.UNDO" "_End")
+  (if (or datra:*failure* (vl-catch-all-error-p result))
     (progn (setq datra:*ready* nil)
-      (command-s "_.U")
+      (command "_.U")
+      (datra:restore snapshot)
       (alert (strcat "DATRA FALLIDO: " (if datra:*failure* datra:*failure* (vl-catch-all-error-message result))
-        ". Grupo deshecho. No guardar como FINAL; revisar reporte."))))
+        ". Geometria propia restaurada por diario; no guardar como FINAL. Revisar reporte."))))
   (princ))
 
 (defun datra:layer (name color)
@@ -116,6 +140,7 @@
 (defun datra:make (data)
   ; entmake asigna propietario del espacio actual; no entmakex huerfano.
   (if (not (entmake data)) (datra:fail "entmake no creo entidad"))
+  (setq datra:*created* (cons (entlast) datra:*created*))
   (entlast))
 
 (defun datra:owned (entity / x)
@@ -166,6 +191,32 @@
     (* datra:*height* 0.8) label nil)
   (setq datra:*edges* (1+ datra:*edges*)))
 
+(defun datra:cajetin (counts / s e a d found tags values key pending)
+  ; Correspondencia observada en DATRA_CAJETIN_A1, no coordenadas supuestas.
+  ; No tocar atributos de Layout1 ni entidades de otras plantillas.
+  (setq s (ssget "_X" (list '(0 . "INSERT") '(2 . "DATRA_CAJETIN_A1")
+    (cons 410 datra:*layout*))) tags '("TOTAL_POSTES" "TOTAL_CAJAS" "TOTAL_EXCEDENTES"))
+  (if (and s (= (sslength s) 1))
+    (progn
+      (setq e (ssname s 0) a (entnext e))
+      (while (and a (/= "SEQEND" (cdr (assoc 0 (setq d (entget a))))))
+        (if (and (= "ATTRIB" (cdr (assoc 0 d))) (member (cdr (assoc 2 d)) tags))
+          (setq found (cons (cons (cdr (assoc 2 d)) a) found)))
+        (setq a (entnext a)))
+      (if (and (= (length found) 3) (assoc "TOTAL_POSTES" found)
+               (assoc "TOTAL_CAJAS" found) (assoc "TOTAL_EXCEDENTES" found))
+        (progn
+          (setq values counts)
+          (foreach key tags
+            (setq a (cdr (assoc key found)) d (entget a))
+            (if (not (entmod (subst (cons 1 (itoa (car values))) (assoc 1 d) d)))
+              (datra:fail "No se pudo actualizar atributo real del cajetin"))
+            (setq values (cdr values)))
+          (entupd e)
+          (setq datra:*cajetin* "ACTUALIZADO_TOTAL_POSTES_TOTAL_CAJAS_TOTAL_EXCEDENTES"))
+        (setq datra:*cajetin* "PENDIENTE_AJUSTE_PLANTILLA_ATRIBUTOS")))
+    (setq datra:*cajetin* "PENDIENTE_AJUSTE_PLANTILLA_BLOQUE")))
+
 (defun datra:finish (file points edges counts / stream selection actual i e d actualtypes p c x actualedges)
   (if (or (/= points datra:*points*) (/= edges datra:*edges*))
     (datra:fail "Conteos de insercion no coinciden"))
@@ -192,8 +243,7 @@
   (datra:text "ESTADO" "DATRA_CONTROL" '(150.0 557.0 0.0) 3.0 datra:*mode* T)
   (datra:text "CONTEOS" "DATRA_CONTROL" '(150.0 552.0 0.0) 2.5
     (strcat "Componentes dibujados: " (itoa actual) " / Aristas: " (itoa edges)) T)
-  (datra:text "TIPOS" "DATRA_CONTROL" '(150.0 547.0 0.0) 2.0
-    (strcat "POSTE: " (itoa p) " | CAJA_EMP: " (itoa c) " | EXCEDENTE: " (itoa x)) T)
+  (datra:cajetin (list p c x))
   (datra:text "PROTOTIPO" "DATRA_CONTROL" '(150.0 542.0 0.0) 2.0
     "SIMBOLOS ESQUEMATICOS - MATERIALES NO HOMOLOGADOS - REVISION HUMANA PENDIENTE" T)
   (if datra:*prototypes* (datra:details))
@@ -204,6 +254,7 @@
   (write-line (strcat "aristas=" (itoa edges)) stream)
   (write-line (strcat "POSTE=" (itoa p) ";CAJA_EMP=" (itoa c) ";EXCEDENTE=" (itoa x)) stream)
   (write-line (strcat "INSUNITS=" (itoa (getvar "INSUNITS"))) stream)
+  (write-line (strcat "cajetin=" datra:*cajetin*) stream)
   (write-line "CRS/legibilidad/FINAL=REQUIERE_APROBACION_HUMANA" stream)
   (close stream)
   (setq datra:*ready* nil))
@@ -266,13 +317,17 @@
   (command "_.UCS" "_World")
   (command "_.MVIEW" "_non" '(145.0 70.0) "_non" '(675.0 535.0))
   (setq vp (entlast))
+  (setq datra:*created* (cons vp datra:*created*))
   (if (/= (cdr (assoc 0 (entget vp))) "VIEWPORT") (datra:fail "MVIEW no creo viewport"))
   (command "_.MSPACE")
   (setvar "CVPORT" (cdr (assoc 69 (entget vp))))
   (command "_.UCS" "_World")
   (command "_.PLAN" "_World")
   (setq scale (max (/ (- xmax xmin) 410.0) (/ (- ymax ymin) 445.0) 0.01))
-  (command "_.ZOOM" "_C" "_non" (list (/ (+ xmin xmax) 2.0) (/ (+ ymin ymax) 2.0)) (* 465.0 scale))
+  ; Reservar el margen al este, donde se colocan etiqueta y WGS84 textual.
+  ; Centrar solo el bbox repartia el margen y recortaba texto del ultimo poste.
+  (command "_.ZOOM" "_C" "_non" (list (+ (/ (+ xmin xmax) 2.0) (* 50.0 scale))
+    (/ (+ ymin ymax) 2.0)) (* 465.0 scale))
   (command "_.PSPACE")
   (command "_.MVIEW" "_Lock" "_On" vp "")
   (setvar "CLAYER" previous-layer)
@@ -305,4 +360,29 @@
   (close stream)
   (alert "Complete WGS84, evidencia, fecha, responsable y tolerancia en configuracion. Esta captura NO aprueba el CRS.")
   (princ))
+
+(defun datra:evidence (expected file / f s i e d x a ad vertices id)
+  ; Inspección read-only de geometría persistida, disponible también al reabrir.
+  (datra:guard expected)
+  (setq f (open file "w") i 0 s (ssget "_X" '((-3 ("DATRA_CFE")))))
+  (write-line (strcat "ENGINE=" (getvar "ACADVER") ";MODE=" datra:*mode*) f)
+  (if s (repeat (sslength s)
+    (setq e (ssname s i) i (1+ i) d (entget e) x (assoc -3 (entget e '("DATRA_CFE"))))
+    (if (datra:owned e)
+     (progn
+      (write-line (strcat (cdr (assoc 0 d)) "|" (cdr (nth 2 (cadr x))) "|"
+        (vl-princ-to-string (vl-remove-if-not '(lambda (p) (member (car p) '(1 2 8 10 40 410))) d))) f)
+      (if (and (= "LWPOLYLINE" (cdr (assoc 0 d))) (= "DATRA_RUTA" (cdr (assoc 8 d))))
+        (progn
+          (setq vertices (vl-remove-if-not '(lambda (p) (= (car p) 10)) d))
+          (write-line (strcat "LENGTH|" (cdr (nth 2 (cadr x))) "|"
+            (rtos (distance (cdr (car vertices)) (cdr (cadr vertices))) 2 12)) f)))))))
+  (setq s (ssget "_X" (list '(0 . "INSERT") '(2 . "DATRA_CAJETIN_A1") (cons 410 datra:*layout*))) i 0)
+  (if s (repeat (sslength s)
+    (setq e (ssname s i) i (1+ i) a (entnext e))
+    (while (and a (/= "SEQEND" (cdr (assoc 0 (setq ad (entget a))))))
+      (write-line (strcat "ATTRIB|" (cdr (assoc 2 ad)) "|" (cdr (assoc 1 ad))) f)
+      (setq a (entnext a)))))
+  (write-line (strcat "WORLDUCS=" (itoa (getvar "WORLDUCS")) ";INSUNITS=" (itoa (getvar "INSUNITS")) ";PDFSHX=" (itoa (getvar "PDFSHX"))) f)
+  (close f) (princ))
 (princ)

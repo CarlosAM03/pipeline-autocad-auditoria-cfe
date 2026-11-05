@@ -23,7 +23,7 @@ def run(audit, dry_run=False, readonly_root=None, emit=print, diagnostico=None):
         raise PipelineError(f"No existe auditoría: {audit}")
     if dry_run:
         cfg, root = preflight(audit, readonly_root, emit)
-        if diagnostico is not None:cfg.update(diagnostico=diagnostico,schema_02=2)
+        if diagnostico is not None:cfg.update(diagnostico=diagnostico,pipeline_integral=True)
         # Sin abrir celdas ni escribir bloqueos/manifiestos.
         return dict(estado="DRY_RUN", fuentes=cfg["fuentes_en_orden"], configuracion=cfg,
                     entrada_prueba=str(root) if readonly_root else None)
@@ -31,12 +31,12 @@ def run(audit, dry_run=False, readonly_root=None, emit=print, diagnostico=None):
         recover(audit)
         try:
             cfg, root = preflight(audit, readonly_root, emit)
-            if diagnostico is not None:cfg.update(diagnostico=diagnostico,schema_02=2)
+            if diagnostico is not None:cfg.update(diagnostico=diagnostico,pipeline_integral=True)
             return execute(audit, root, cfg, readonly_root is not None, emit)
         except (Exception, KeyboardInterrupt) as exc:
             canonical=(audit/'salida/manifiesto_ejecucion.json').exists()
             try:
-                canonical=canonical or (config.load(audit)['schema_02']==2 and not (audit/'manifiesto_ejecucion.json').exists())
+                canonical=canonical or (config.load(audit)['pipeline_integral'] and not (audit/'manifiesto_ejecucion.json').exists())
             except Exception:pass
             directory = output_path(audit / 'salida/fallos' if canonical else audit/'manifiestos', audit)
             directory.mkdir(parents=True,exist_ok=True)
@@ -92,7 +92,7 @@ def execute(audit, root, cfg, testing, emit):
         warnings.append(dict(codigo="MAESTRO_NO_DECLARADO", motivo="Comparación informativa NO_DETERMINADO"))
     if baseline is None:
         warnings.append(dict(codigo="BASELINE_NO_DECLARADA", motivo="P-02: novedad NO_DETERMINADO"))
-    if cfg['schema_02']==2:
+    if cfg['pipeline_integral']:
         warnings[0]=dict(codigo='ACEPTACION_HUMANA_PENDIENTE',motivo='P-09 ratificado; lote sujeto a evidencia y revisión de campo/CAD')
         warnings[1]=dict(codigo='TOPOLOGIA_REQUIERE_EVIDENCIA',motivo='Solo entrada humana autoriza líneas; propuestas separadas de confirmaciones')
     if crs_info["estado"] == "CRS_PENDIENTE":
@@ -129,7 +129,7 @@ def execute(audit, root, cfg, testing, emit):
         from .reporting import revision_file
         revision_file(stage, records, audit.name)
         topology_report=None;edges=[]
-        if cfg['schema_02']==2:
+        if cfg['pipeline_integral']:
             from .network import confirmed_edges, propose, PROPOSED
             from .reporting import csv_file, jsonl_file
             from .dedup import identified_groups
@@ -142,8 +142,12 @@ def execute(audit, root, cfg, testing, emit):
                     features,spatial_info=read_spatial(path)
                     proposals,matches=propose(audit,identified_groups(records),features,float(spec.get('tolerancia_m',0)),cfg.get('mapa_ids'))
                 admitted_ids={r['elemento_id'] for r in uniques}
-                routes={r['ruta_salida'] for r in records if r['elemento_id'] in admitted_ids}
-                edges,topology_report=confirmed_edges(audit,uniques,route_names=routes)
+                from .projection import route_id
+                routes={eid:set() for eid in admitted_ids}
+                for r in records:
+                    if r['elemento_id'] in admitted_ids:
+                        routes[r['elemento_id']].add(route_id(audit.name,r['ruta_salida']))
+                edges,topology_report=confirmed_edges(audit,uniques,memberships=routes)
             except Exception as exc:
                 topology_report=dict(estado='PENDIENTE_EVIDENCIA',error=str(exc));edges=[]
             topology_report['kmz']=spatial_info
@@ -164,7 +168,7 @@ def execute(audit, root, cfg, testing, emit):
             diagnostic=project(identified_groups(records),candidate,cfg['crs_candidato'],2,audit.name)
             csv_file(stage/'02_DIAGNOSTICO_NO_VERIFICADO.csv',PROJECTED_V2,diagnostic)
         cad_report = None
-        if cfg['schema_02'] == 2:
+        if cfg['pipeline_integral']:
             from .cad import package
             cad_report = package(stage,audit,cfg,crs_info,edges)
         inputs=[]
@@ -184,8 +188,8 @@ def execute(audit, root, cfg, testing, emit):
                         topologia="NO_CONFIRMADA", aprobacion_humana="PENDIENTE", perfiles_hojas=profiles,
                         artefactos={p.name: dict(sha256=sha256(p), bytes=p.stat().st_size) for p in sorted(stage.iterdir())})
         manifest["contrato_unificado"] = "PROPUESTA-P09-unificados-v1"
-        if cfg['schema_02']==2:manifest['contrato_unificado']='P09-v1-ratificado'
-        manifest['schema_version']={'00':1,'01':1,'02':cfg['schema_02'],'manifiesto':2 if cfg['schema_02']==2 else 1}
+        if cfg['pipeline_integral']:manifest['contrato_unificado']='P09-v1-ratificado'
+        manifest['schema_version']={'00':1,'01':1,'02':cfg['schema_02'],'manifiesto':2 if cfg['pipeline_integral'] else 1}
         manifest['entradas']=inputs
         manifest['diagnostico']=dict(estado='DIAGNOSTICO_NO_VERIFICADO',filas=len(diagnostic)) if diagnostic is not None else None
         manifest['resoluciones'] = resolutions_info
@@ -199,8 +203,10 @@ def execute(audit, root, cfg, testing, emit):
                           admision_geografica="ACREDITADA_EN_CONFIG" if cfg["geografia_permitida"] and cfg["geografia_permitida"].get("aprobada") else "PENDIENTE_P03"),
             "CP-03": dict(estado=cad_report['estado'] if cad_report else 'PENDIENTE_EVIDENCIA'),
             "CP-04": dict(estado=cad_report.get('cp04','PENDIENTE_EVIDENCIA') if cad_report else 'PENDIENTE_EVIDENCIA')}
-        if cfg['schema_02']==2:
+        if cfg['pipeline_integral']:
             manifest['checkpoints']['CP-01']['estado']='COMPLETADO_TECNICO'
+            from .traceability import generate_workbooks
+            manifest['trazabilidad_xlsx']=generate_workbooks(stage,manifest,edges)
             from .checkpoints import write_acta
             write_acta(stage,manifest)
             manifest['artefactos']={p.name:dict(sha256=sha256(p),bytes=p.stat().st_size) for p in sorted(stage.iterdir()) if p.is_file()}

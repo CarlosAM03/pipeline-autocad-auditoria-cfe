@@ -10,7 +10,7 @@ DEFAULTS = dict(hojas_por_fuente={}, excepciones_cabecera={}, maestro_informativ
                 baseline_historica=None, geografia_permitida=None, ids_confiables=[],
                 crs_candidato="EPSG:32611", crs_validado=False, evidencia_crs=None,
                 cercanos_m=None, schema_02=1, cad=None, kmz=None, mapa_ids=None,
-                diagnostico=False)
+                diagnostico=False, pipeline_integral=None)
 
 
 def audit_path(name):
@@ -34,6 +34,11 @@ def load(audit):
     if set(raw) - allowed:
         raise PipelineError(f"Claves de configuración no reconocidas: {sorted(set(raw) - allowed)}")
     cfg = {**DEFAULTS, **raw}
+    if cfg['pipeline_integral'] is None:
+        # Compatibilidad de perfiles anteriores; los nuevos declaran el flag.
+        cfg['pipeline_integral']=cfg['schema_02']==2
+    if type(cfg['pipeline_integral']) is not bool:
+        raise PipelineError('pipeline_integral requiere booleano')
     if cfg.get("auditoria") != audit.name:
         raise PipelineError("auditoria debe coincidir con nombre de carpeta")
     sources = cfg.get("fuentes_en_orden")

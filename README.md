@@ -2,7 +2,12 @@
 
 Pipeline local Python para preparar inventarios XLSX y compilar dos scripts para AutoCAD convencional 2026 en inglés. Trabaja sobre copias, conserva el linaje y separa identificación, admisión geográfica, proyección y aceptación humana.
 
-**Estado, 2026-11-05:** software CP-01 a CP-04 implementado; evidencia geográfica y aceptación de planos reales pendientes. La suite original de 43 pruebas se conserva: **81 pruebas locales aprobadas**, sin fallidas ni omitidas. Resultados ejecutados, conteos y gates: [acta integral](AuditoriaCFE/Codex/02_Harness_Integral/acta_fase_6.md). CI técnico no equivale a aprobación productiva.
+**Estado, 2026-11-05:** software CP-01 a CP-04 implementado; evidencia geográfica y aceptación de planos reales pendientes. La suite original de 43 pruebas se conserva. El [cierre integral anterior](AuditoriaCFE/Codex/02_Harness_Integral/CIERRE_INTEGRAL_2026-11-05.md) registra 81 pruebas; el corte de 79 de fase 6 es histórico. La revisión posterior del PR y su evidencia técnica se documentan en el [piloto Mirador](AuditoriaCFE/Codex/03_PR1_Piloto_Mirador/ACTA_TRABAJO.md). CI técnico no equivale a aprobación productiva.
+
+El piloto de revisión ejecutó **92 pruebas locales: 92 aprobadas, 0 fallidas y
+0 omitidas**. Añade los libros de trazabilidad, aislamiento de preparación,
+pertenencias por extremo, recuperación conservadora y evidencia CAD separada.
+Las pruebas nativas usan copias; las validaciones físicas siguen pendientes.
 
 | Checkpoint | Producto | Condiciones |
 |---|---|---|
@@ -48,6 +53,21 @@ python -m venv AuditoriaCFE/.venv
 ```
 
 Sin argumento se ofrece selección interactiva. `--preparar-entradas` copia únicamente las fuentes exactas declaradas por el encargo y registra hashes; requiere históricos locales. Las cuatro auditorías son Natura, Mirador, Otay-Florido y Tijuana-General. Cada una tiene configuración y lote independientes; una falla no cancela el resto. El resumen batch queda separado bajo `auditorias/_batch/salida/`.
+
+`--preparar-entradas --auditoria Mirador` prepara exclusivamente Mirador; la
+preparación conjunta requiere `--preparar-entradas --batch`. El menú selecciona
+una auditoría existente antes de escribir; no es un selector genérico Windows.
+
+Los perfiles nuevos declaran `pipeline_integral: true` independientemente de
+`schema_02: 1|2`. Perfiles antiguos sin el flag conservan su comportamiento por
+compatibilidad (v2 integral, v1 legado); se recomienda declarar el flag al migrar.
+Los dos libros [XLSX de trazabilidad v1](AuditoriaCFE/Docs/Specs/Contrato_Adicional_Trazabilidad_XLSX_v1.md)
+son productos adicionales del perfil integral. Usan texto exacto, sin fórmulas,
+y quedan incluidos en los hashes del manifiesto. No reemplazan CSV00/01/02.
+
+`--verificar-paquete` comprueba el lote reproducible y excluye los DWG/PDF
+mutables. `--verificar-evidencia-cad` verifica por separado los archivos del acta
+nativa correspondiente a la corrida. Ninguno aprueba CRS, firma o FINAL.
 
 ## Reglas y custodia
 

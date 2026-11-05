@@ -12,10 +12,18 @@ SOURCES = {
     'Tijuana-General':['Postes_CFE.xlsx']}
 
 
-def bootstrap():
+def selected_names(names):
+    selected=list(SOURCES) if names is None else list(names)
+    if not selected or len(selected)!=len(set(selected)) or set(selected)-set(SOURCES):
+        raise PipelineError('Preparación requiere auditorías autorizadas explícitas')
+    return selected
+
+
+def bootstrap(names=None):
     history = PROJECT.parent/'Auditorias-20261104T035633Z-1-001'
     reports = {}
-    for name,sources in SOURCES.items():
+    for name in selected_names(names):
+        sources=SOURCES[name]
         audit = output_path(AUDITS/name,AUDITS)
         entry = output_path(audit/'entrada',audit)
         entry.mkdir(parents=True,exist_ok=True)
@@ -39,7 +47,7 @@ def bootstrap():
         manifest.write_text(json_text(copied),encoding='utf-8')
         cfg = dict(auditoria=name,fuentes_en_orden=[x['archivo'] for x in copied],hojas_por_fuente={},
                    excepciones_cabecera={},geografia_permitida=None,crs_validado=False,schema_02=2,
-                   crs_candidato='EPSG:32611',baseline_historica=None,maestro_informativo=None)
+                   crs_candidato='EPSG:32611',baseline_historica=None,maestro_informativo=None,pipeline_integral=True)
         if name == 'Mirador':
             cfg['hojas_por_fuente']['Copy of STD HACIA CNAL 12.xlsx']=['Sheet1','Sheet2']
             cfg['excepciones_cabecera']['Ruta canal 12 level antes 2014 Completo.xlsx']={'Hoja1':'F3_D_VACIA'}
@@ -62,7 +70,7 @@ def bootstrap():
     return reports
 
 
-def prepare_master():
+def prepare_master(names=None):
     """Derivado de extracción fiel, comparación informativa separada del inventario."""
     from .schemas import extract
     from .reporting import csv_file,MINIMUM
@@ -70,6 +78,7 @@ def prepare_master():
     import io
     import hashlib
     from datetime import date
+    selected=selected_names(names)
     source=PROJECT.parent/'Auditorias-20261104T035633Z-1-001/postes/Postes_CFE.xlsx'
     if not source.exists():return dict(estado='PENDIENTE_EVIDENCIA',motivo='Postes_CFE.xlsx ausente')
     checksum=sha256(source)
@@ -78,7 +87,8 @@ def prepare_master():
     writer=csv.writer(stream);writer.writerow(MINIMUM)
     writer.writerows([r['ruta_original'],r['tipo_original'],r['coordenada_original']] for r in rows)
     expected=hashlib.sha256(stream.getvalue().encode('utf-8')).hexdigest()
-    for name in ('Natura','Mirador','Otay-Florido'):
+    for name in selected:
+        if name=='Tijuana-General':continue
         audit=within(AUDITS/name,AUDITS)
         if not (audit/'entrada').is_dir():continue
         path=output_path(audit/'entrada/referencia_maestro.csv',audit)

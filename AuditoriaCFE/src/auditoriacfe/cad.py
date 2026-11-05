@@ -76,11 +76,20 @@ def package(stage, audit, cfg, crs_info, edges):
         productive = False
     mode = 'DIAGNOSTICO_NO_VERIFICADO' if diagnostic else 'PRELIMINAR'
     if productive: mode = 'PRELIMINAR_CRS_ACREDITADO'
+    # Ensayos ficticios no deben presentarse como acreditación de una base real.
+    if spec.get('rotulo_fixture'):
+        if not audit.name.startswith('Fixture-') or spec['rotulo_fixture']!='SOLO_FIXTURE_SINTETICO':
+            raise PipelineError('Rótulo fixture reservado a auditorías Fixture- ficticias')
+        mode='SOLO_FIXTURE_SINTETICO'
     source = stage/('02_DIAGNOSTICO_NO_VERIFICADO.csv' if diagnostic else '02_elementos_proyectados.csv')
     rows = []
     if source.exists() and (productive or diagnostic): rows, _ = read_projected(source, audit.name)
     owner = 'AUD-' + digest(audit.name)
     copy_name = 'plano_' + sha256(base)[:16] + '.dwg'
+    if spec.get('copia_nombre'):
+        copy_name=spec['copia_nombre']
+        if not isinstance(copy_name,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,100}\.dwg',copy_name):
+            raise PipelineError('copia_nombre debe ser nombre DWG simple seguro')
     target = audit/'salida/resultados_cad'/copy_name
     destination = audit/'salida'
     header = f'(load {literal((destination/"cad_runtime.lsp").as_posix())})\n'
@@ -179,7 +188,7 @@ def prepare_copy(audit, manifest):
     source = within(audit/'entrada'/report['archivo_base'],audit/'entrada')
     if sha256(source) != report['base_sha256']: raise PipelineError('Cambió la base CAD')
     target = within(audit/'salida'/report['copia_relativa'],audit/'salida')
-    target.parent.mkdir(exist_ok=True)
+    target.parent.mkdir(parents=True,exist_ok=True)
     if not target.exists():
         # Modo exclusivo impide sobreescribir una edición del operador.
         with source.open('rb') as src, target.open('xb') as dst: shutil.copyfileobj(src,dst)

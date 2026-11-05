@@ -83,7 +83,32 @@ class NetworkIntegralTests(unittest.TestCase):
     def test_confirmed_edge_can_belong_to_non_prevalent_shared_route(self):
         self.write_edges([('0','1')],ruta_id=route_id(self.audit.path.name,'SHARED'))
         with self.assertRaises(PipelineError):confirmed_edges(self.audit.path,self.elements())
-        edges,report=confirmed_edges(self.audit.path,self.elements(),route_names={'R','SHARED'})
+        memberships={str(i):{route_id(self.audit.path.name,'R'),route_id(self.audit.path.name,'SHARED')} for i in range(2)}
+        edges,report=confirmed_edges(self.audit.path,self.elements(),memberships=memberships)
         self.assertEqual(len(edges),1)
         self.assertEqual(edges[0]['ruta_id'],route_id(self.audit.path.name,'SHARED'))
         self.assertEqual(report['aristas'],1)
+
+    def test_route_existing_elsewhere_cannot_authorize_foreign_endpoint(self):
+        self.write_edges([('0','1')],ruta_id=route_id(self.audit.path.name,'SHARED'))
+        memberships={'0':{route_id(self.audit.path.name,'SHARED')},'1':{route_id(self.audit.path.name,'R')}}
+        with self.assertRaises(PipelineError):
+            confirmed_edges(self.audit.path,self.elements(),memberships=memberships)
+
+    def test_pipeline_uses_all_admitted_occurrences_for_shared_route(self):
+        from auditoriacfe.pipeline import run
+        rows=[]
+        for i,(route,coord) in enumerate([('R','32.5N117W'),('R','32.6N117W'),('SHARED','32.5N117W'),('SHARED','32.6N117W')],2):
+            rows.append((i,record(route=route,coord=coord),False))
+        xlsx(self.audit.path/'entrada/a.xlsx',rows=rows)
+        self.audit.save(pipeline_integral=True)
+        run(self.audit.path,emit=lambda *a:None)
+        records=[json.loads(l) for l in (self.audit.path/'salida/linaje_y_calidad.jsonl').read_text().splitlines()]
+        self.write_edges([(records[0]['elemento_id'],records[1]['elemento_id'])],ruta_id=route_id(self.audit.path.name,'SHARED'))
+        report=run(self.audit.path,emit=lambda *a:None)['topologia_detalle']
+        self.assertEqual(report['aristas'],1)
+        # Ruta existe en el inventario, pero ahora solo un extremo pertenece.
+        xlsx(self.audit.path/'entrada/a.xlsx',rows=rows[:-1])
+        report=run(self.audit.path,emit=lambda *a:None)['topologia_detalle']
+        self.assertEqual(report['estado'],'PENDIENTE_EVIDENCIA')
+        self.assertIn('ambos POSTE',report['error'])
