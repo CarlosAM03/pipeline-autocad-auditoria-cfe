@@ -14,6 +14,7 @@ SUMMARY = "elemento_id,auditoria,tipo,ruta_prevalente,estado,coordenada,archivo_
 INCIDENTS = "incidencia_id,codigo,severidad,archivo,hoja,fila,valor_original,valor_elegido,motivo,estado_revision".split(",")
 TOPOLOGY = "propuesta_id,origen_id,destino_id,ruta,tramo,distancia_plana_m,metodo,estado,justificacion".split(",")
 PROJECTED = "elemento_id,ruta_id,tipo,latitud,longitud,este_m,norte_m,crs".split(",")
+PROJECTED_V2 = 'elemento_id,ruta_id,ruta_nombre,tipo,latitud,longitud,este_m,norte_m,crs'.split(',')
 UNIFIED = "elemento_id,ruta_prevalente,tipo,coordenada_original,coordenada_interpretada,estado_preparacion,admision_geografica,apto_csv_01,archivo_prevalente,hoja_prevalente,fila_prevalente,ocurrencias".split(",")
 REVISION = 'revision_id,elemento_id,ocurrencia_id,auditoria,archivo,hoja,fila,tipo_original,coordenada_original,codigo_incidencia,estado_actual,accion_requerida,fuente_evidencia,resolucion_id'.split(',')
 
@@ -87,7 +88,7 @@ def geographic_admission(record):
     return "ADMITIDO_P03" if record["estado"] == "VALIDO" else "REVISAR"
 
 
-def generate(stage, records, uniques, audit, maestro, baseline, refinfo, projection_rows, warnings, profiles, auxiliary, near):
+def generate(stage, records, uniques, audit, maestro, baseline, refinfo, projection_rows, warnings, profiles, auxiliary, near, schema02=1):
     from .dedup import key
     csv_file(stage / "01_elementos_normalizados.csv", MINIMUM,
              ([r["ruta_salida"], r["tipo_canonico"], r["coordenada_normalizada"]] for r in uniques))
@@ -138,7 +139,7 @@ def generate(stage, records, uniques, audit, maestro, baseline, refinfo, project
     if projection_rows is not None:
         if len(projection_rows) != len(uniques):
             raise PipelineError("Cardinalidad espacial inconsistente")
-        csv_file(stage / "02_elementos_proyectados.csv", PROJECTED, projection_rows)
+        csv_file(stage / "02_elementos_proyectados.csv", PROJECTED if schema02 == 1 else PROJECTED_V2, projection_rows)
 
 
 @contextmanager
@@ -174,8 +175,19 @@ def recover(audit):
     previous = output_path(audit / "temporales" / "salida_anterior", audit)
     output = output_path(audit / "salida", audit)
     if previous.exists() and not output.exists():
-        os.replace(previous, output)
+        replace_retry(previous, output)
     return output, previous
+
+
+def replace_retry(source,destination):
+    import time
+    for attempt in range(5):
+        try:
+            os.replace(source,destination)
+            return
+        except PermissionError:
+            if attempt == 4:raise
+            time.sleep(0.1*(attempt+1))
 
 
 def publish(audit, stage, manifest):
@@ -186,6 +198,26 @@ def publish(audit, stage, manifest):
     """
     import shutil
     output, previous = recover(audit)
+    canonical = manifest.get('schema_version',{}).get('manifiesto') == 2
+    if canonical:
+        # Verificar el lote anterior antes de migrar/copiar sus manifestaciones.
+        if output.exists() and ((output/'manifiesto_ejecucion.json').exists() or (audit/'manifiesto_ejecucion.json').exists()):
+            verify(audit)
+        histories = [audit/'manifiestos',output/'manifiestos']
+        archive=stage/'manifiestos';archive.mkdir()
+        for directory in histories:
+            if not directory.exists():continue
+            within(directory,audit)
+            for old in directory.glob('*.json'):
+                old=within(old,directory)
+                if old.stat().st_size > 16*1024*1024:
+                    raise PipelineError('Manifiesto legacy demasiado grande')
+                target=archive/old.name
+                if target.exists() and sha256(target)!=sha256(old):
+                    raise PipelineError('Conflicto de historial de manifiestos')
+                shutil.copyfile(old,target)
+        (archive/(manifest['ejecucion_id']+'.json')).write_text(json_text(manifest),encoding='utf-8')
+        (stage/'manifiesto_ejecucion.json').write_text(json_text(manifest),encoding='utf-8')
     if previous.exists():
         within(previous, audit / "temporales")
         shutil.rmtree(previous)
@@ -195,35 +227,64 @@ def publish(audit, stage, manifest):
     tmp = output_path(manifest_dir / (manifest["ejecucion_id"] + ".tmp"), audit)
     tmp.write_text(json_text(manifest), encoding="utf-8")
     # Preparado antes de intercambiar directorios; hashes identifican versión.
-    os.replace(tmp, manifest_path)
+    replace_retry(tmp, manifest_path)
     had_output = output.exists()
     if had_output:
-        os.replace(output, previous)
+        replace_retry(output, previous)
     try:
-        os.replace(stage, output)
+        replace_retry(stage, output)
     except BaseException:
         if had_output:
-            os.replace(previous, output)
+            replace_retry(previous, output)
         raise
     if previous.exists():
         within(previous, audit / "temporales")
         shutil.rmtree(previous)
+    if canonical:
+        verify(audit)
+        # El archivo nuevo ya contiene toda la historia. Retirar solo JSON
+        # propios copiados idénticos, nunca carpetas arbitrarias del operador.
+        for old in manifest_dir.glob('*.json'):
+            target=output/'manifiestos'/old.name
+            if target.exists() and sha256(target)==sha256(old):old.unlink()
+        if not list(manifest_dir.iterdir()):manifest_dir.rmdir()
+        active=output_path(audit/'manifiesto_ejecucion.json',audit)
+        if active.exists():active.unlink()
+        return output/'manifiesto_ejecucion.json'
     active = output_path(audit / "manifiesto_ejecucion.json", audit)
     active_tmp = output_path(audit / "temporales" / "manifiesto_actual.tmp", audit)
     active_tmp.write_text(json_text(manifest), encoding="utf-8")
-    os.replace(active_tmp, active)
+    replace_retry(active_tmp, active)
     return manifest_path
 
 
 def verify(audit):
     """Consumidores deben verificar antes de usar un lote; rechaza mezcla o edición."""
-    active = within(audit / "manifiesto_ejecucion.json", audit)
+    output = within(audit / "salida", audit)
+    canonical=(output/'manifiesto_ejecucion.json').exists()
+    active = within(output / 'manifiesto_ejecucion.json' if canonical else audit / "manifiesto_ejecucion.json", audit)
     manifest = json.loads(active.read_text(encoding="utf-8"))
     output = within(audit / "salida", audit)
-    if {p.name for p in output.iterdir()} != set(manifest["artefactos"]):
+    actual={p.name for p in output.iterdir()}
+    if canonical:
+        actual -= {'manifiesto_ejecucion.json','manifiestos'}
+        if manifest.get('schema_version',{}).get('manifiesto') != 2:
+            raise PipelineError('Versión de manifiesto canónico inválida')
+        identity={k:v for k,v in manifest.items() if k not in ('ejecucion_id','criterio_publicacion')}
+        if digest(identity) != manifest.get('ejecucion_id'):
+            raise PipelineError('Identidad/hash del manifiesto no coincide')
+        archived=within(output/'manifiestos'/(manifest['ejecucion_id']+'.json'),output)
+        if json.loads(archived.read_text(encoding='utf-8')) != manifest:
+            raise PipelineError('Manifiesto activo/histórico no coinciden')
+    if actual != set(manifest["artefactos"]):
         raise PipelineError("Conjunto de artefactos no coincide con manifiesto activo")
     for name, meta in manifest["artefactos"].items():
         path = within(output / name, output)
         if sha256(path) != meta["sha256"] or path.stat().st_size != meta["bytes"]:
             raise PipelineError(f"Hash/tamaño no coincide: {name}")
+    if canonical:
+        for source in manifest.get('entradas',[]):
+            source_path=within(audit/'entrada'/source['archivo'],audit/'entrada')
+            if sha256(source_path) != source['sha256']:
+                raise PipelineError('Entrada operativa cambió después de preparar el lote')
     return manifest

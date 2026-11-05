@@ -91,7 +91,7 @@ def execute(audit, root, cfg, testing, emit):
     projected = None
     if transformer:
         try:
-            projected = project(uniques, transformer, cfg["crs_candidato"])
+            projected = project(uniques, transformer, cfg["crs_candidato"],cfg['schema_02'],audit.name)
         except Exception as exc:
             crs_info = dict(estado="CRS_PENDIENTE", motivo=f"Error de transformación: {exc}")
             warnings.append(dict(codigo="CRS_PENDIENTE", motivo=crs_info["motivo"]))
@@ -116,9 +116,27 @@ def execute(audit, root, cfg, testing, emit):
     stage = Path(tempfile.mkdtemp(prefix="proceso1_", dir=temporary))
     try:
         generate(stage, records, uniques, audit.name, master, baseline, refinfo,
-                 projected, warnings, profiles, auxiliary, near)
+                 projected, warnings, profiles, auxiliary, near,cfg['schema_02'])
         from .reporting import revision_file
         revision_file(stage, records, audit.name)
+        diagnostic=None
+        if cfg['diagnostico']:
+            from .dedup import identified_groups
+            from .reporting import csv_file, PROJECTED_V2
+            from pyproj import Transformer
+            cad=cfg.get('cad') or {}
+            base=within(audit/'entrada'/cad.get('base_dwg',''),audit/'entrada')
+            if not base.is_file() or base.suffix.lower()!='.dwg' or cad.get('copia') is not True:
+                raise PipelineError('Diagnóstico requiere COPIA DWG explícita en entrada y copia=true')
+            candidate=Transformer.from_crs(4326,cfg['crs_candidato'],always_xy=True)
+            diagnostic=project(identified_groups(records),candidate,cfg['crs_candidato'],2,audit.name)
+            csv_file(stage/'02_DIAGNOSTICO_NO_VERIFICADO.csv',PROJECTED_V2,diagnostic)
+        inputs=[]
+        if not testing:
+            for input_file in sorted(root.rglob('*')):
+                if input_file.is_file():
+                    within(input_file,root)
+                    inputs.append(dict(archivo=input_file.relative_to(root).as_posix(),sha256=sha256(input_file)))
         code = {p.name: sha256(p) for p in sorted(Path(__file__).parent.glob("*.py"))}
         code["preparar_auditoria.py"] = sha256(config.PROJECT / "preparar_auditoria.py")
         manifest = dict(auditoria=audit.name, estado="PRELIMINAR", modo="PRUEBA" if testing else "OPERATIVO",
@@ -130,6 +148,9 @@ def execute(audit, root, cfg, testing, emit):
                         topologia="NO_CONFIRMADA", aprobacion_humana="PENDIENTE", perfiles_hojas=profiles,
                         artefactos={p.name: dict(sha256=sha256(p), bytes=p.stat().st_size) for p in sorted(stage.iterdir())})
         manifest["contrato_unificado"] = "PROPUESTA-P09-unificados-v1"
+        manifest['schema_version']={'00':1,'01':1,'02':cfg['schema_02'],'manifiesto':2 if cfg['schema_02']==2 else 1}
+        manifest['entradas']=inputs
+        manifest['diagnostico']=dict(estado='DIAGNOSTICO_NO_VERIFICADO',filas=len(diagnostic)) if diagnostic is not None else None
         manifest['resoluciones'] = resolutions_info
         manifest['ambito'] = area_info
         manifest["checkpoints"] = {
