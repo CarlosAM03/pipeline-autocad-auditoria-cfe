@@ -95,7 +95,7 @@ class ReviewPR1Tests(unittest.TestCase):
         from pathlib import Path
         from auditoriacfe.intake import bootstrap,prepare_master
         with tempfile.TemporaryDirectory() as temp:
-            root=Path(temp);audits=root/'project/auditorias';audits.mkdir(parents=True)
+            root=Path(temp).resolve();audits=root/'project/auditorias';audits.mkdir(parents=True)
             for name in ('Mirador','Natura','Otay-Florido','Tijuana-General'):
                 (audits/name).mkdir();(audits/name/'owner.txt').write_text(name)
             def snap():

@@ -88,6 +88,11 @@ Se conserva 073d17f y se publica un commit correctivo adicional, sin reescribir
 historia. Los resultados CI del SHA exacto y el lote actualizado quedan en la
 entrega y en el manifiesto del ZIP privado; no se extrapola el éxito local a CI.
 
+Un runner Windows/Python3.12 reveló después un fallo del fixture H02: TEMP usa
+el alias 8.3 RUNNER~1 y el guardia de escritura lo rechazó correctamente.
+El fixture resuelve su raíz temporal a ruta canónica antes de crear el árbol.
+No se relajó la protección de rutas de producción ni se omitió el caso.
+
 Estados físicos sin cambio: P03/P05/P06/P07/P08/P04 pendientes. No hay
 aceptación humana ni liberación FINAL. Los resultados nativos y paquete privado
 se registrarán al ejecutarse, nunca a partir de expectativas.
