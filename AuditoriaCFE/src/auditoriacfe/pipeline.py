@@ -119,6 +119,27 @@ def execute(audit, root, cfg, testing, emit):
                  projected, warnings, profiles, auxiliary, near,cfg['schema_02'])
         from .reporting import revision_file
         revision_file(stage, records, audit.name)
+        topology_report=None;edges=[]
+        if cfg['schema_02']==2:
+            from .network import confirmed_edges, propose, PROPOSED
+            from .reporting import csv_file, jsonl_file
+            from .dedup import identified_groups
+            from .spatial_sources import read_spatial
+            proposals=[];matches=[];spatial_info=None
+            try:
+                if cfg.get('kmz'):
+                    spec=cfg['kmz']
+                    path=within(audit/'entrada'/spec['archivo'],audit/'entrada')
+                    features,spatial_info=read_spatial(path)
+                    proposals,matches=propose(audit,identified_groups(records),features,float(spec.get('tolerancia_m',0)),cfg.get('mapa_ids'))
+                edges,topology_report=confirmed_edges(audit,uniques)
+            except Exception as exc:
+                topology_report=dict(estado='PENDIENTE_EVIDENCIA',error=str(exc));edges=[]
+            topology_report['kmz']=spatial_info
+            topology_report['propuestas']=len(proposals)
+            csv_file(stage/'topologia_propuesta.csv',PROPOSED,proposals)
+            jsonl_file(stage/'correspondencias_kmz.jsonl',matches)
+            (stage/'reporte_topologia.json').write_text(json_text(topology_report),encoding='utf-8')
         diagnostic=None
         if cfg['diagnostico']:
             from .dedup import identified_groups
@@ -153,6 +174,7 @@ def execute(audit, root, cfg, testing, emit):
         manifest['diagnostico']=dict(estado='DIAGNOSTICO_NO_VERIFICADO',filas=len(diagnostic)) if diagnostic is not None else None
         manifest['resoluciones'] = resolutions_info
         manifest['ambito'] = area_info
+        manifest['topologia_detalle']=topology_report
         manifest["checkpoints"] = {
             "CP-01": dict(estado="COMPLETADO", filas=manifest["conteos"]["filas_csv_00"]),
             "CP-02": dict(normalizado="GENERADO_PRELIMINAR", proyectado=crs_info["estado"],
