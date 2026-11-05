@@ -2,7 +2,7 @@
 
 > **Acta conceptual y presentación técnica del repositorio.** Herramienta local para preparar, verificar y representar en AutoCAD levantamientos de infraestructura aérea asociados a auditorías CFE para DATRA.
 >
-> **Estado al 4 de noviembre de 2026:** Proceso 1 implementado y probado técnicamente; **sin liberación productiva de datos reales**. Generación de scripts AutoCAD y plantilla DWT canónica pendientes de integración/validación. Este repositorio no constituye una certificación de CFE ni una publicación de inventarios de campo.
+> **Estado al 4 de noviembre de 2026:** CP-01 implementado, auditoría JS ejecutada y **43 pruebas técnicas aprobadas**, sin liberación productiva de datos reales. CP-02 conserva sus precondiciones geográficas; CP-03 y CP-04 siguen pendientes. Este repositorio no constituye una certificación de CFE ni una publicación de inventarios de campo.
 
 ## 1. Propósito
 
@@ -34,23 +34,33 @@ La fuente normativa es el [ADR-000](AuditoriaCFE/Docs/ADRs/ADR-000_Decisiones_Ba
 flowchart TD
     A[Carpeta de auditoría<br/>XLSX originales] --> B[Proceso 1A<br/>Lectura OOXML y reconocimiento de esquemas]
     B --> C[Normalización, validación y deduplicación]
-    C --> D[01_elementos_normalizados.csv]
+    C --> U[CP-01<br/>00_elementos_unificados.csv]
+    U --> Q{Admisión geográfica<br/>P-03 aprobada?}
+    Q -->|Pendiente| R[Grupos identificados en 00<br/>01 sin elementos no admitidos]
+    Q -->|Sí| D[CP-02<br/>01_elementos_normalizados.csv]
     C --> E[Summary, linaje, incidencias y manifiesto]
     D --> F{CRS CAD y controles<br/>aprobados?}
     F -->|No| G[Salida PRELIMINAR<br/>Proyección bloqueada]
     F -->|Sí| H[Proceso 1B<br/>Proyección geodésica]
-    H --> I[02_elementos_proyectados.csv]
-    I --> J[Proceso 2<br/>Generador de scripts CAD]
+    H --> I[CP-02<br/>02_elementos_proyectados.csv]
+    I --> J[Compilación CAD futura<br/>dentro de preparación]
     K[Topología confirmada<br/>si existe] --> J
     L[Plantilla DATRA/CFE<br/>DWT con mapa y marco] --> M[AutoCAD abierto]
-    J --> N[01_configurar_plano.scr]
-    J --> O[02_dibujar_auditoria.scr]
+    J --> N[CP-03<br/>01_configurar_plano.scr]
+    J --> O[CP-04<br/>02_dibujar_auditoria.scr]
     N --> M
     O --> M
     M --> P[Revisión humana<br/>DWG + PDF A1]
 ```
 
-**Proceso 1 y Proceso 2 son entregas separadas.** Es posible preparar puntos válidos sin tener conectividad de fibra acreditada; no se deben inventar líneas para completar visualmente el plano.
+Los **cuatro checkpoints** organizan productos y conservan los **dos procesos arquitectónicos**: preparación fuera de AutoCAD y construcción/revisión del plano en AutoCAD. La compilación de los futuros SCR pertenece a la preparación; AutoCAD los ejecutará después. CP-01 puede completarse sin P-03 ni P-06; identificar un grupo no lo aprueba para dibujo. Es posible preparar puntos válidos sin conectividad acreditada y no se deben inventar líneas.
+
+| Checkpoint | Producto y estado |
+|---|---|
+| **CP-01 — Unificación y deduplicación** | `00_elementos_unificados.csv` implementado; prevalentes identificables, sin exigir aprobación de P-03/P-06. |
+| **CP-02 — Preparación cartográfica** | `01_elementos_normalizados.csv` conserva admisión P-03; el auxiliar `02_elementos_proyectados.csv` exige además CRS y controles P-06. |
+| **CP-03 — Configuración AutoCAD** | Futuro `01_configurar_plano.scr`; no implementado ni generado. |
+| **CP-04 — Construcción de auditoría** | Futuro `02_dibujar_auditoria.scr`; no implementado ni generado. |
 
 ## 4. Contrato de salidas
 
@@ -58,17 +68,18 @@ Cada ejecución dispone de salidas en `AuditoriaCFE/auditorias/<nombre>/salida/`
 
 | Producto | Finalidad | Estado del código |
 |---|---|---|
+| `00_elementos_unificados.csv` | Una fila por grupo identificable, con prevalente, ocurrencias, estado de preparación y admisión geográfica separados. No autoriza CAD. | **Implementado — CP-01**, también con P-03/P-06 pendientes. |
 | `01_elementos_normalizados.csv` | Elementos únicos admitidos; exactamente `Ruta,Elemento de Red,Coordenadas`. | **Implementado.** Puede contener solo cabecera si faltan reglas de admisión. |
 | `summary.csv` | Estado de cada componente, procedencia prevalente, coincidencia informativa con maestro y novedad frente a baseline. | **Implementado.** |
 | `linaje_y_calidad.jsonl` / `reporte_incidencias.csv` | Trazabilidad de ocurrencias, duplicados, errores y exclusiones. | **Implementado.** |
 | `asociaciones_elemento_ruta.csv` / `resumen_conteos.csv` | Subrutas y conciliación del inventario. | **Implementado.** |
 | `topologia_propuesta.csv` | Posibles relaciones **no confirmadas**; puede permanecer vacío. | **Archivo implementado; aristas no inferidas.** |
 | `02_elementos_proyectados.csv` | Coordenadas métricas para CAD e identificadores de los elementos. | **Implementado condicionalmente; validado solo con fixture sintético.** |
-| `01_configurar_plano.scr` | Preparar/verificar el dibujo abierto desde la DWT DATRA. | **Pendiente — Proceso 2.** |
-| `02_dibujar_auditoria.scr` | Insertar símbolos, etiquetas, numeración, conteos y trazas confirmadas. | **Pendiente — Proceso 2.** |
+| `01_configurar_plano.scr` | Preparar/verificar el dibujo abierto desde la DWT DATRA. | **Pendiente — CP-03.** |
+| `02_dibujar_auditoria.scr` | Insertar símbolos, etiquetas, numeración, conteos y trazas confirmadas. | **Pendiente — CP-04.** |
 | DWG y PDF A1 | Entregables CAD posteriores a revisión humana. | **Pendientes.** |
 
-También se generan perfiles de hojas, filas no operativas, diagnóstico opcional de coordenadas cercanas y manifiestos con hashes. El [contrato auxiliar](AuditoriaCFE/Docs/Specs/Contrato_Salidas_Proceso1_PROPUESTA.md) sigue sujeto a aprobación **P-09**.
+También se generan perfiles de hojas, filas no operativas, diagnóstico opcional de coordenadas cercanas y manifiestos con hashes. El [contrato auxiliar](AuditoriaCFE/Docs/Specs/Contrato_Salidas_Proceso1_PROPUESTA.md) y la [extensión del CSV 00](AuditoriaCFE/Codex/01_Implementacion_Proceso1/EXTENSION_ETL_UNIFICADO.md) siguen sujetos a aprobación **P-09**. Los contratos 00/01/02 permanecen como están implementados; esta revisión no cambia sus columnas ni condiciones.
 
 ## 5. Auditorías previstas
 
@@ -81,22 +92,22 @@ Un componente puede aparecer legítimamente en un plano individual y en el plano
 
 ## 6. Estado verificable del repositorio
 
-**Corte técnico:** commit [`7baa82c`](https://github.com/CarlosAM03/pipeline-autocad-auditoria-cfe/commit/7baa82c231166681d0928013551cf29c2e2de298) (`feat:primera implementacion proceso 1`), posterior al checkpoint [`33364c1`](https://github.com/CarlosAM03/pipeline-autocad-auditoria-cfe/commit/33364c1aa2c94a751857c4d106ee826d8af17ac5).
+**Corte técnico:** extensión CP-01 del commit [`b3b303a`](https://github.com/CarlosAM03/pipeline-autocad-auditoria-cfe/commit/b3b303aa3862fa90b3a351766d73570ed9772714), posterior a la primera implementación `7baa82c` y al checkpoint [`33364c1`](https://github.com/CarlosAM03/pipeline-autocad-auditoria-cfe/commit/33364c1aa2c94a751857c4d106ee826d8af17ac5). El acta conceptual se incorporó después en `e4d4e9c`; esta revisión de integración no reescribe esos commits.
 
 - **Proceso 1:** CLI Python, lectura OOXML secuencial de cuatro familias, calidad geográfica, prevalencia/deduplicación, comparaciones, proyección bajo evidencia, reportes y manifiestos implementados.
-- **Pruebas declaradas y documentadas por Codex:** **29 aprobadas**, incluidas regresiones sobre originales presentes en el equipo de desarrollo. La suite histórica **se omite explícitamente** cuando esos originales no están disponibles en otro equipo.
+- **Pruebas técnicas ejecutadas:** **43 aprobadas, 0 fallidas y 0 omitidas** en el entorno con originales y Node disponibles: 29 previas, 9 de unificación y 5 de auditoría JS. En otros equipos las clases históricas se omiten explícitamente si faltan sus insumos o Node; no se cuentan como aprobadas. La prueba de no regresión usa un oráculo congelado versionado y ya no necesita el historial de `7baa82c`.
 - **Regresión de extracción:** 551 registros históricos Mirador y 969 Otay–Florido antes de deduplicación y nuevas reglas de calidad.
 - **Prueba de archivos grandes:** hoja sintética con 1,048,576 nodos de fila XML, sin abrir fotografías.
-- **Salidas reales históricas de prueba:** 494 grupos identificados en Mirador (incluyendo una copia anterior) y 749 en Otay, pero **cero componentes exportables** por falta de aprobación del perímetro P-03.
-- **Demo sintética:** cuatro componentes exportables y proyectados con controles *ficticios*; **no valida la posición del mapa real**.
+- **Salidas reales históricas de prueba:** CSV 00 con **494 grupos en Mirador** (incluyendo una copia anterior) y **749 en Otay**; CSV 01 sin componentes admitidos por P-03 pendiente y sin CSV 02 validado por P-06 pendiente. Las ocurrencias rechazadas o sin identidad permanecen en linaje e incidencias.
+- **Demo sintética:** cinco grupos en 00 y cuatro componentes admitidos en 01 y proyectados en 02 con controles *ficticios*; **no valida la posición del mapa real**.
 - **Topología:** no hay aristas aprobadas ni scripts de rutas implementados.
 - **Plantilla:** existe un marco DATRA A1 candidato y una base cartográfica DWG local, pero la **DWT canónica**, los detalles constructivos y los controles CRS no se han dado por cerrados.
 
-La suite ejecutada en el equipo de desarrollo y los bloqueos declarados se documentan en [Pruebas y validación](AuditoriaCFE/Codex/01_Implementacion_Proceso1/PRUEBAS_Y_VALIDACION.md), [Resultado de implementación](AuditoriaCFE/Codex/01_Implementacion_Proceso1/RESULTADO_IMPLEMENTACION.md) y [Pendientes](AuditoriaCFE/Codex/01_Implementacion_Proceso1/PENDIENTES_PARA_REVISION.md). Los resultados locales ignorados por Git **no se incluyen en este repositorio público**.
+La suite ejecutada en el equipo de desarrollo y los bloqueos declarados se documentan en [Pruebas y validación](AuditoriaCFE/Codex/01_Implementacion_Proceso1/PRUEBAS_Y_VALIDACION.md), [Resultado de implementación](AuditoriaCFE/Codex/01_Implementacion_Proceso1/RESULTADO_IMPLEMENTACION.md) y [Pendientes](AuditoriaCFE/Codex/01_Implementacion_Proceso1/PENDIENTES_PARA_REVISION.md). **Pasar pruebas técnicas no aprueba fuentes productivas, perímetro, CRS, topología ni liberación final.** Los resultados locales ignorados por Git no se incluyen en el repositorio.
 
 ## 7. Recuperación del código histórico JavaScript
 
-Los archivos originales de referencia son `generar.js`, `ordenar.js` y `trayectoria.js`, custodiados fuera del código productivo, junto a sus CSV y TXT anteriores. **No se han portado como módulos de producción ni auditado por Codex en la primera implementación.** Su análisis previo establece:
+Los archivos originales de referencia son `generar.js`, `ordenar.js` y `trayectoria.js`, custodiados fuera del código productivo, junto a sus CSV y TXT anteriores. **La auditoría técnica ya fue ejecutada y documentada**, con funciones sobre copias aisladas, sin ejecutar MAIN, generar SCR ni abrir AutoCAD. No se portaron los JS como módulos de producción. Véase [AUDITORIA_JS_HISTORICOS.md](AuditoriaCFE/Codex/01_Implementacion_Proceso1/AUDITORIA_JS_HISTORICOS.md).
 
 | Script histórico | Conocimiento recuperable | Lo que **no** se reutiliza como regla nueva |
 |---|---|---|
@@ -106,7 +117,7 @@ Los archivos originales de referencia son `generar.js`, `ordenar.js` y `trayecto
 
 **Verificación independiente:** al ejecutar una copia de `generar.js` con los CSV históricos, se reprodujeron los TXT de puntos de Mirador y Otay–Florido **con contenido idéntico después de normalizar saltos de línea**, con **533** y **965** puntos respectivamente. Esto sirve para pruebas de regresión histórica del futuro generador, **no** demuestra exactitud geográfica ni autoriza los filtros previos.
 
-Antes de implementar el **Proceso 2**, Codex debe auditar formalmente los tres JS y documentar un mapeo de lógica `conservar / reemplazar / descartar`, con pruebas de regresión que comparen los comandos resultantes sin incorporar reglas incorrectas. Esa auditoría del código heredado es un checkpoint independiente de la aceptación del ETL y **no autoriza producir rutas CAD todavía**.
+La auditoría de CP-01 incluye el mapeo **CONSERVAR / REEMPLAZAR / DESCARTAR** y pruebas de regresión. La reproducción de funciones confirmó los **533/965 POINT** en orden y coordenadas frente a los TXT. Verificó retorno al padre en `ordenar.js` y preorden sin retorno en `trayectoria.js`, que introduce saltos entre ramas. La discrepancia de atribución en TO-BE v0.2 está documentada en una [propuesta separada](AuditoriaCFE/Codex/01_Implementacion_Proceso1/PROPUESTA_CHECKPOINTS_CP01_CP04.md); la norma permanece intacta. La auditoría completada **no autoriza generar rutas CAD ni valida los filtros o la fórmula UTM históricos**.
 
 ## 8. Instalación y operación del Proceso 1
 
@@ -122,6 +133,8 @@ py -3.10 -m venv .\AuditoriaCFE\.venv
 ```
 
 Si no hay `py`, usar la **ruta real** de un intérprete Python 3.10+ instalado para crear `.venv`; no instalar bibliotecas en el Python de AutoCAD. El histórico de campo no se descarga automáticamente.
+
+La prueba de compatibilidad lee el [oráculo congelado de reportes](AuditoriaCFE/tests/fixtures/README.md) y verifica su hash, sin invocar Git. Funciona en clones superficiales y exportaciones sin `.git`; no necesita descargar commits adicionales. Node.js solo se requiere para las cinco pruebas de auditoría JS, no para el ETL. Las dependencias e intérprete locales alternativos están documentados en el [manual operativo](AuditoriaCFE/README.md).
 
 Crear `AuditoriaCFE/auditorias/<nombre>/entrada/`, copiar allí los XLSX correspondientes y definir `configuracion.json` con `fuentes_en_orden` completo y explícito. El programa no decide por nombre de archivo ni fecha cuál fuente prevalece.
 
@@ -147,7 +160,7 @@ Para utilizar el Proceso 1 sobre auditorías reales quedan, entre otros:
 - **P-04 / P-09:** criterio de liberación y aceptación formal del contrato auxiliar de datos.
 - **P-06:** CRS y al menos dos controles CAD respaldados por evidencia; sin ello, no existe CSV proyectado real válido.
 - **P-05:** método de validación de aristas y ramificaciones antes de dibujar trayectorias.
-- **Proceso 2:** revisión formal de JS históricos, diseño de bloques/capas/etiquetas, pruebas AutoCAD y los dos `.scr`.
+- **CP-03 / CP-04:** diseño de bloques/capas/etiquetas, plantilla y perfil AutoCAD verificados, implementación y pruebas de los dos `.scr`. La auditoría formal de JS ya está completada.
 
 En la fase CAD, la secuencia aprobada será **abrir la DWT DATRA → ejecutar `01_configurar_plano.scr` → ejecutar `02_dibujar_auditoria.scr` → revisión → guardar DWG y exportar PDF A1**. La plantilla estática no debe duplicar el mapa al ejecutar los scripts.
 

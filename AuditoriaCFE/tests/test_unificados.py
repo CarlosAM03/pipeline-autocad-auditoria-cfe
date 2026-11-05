@@ -1,11 +1,11 @@
 import csv
+import hashlib
 import json
-import subprocess
 import types
 import unittest
 from pathlib import Path
 
-from support import AuditFixture, GEO, PROJECT, record, xlsx
+from support import AuditFixture, GEO, record, xlsx
 from auditoriacfe import config, reporting
 from auditoriacfe.dedup import consolidate, identified_groups
 from auditoriacfe.pipeline import run
@@ -112,9 +112,12 @@ class UnifiedTests(unittest.TestCase):
         self.assertEqual(self.rows()[0]["apto_csv_01"], "SI")
 
     def test_legacy_reporting_exact_bytes_except_additive_counts(self):
-        # Oráculo independiente: reporting.py real del commit anterior, no una
-        # reescritura del contrato actual. Solo se lee con git show.
-        previous_source = subprocess.check_output(["git", "show", "7baa82c:AuditoriaCFE/src/auditoriacfe/reporting.py"], cwd=PROJECT.parent).decode("utf-8")
+        # Oráculo congelado del commit anterior; no requiere Git ni su historial.
+        # read_text normaliza CRLF de Windows a LF antes de comprobar el hash.
+        fixture = Path(__file__).resolve().parent / "fixtures/reporting_7baa82c.py"
+        previous_source = fixture.read_text(encoding="utf-8")
+        self.assertEqual(hashlib.sha256(previous_source.encode("utf-8")).hexdigest(),
+                         "443e5eab1cd9f86651f381721f8f38cc7eac2512d5a52230c429765428d2c4e8")
         legacy = types.ModuleType("auditoriacfe._legacy_reporting")
         legacy.__package__ = "auditoriacfe"
         exec(compile(previous_source, "reporting_7baa82c.py", "exec"), legacy.__dict__)

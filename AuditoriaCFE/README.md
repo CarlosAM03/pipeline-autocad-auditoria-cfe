@@ -30,7 +30,7 @@ En esta extensión el entorno `.venv` preexistente apunta a un Python 3.11 de Wi
 & ./AuditoriaCFE/.venv-cp01/Scripts/python.exe -m pip check
 ```
 
-La suite ampliada tiene 43 pruebas (29 originales intactas + 9 de unificación + 5 de JS). Solo las cinco de auditoría JS necesitan Node.js en PATH y los históricos exactos; no es dependencia del ETL. La auditoría ejecuta funciones sobre copias temporales sin MAIN ni escrituras JS, nunca genera SCR ni ejecuta AutoCAD. Si falta Node o histórico se marca omisión, no aprobación simulada. La prueba de compatibilidad de reportes lee `reporting.py` del commit `7baa82c` mediante `git show`; necesita ese historial local.
+La suite ampliada tiene 43 pruebas (29 originales intactas + 9 de unificación + 5 de JS). Solo las cinco de auditoría JS necesitan Node.js en PATH y los históricos exactos; no es dependencia del ETL. La auditoría ejecuta funciones sobre copias temporales sin MAIN ni escrituras JS, nunca genera SCR ni ejecuta AutoCAD. Si falta Node o histórico se marca omisión, no aprobación simulada. La prueba de compatibilidad usa una [copia congelada de reporting.py de 7baa82c](tests/fixtures/README.md), cuya procedencia y SHA-256 se verifican. No requiere Git ni ese historial local y conserva la comparación de productos anteriores en clones superficiales y exportaciones sin `.git`.
 
 Si `python` es un alias de Windows inaccesible, usar la ruta explícita al intérprete instalado. En esta máquina se utilizó `C:/Users/Carl0/AppData/Local/Programs/Thonny/python.exe` para crear el entorno. La extracción y pruebas sin proyección usan biblioteca estándar. `pyproj` es necesario para las pruebas geodésicas obligatorias, proyección acreditada y cercanía optativa. No requiere Excel, openpyxl, pandas, Pillow ni AutoCAD.
 
