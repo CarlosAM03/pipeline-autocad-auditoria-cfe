@@ -1,0 +1,3 @@
+# Auditoría de PRUEBA, sin precedencia operativa aprobada
+
+La lista de configuración reproduce primero el bloque histórico de 551 ocurrencias y agrega la copia de 181 para probar consolidación de versiones. No aprueba P-01 de Mirador. La CLI exige el argumento `--entrada-prueba` con la ruta exacta declarada en el README de AuditoriaCFE. No se copian ni modifican originales. Sin P-03 los componentes identificados permanecen REVISAR y el CSV mínimo solo tiene cabecera; sin P-06 no hay CSV proyectado. La referencia maestra es informativa y su fecha se identifica como fecha de diagnóstico, no de captura. No se declara baseline histórica del plano.

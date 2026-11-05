@@ -1,0 +1,24 @@
+{
+  "auditoria": "Prueba-Historica-Mirador",
+  "fuentes_en_orden": [
+    "STD HACIA CNAL 12.xlsx",
+    "Ruta canal 12 level antes 2014 Completo.xlsx",
+    "Copy of STD HACIA CNAL 12.xlsx"
+  ],
+  "hojas_por_fuente": {
+    "Copy of STD HACIA CNAL 12.xlsx": ["Sheet1", "Sheet2"]
+  },
+  "excepciones_cabecera": {
+    "Ruta canal 12 level antes 2014 Completo.xlsx": {"Hoja1": "F3_D_VACIA"}
+  },
+  "maestro_informativo": {
+    "archivo": "../../../Auditorias-20261104T035633Z-1-001/postes/Postes_CFE.xlsx",
+    "fecha": "2026-11-03 (fecha de diagnóstico; fecha de levantamiento no acreditada)"
+  },
+  "baseline_historica": null,
+  "geografia_permitida": null,
+  "crs_candidato": "EPSG:32611",
+  "crs_validado": false,
+  "evidencia_crs": null,
+  "cercanos_m": null
+}

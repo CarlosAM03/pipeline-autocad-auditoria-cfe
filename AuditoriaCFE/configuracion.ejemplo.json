@@ -1,0 +1,14 @@
+{
+  "auditoria": "MiAuditoria",
+  "fuentes_en_orden": ["levantamiento.xlsx"],
+  "hojas_por_fuente": {},
+  "excepciones_cabecera": {},
+  "maestro_informativo": null,
+  "baseline_historica": null,
+  "geografia_permitida": null,
+  "ids_confiables": [],
+  "crs_candidato": "EPSG:32611",
+  "crs_validado": false,
+  "evidencia_crs": null,
+  "cercanos_m": null
+}

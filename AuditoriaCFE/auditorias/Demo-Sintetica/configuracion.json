@@ -1,0 +1,41 @@
+{
+  "auditoria": "Demo-Sintetica",
+  "fuentes_en_orden": [
+    "demo.xlsx"
+  ],
+  "geografia_permitida": {
+    "lat_min": "32",
+    "lat_max": "33",
+    "lon_min": "-118",
+    "lon_max": "-116",
+    "aprobada": true,
+    "evidencia": "FIXTURE SINTÉTICO; no acredita perímetro operativo"
+  },
+  "crs_candidato": "EPSG:32611",
+  "crs_validado": true,
+  "cercanos_m": 5,
+  "evidencia_crs": {
+    "archivo": "CONTROLES_SINTETICOS.txt",
+    "aprobado_por": "FIXTURE SINTETICO",
+    "fecha": "2026-11-04",
+    "crs": "EPSG:32611",
+    "unidades": "m",
+    "tolerancia_m": 0.01,
+    "controles": [
+      {
+        "id": "C1",
+        "latitud": 0,
+        "longitud": -117,
+        "este_m": 500000,
+        "norte_m": 0
+      },
+      {
+        "id": "C2",
+        "latitud": 1,
+        "longitud": -117,
+        "este_m": 500000,
+        "norte_m": 110530.15880237566
+      }
+    ]
+  }
+}

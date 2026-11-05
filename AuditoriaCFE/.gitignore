@@ -1,0 +1,4 @@
+/tests/_runtime/
+/auditorias/**/.proceso1.lock
+/auditorias/**/manifiestos/
+/auditorias/**/manifiesto_ejecucion.json

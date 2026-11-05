@@ -1,0 +1,4 @@
+# ETL y pruebas: biblioteca estándar, Python >=3.10.
+# Solo la proyección acreditada necesita esta dependencia.
+pyproj==3.7.2; python_version >= '3.11'
+pyproj==3.6.1; python_version < '3.11'
