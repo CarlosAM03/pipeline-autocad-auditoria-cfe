@@ -1,6 +1,6 @@
 ## Actualización de pruebas — 2026-11-05
 
-Suite ampliada ejecutada: **80 aprobadas / 80 ejecutadas, 0 fallidas, 0 omitidas**, 61.554 s. Las 43 anteriores siguen intactas. Comando: `python -m unittest discover -s AuditoriaCFE/tests -v`. Se ejecutaron `compileall`, `pip check`, Ruff E9/F821/F822/F823 y verificador de custodia/oráculo. Logs locales en tests/_runtime; evidencias/errores corregidos en [acta fase 6](../02_Harness_Integral/acta_fase_6.md).
+Suite ampliada ejecutada: **81 aprobadas / 81 ejecutadas, 0 fallidas, 0 omitidas**, 60.929 s. Las 43 anteriores siguen intactas. Comando: `python -m unittest discover -s AuditoriaCFE/tests -v`. Se ejecutaron `compileall`, `pip check`, Ruff E9/F821/F822/F823 y verificador de custodia/oráculo. Logs locales en tests/_runtime; evidencias/errores corregidos en [acta fase 6](../02_Harness_Integral/acta_fase_6.md).
 
 Pruebas añadidas cubren resoluciones y conflictos de IDs, polígonos/huecos/corredor, v1/v2, diagnóstico, migración/rollback/crash, KMZ traversal/bomb/XML DTD incluso UTF-16, grafos, dos SCR, custodia de copia e idempotencia, batch y actualización legítima de entradas/configuración. La publicación conserva artefactos anteriores tras un fallo.
 

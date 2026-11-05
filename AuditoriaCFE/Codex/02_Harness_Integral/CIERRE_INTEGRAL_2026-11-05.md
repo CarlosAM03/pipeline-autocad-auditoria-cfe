@@ -6,7 +6,7 @@ Fecha de decisiones: 2026-11-05. Rama: `codex/etl-unificado-auditoria-js`. PR: [
 
 CP-01/02 y compiladores CP-03/04 integrados. Código v0.3.0, dos SCR y dos auxiliares LISP cargados automáticamente, sin tercer paso de SCRIPT/APPLOAD. Se conservan encabezados 00/01 y lector 02 v1; v2 es explícito. El programa grande vive en `cad_datos.lsp`, evitando líneas SCRIPT de megabytes; prueba sintética de 4200 filas incluida.
 
-**Última suite local: 80 casos, 80 aprobados, 0 fallidos, 0 omitidos, 61.554 s.** Las 43 pruebas iniciales están intactas. `compileall`, Ruff E9/F821/F822/F823, `pip check`, custodia/oráculo y `git diff --check` ejecutados correctamente. Comando: `python -m unittest discover -s AuditoriaCFE/tests -v`; log local `tests/_runtime/FINAL_PRUEBAS.log`.
+**Última suite local: 81 casos, 81 aprobados, 0 fallidos, 0 omitidos, 60.929 s.** Las 43 pruebas iniciales están intactas. `compileall`, Ruff E9/F821/F822/F823, `pip check`, custodia/oráculo y `git diff --check` ejecutados correctamente. Comando: `python -m unittest discover -s AuditoriaCFE/tests -v`; log local `tests/_runtime/FINAL_81.log`.
 
 Clon superficial de f22d886 sin fuentes privadas: 79 descubiertas, 70 aprobadas, nueve omitidas, ninguna fallida, 49.046 s. Las nueve corresponden a originales XLSX/JS ausentes. Ese corte completó CI de push en Windows/Linux y Python 3.10/3.12. El commit posterior de cierre incorpora el caso 80 y vuelve a ejecutar CI; el estado de su SHA se consulta en el PR, sin atribuirle anticipadamente el resultado del corte anterior.
 
@@ -65,3 +65,10 @@ Protección de main aplicada y leída de vuelta (HTTP 200): una aprobación, rev
 Antes/después del push, solo quedaron tres archivos previos sin seguimiento del paquete del owner: `.gitignore`, `05_PROMPT_MAESTRO_CODEX.txt`, `06_INVENTARIO_PAQUETE.json` en Harness. Se conservaron fuera de los commits. Transcripción, entradas/salidas, resoluciones/topología reales, temporales y nuevos CAD propietarios ignorados. Hashes de los nueve recursos/fuentes de referencia se cotejaron sin cambios; ADR-000, TO-BE v0.2 y README_ENTREGA_Y_PASOS.md permanecen intactos.
 
 La validación técnica concluye con gates explícitos. El último SHA, resultado remoto de sus checks y estado Git se informan en la entrega; este documento no se autoatribuye el hash de su propio commit.
+
+
+## Verificación posterior de subrutas
+
+Se corrigió un rechazo indebido de aristas firmadas en una subruta no prevalente: ahora se consideran todas las pertenencias de ocurrencias de componentes admitidos, sin duplicar componentes ni aceptar rutas desconocidas. Prueba 81 añadida y suite completa 81/81 OK. Se repitió batch y se verificó que 00 conserva 438/493/747/4131 filas y que los cuatro artefactos CAD por auditoría son byte a byte iguales a los del ensayo nativo. Las evidencias locales enlazan el lote compatible conservando el ID originalmente ejecutado; no se finge otra ejecución CAD.
+
+Los ocho jobs de CI de 2841f71 (push y PR, cuatro plataformas/versiones cada uno) finalizaron success. La corrección de subrutas vuelve a ejecutar el CI del SHA final; su resultado real se informa al entregar y se consulta en el PR. No modifica scripts, CRS ni CSV 00/01/02.

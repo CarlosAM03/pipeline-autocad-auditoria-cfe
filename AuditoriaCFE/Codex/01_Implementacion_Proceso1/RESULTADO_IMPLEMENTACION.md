@@ -6,7 +6,7 @@ Implementados: resoluciones por SHA/fila/evidencia y revisión separada; GeoJSON
 
 Instalación: `python -m pip install -r AuditoriaCFE/requirements.txt`. Ejecución desde raíz: `python AuditoriaCFE/preparar_auditoria.py --auditoria Natura`, `--batch`, `--batch --diagnostico`, `--batch --verificar-paquete`. Detalle en AuditoriaCFE/README.md.
 
-80 pruebas locales aprobadas. Cuatro auditorías corridas en diagnóstico: 438/493/747/4131 filas 00; CSV01 sin admitidos por P-03 pendiente; CSV02 productivo ausente por P-06. Se generan paquetes de puntos diagnósticos, reportes y manifiestos; no hay plano FINAL ni aceptación humana. Informe completo: [acta fase 6](../02_Harness_Integral/acta_fase_6.md). El último ensayo AutoCAD y estado remoto se registran en el cierre del arnés.
+81 pruebas locales aprobadas. Cuatro auditorías corridas en diagnóstico: 438/493/747/4131 filas 00; CSV01 sin admitidos por P-03 pendiente; CSV02 productivo ausente por P-06. Se generan paquetes de puntos diagnósticos, reportes y manifiestos; no hay plano FINAL ni aceptación humana. Informe completo: [acta fase 6](../02_Harness_Integral/acta_fase_6.md). El último ensayo AutoCAD y estado remoto se registran en el cierre del arnés.
 
 
 Cierre posterior: ensayo Core Console 2026 aprobado en fixture y cuatro auditorías, con repetición de SCR02, persistencia y cinco PDF de una A1. No acredita CRS real ni aceptación visual/productiva; General y Mirador presentan solapamientos por calidad geográfica y densidad. Detalles y gates vigentes: [cierre integral](../02_Harness_Integral/CIERRE_INTEGRAL_2026-11-05.md).

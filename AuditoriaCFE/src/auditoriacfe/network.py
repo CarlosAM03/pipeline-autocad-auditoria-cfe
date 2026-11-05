@@ -46,12 +46,14 @@ def graph_report(nodes,edges):
                 inicio_final='NO_DETERMINADO')
 
 
-def confirmed_edges(audit,elements):
+def confirmed_edges(audit,elements,route_names=None):
     path=within(audit/'entrada/topologia_confirmada.csv',audit/'entrada')
     nodes={r['elemento_id']:r for r in elements if r['tipo_canonico']=='POSTE'}
     if not path.exists():return [],dict(estado='SOLO_PUNTOS_PRELIMINAR',**graph_report(nodes,[]))
     result={};ids=set();pending=0
-    routes={route_id(audit.name,r['ruta_salida']) for r in elements}
+    # La ruta prevalente no agota las pertenencias de un poste compartido.
+    names=route_names if route_names is not None else {r['ruta_salida'] for r in elements}
+    routes={route_id(audit.name,name) for name in names}
     from datetime import date
     for row in read_csv(path,CONFIRMED):
         if row['estado']!='CONFIRMADA':pending+=1;continue

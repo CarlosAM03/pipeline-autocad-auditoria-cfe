@@ -141,7 +141,9 @@ def execute(audit, root, cfg, testing, emit):
                     path=within(audit/'entrada'/spec['archivo'],audit/'entrada')
                     features,spatial_info=read_spatial(path)
                     proposals,matches=propose(audit,identified_groups(records),features,float(spec.get('tolerancia_m',0)),cfg.get('mapa_ids'))
-                edges,topology_report=confirmed_edges(audit,uniques)
+                admitted_ids={r['elemento_id'] for r in uniques}
+                routes={r['ruta_salida'] for r in records if r['elemento_id'] in admitted_ids}
+                edges,topology_report=confirmed_edges(audit,uniques,route_names=routes)
             except Exception as exc:
                 topology_report=dict(estado='PENDIENTE_EVIDENCIA',error=str(exc));edges=[]
             topology_report['kmz']=spatial_info

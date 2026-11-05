@@ -79,3 +79,11 @@ class NetworkIntegralTests(unittest.TestCase):
         edges,report=confirmed_edges(self.audit.path,self.elements())
         self.assertEqual(edges,[])
         self.assertEqual(report['estado'],'SOLO_PUNTOS_PRELIMINAR')
+
+    def test_confirmed_edge_can_belong_to_non_prevalent_shared_route(self):
+        self.write_edges([('0','1')],ruta_id=route_id(self.audit.path.name,'SHARED'))
+        with self.assertRaises(PipelineError):confirmed_edges(self.audit.path,self.elements())
+        edges,report=confirmed_edges(self.audit.path,self.elements(),route_names={'R','SHARED'})
+        self.assertEqual(len(edges),1)
+        self.assertEqual(edges[0]['ruta_id'],route_id(self.audit.path.name,'SHARED'))
+        self.assertEqual(report['aristas'],1)
