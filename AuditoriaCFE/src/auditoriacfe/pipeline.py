@@ -152,6 +152,10 @@ def execute(audit, root, cfg, testing, emit):
             candidate=Transformer.from_crs(4326,cfg['crs_candidato'],always_xy=True)
             diagnostic=project(identified_groups(records),candidate,cfg['crs_candidato'],2,audit.name)
             csv_file(stage/'02_DIAGNOSTICO_NO_VERIFICADO.csv',PROJECTED_V2,diagnostic)
+        cad_report = None
+        if cfg['schema_02'] == 2:
+            from .cad import package
+            cad_report = package(stage,audit,cfg,crs_info,edges)
         inputs=[]
         if not testing:
             for input_file in sorted(root.rglob('*')):
@@ -175,11 +179,13 @@ def execute(audit, root, cfg, testing, emit):
         manifest['resoluciones'] = resolutions_info
         manifest['ambito'] = area_info
         manifest['topologia_detalle']=topology_report
+        manifest['cad']=cad_report
         manifest["checkpoints"] = {
             "CP-01": dict(estado="COMPLETADO", filas=manifest["conteos"]["filas_csv_00"]),
             "CP-02": dict(normalizado="GENERADO_PRELIMINAR", proyectado=crs_info["estado"],
                           admision_geografica="ACREDITADA_EN_CONFIG" if cfg["geografia_permitida"] and cfg["geografia_permitida"].get("aprobada") else "PENDIENTE_P03"),
-            "CP-03": dict(estado="NO_IMPLEMENTADO"), "CP-04": dict(estado="NO_IMPLEMENTADO")}
+            "CP-03": dict(estado=cad_report['estado'] if cad_report else 'PENDIENTE_EVIDENCIA'),
+            "CP-04": dict(estado=cad_report.get('cp04','PENDIENTE_EVIDENCIA') if cad_report else 'PENDIENTE_EVIDENCIA')}
         try:
             import pyproj
             manifest["dependencias"] = dict(pyproj=pyproj.__version__, PROJ=pyproj.proj_version_str)

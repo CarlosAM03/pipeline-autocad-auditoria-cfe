@@ -203,6 +203,13 @@ def publish(audit, stage, manifest):
         # Verificar el lote anterior antes de migrar/copiar sus manifestaciones.
         if output.exists() and ((output/'manifiesto_ejecucion.json').exists() or (audit/'manifiesto_ejecucion.json').exists()):
             verify(audit)
+        # Resultados nativos son mutables y se preservan; nunca reemplazar un DWG
+        # editado por el operador al regenerar el paquete de instrucciones.
+        native=output/'resultados_cad'
+        if native.exists():
+            within(native,output)
+            for child in native.rglob('*'):within(child,native)
+            shutil.copytree(native,stage/'resultados_cad')
         histories = [audit/'manifiestos',output/'manifiestos']
         archive=stage/'manifiestos';archive.mkdir()
         for directory in histories:
@@ -268,6 +275,12 @@ def verify(audit):
     actual={p.name for p in output.iterdir()}
     if canonical:
         actual -= {'manifiesto_ejecucion.json','manifiestos'}
+        if manifest.get('cad',{}).get('copia_relativa'):
+            actual.discard('resultados_cad')
+            native=output/'resultados_cad'
+            if native.exists():
+                within(native,output)
+                for child in native.rglob('*'):within(child,native)
         if manifest.get('schema_version',{}).get('manifiesto') != 2:
             raise PipelineError('Versión de manifiesto canónico inválida')
         identity={k:v for k,v in manifest.items() if k not in ('ejecucion_id','criterio_publicacion')}
