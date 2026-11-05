@@ -57,7 +57,7 @@ Ambos: una página, aproximadamente 841.022×594.078 mm, cero anotaciones,
 Poppler y PyMuPDF OK. El PDF histórico sigue con 27128 anotaciones y Poppler
 informa dimensiones 0×0 aunque devuelva exit0; no se considera validado.
 
-Ejecución privada final Mirador:
+Ejecución privada del ensayo previo al ajuste CI:
 `cc71f3375580f366ce6491d77730a9923849b27ba502dbf5ac7ab38b1de32ded`.
 Runtime nativo comprobado:
 `9b78d7dcc4e442cf7f95b3d6933860f0ae8f63364433f75c50926a796d468693`.
@@ -75,6 +75,18 @@ commit y archivos; no se sube ni se incorporan datos de campo al staging.
 CI remoto se verifica para el SHA que contenga esta acta; los históricos locales
 no forman parte del clon público. Publicación restringida a código, tests y
 documentación genérica, PR #1 abierto sin merge. No hay aprobación humana.
+
+Regresión CI posterior al primer commit de revisión (073d17f): la suite pasó,
+pero falló el benchmark de 100000 filas/1000 elementos. El grafo completo se
+había serializado en una celda de Resumen_Gates y excedía 32767 caracteres.
+Se reprodujo localmente, se sustituyó por estado + referencia al JSON íntegro
+con hash, sin truncar datos ni cambiar topología, y se agregó una prueba con
+10000 identidades ficticias. Benchmark corregido ejecutado: 3.165 s de pipeline
+y verificación, RSS pico 45969408 bytes; es una medición local, no SLA.
+La nueva suite completa pasó **93/93 en 85.716 s**, cero fallidas/omitidas.
+Se conserva 073d17f y se publica un commit correctivo adicional, sin reescribir
+historia. Los resultados CI del SHA exacto y el lote actualizado quedan en la
+entrega y en el manifiesto del ZIP privado; no se extrapola el éxito local a CI.
 
 Estados físicos sin cambio: P03/P05/P06/P07/P08/P04 pendientes. No hay
 aceptación humana ni liberación FINAL. Los resultados nativos y paquete privado

@@ -15,6 +15,9 @@ no nuevas entradas al ETL. Los dos SCR siguen siendo los únicos pasos CAD.
 
 Resumen y Resumen_Gates son las primeras pestañas. Las hojas vacías contienen
 solo encabezado; la explicación queda en Resumen_Gates, sin filas ficticias.
+El gate P05 contiene su estado y una referencia a `reporte_topologia.json`,
+cuyo hash figura en Fuentes_Hashes. El grafo completo no se serializa dentro
+de una celda de resumen; sus datos permanecen íntegros en JSON/CSV.
 `DIAGNOSTICO_NO_VERIFICADO` no acredita CRS ni conectividad. La hoja Linaje
 conserva campos originales, interpretados, fuente/hoja/fila/hash, prevalente,
 resolución e incidencias. Los objetos anidados se serializan como JSON textual.

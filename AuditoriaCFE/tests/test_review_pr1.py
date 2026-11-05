@@ -133,3 +133,19 @@ class ReviewPR1Tests(unittest.TestCase):
             self.assertEqual(verify_package(a)['commit'],'FIXTURE')
             with zipfile.ZipFile(a,'a') as z:z.writestr('PRIVATE_SOURCE.kmz',b'PRIVATE')
             with self.assertRaises(PipelineError):verify_package(a)
+
+    def test_large_graph_is_referenced_not_squeezed_into_summary_cell(self):
+        f=self.fixture(pipeline_integral=True)
+        m=run(f.path,emit=lambda *a:None)
+        out=f.path/'salida';stage=f.path/'large';shutil.copytree(out,stage)
+        graph=dict(estado='SOLO_PUNTOS_PRELIMINAR',aislados=['FICTICIO-'+str(i) for i in range(10000)])
+        m['topologia_detalle']=graph
+        path=stage/'reporte_topologia.json';path.write_text(json.dumps(graph))
+        checksum=sha256(path)
+        from auditoriacfe.traceability import generate_workbooks
+        generate_workbooks(stage,m,[])
+        self.assertEqual(sha256(path),checksum)
+        with zipfile.ZipFile(stage/'02_trazabilidad_transformacion.xlsx') as z:
+            summary=z.read('xl/worksheets/sheet1.xml').decode()
+            self.assertIn('reporte_topologia.json',summary)
+            self.assertNotIn('FICTICIO-',summary)

@@ -4,7 +4,7 @@ Pipeline local Python para preparar inventarios XLSX y compilar dos scripts para
 
 **Estado, 2026-11-05:** software CP-01 a CP-04 implementado; evidencia geográfica y aceptación de planos reales pendientes. La suite original de 43 pruebas se conserva. El [cierre integral anterior](AuditoriaCFE/Codex/02_Harness_Integral/CIERRE_INTEGRAL_2026-11-05.md) registra 81 pruebas; el corte de 79 de fase 6 es histórico. La revisión posterior del PR y su evidencia técnica se documentan en el [piloto Mirador](AuditoriaCFE/Codex/03_PR1_Piloto_Mirador/ACTA_TRABAJO.md). CI técnico no equivale a aprobación productiva.
 
-El piloto de revisión ejecutó **92 pruebas locales: 92 aprobadas, 0 fallidas y
+El piloto de revisión ejecutó **93 pruebas locales: 93 aprobadas, 0 fallidas y
 0 omitidas**. Añade los libros de trazabilidad, aislamiento de preparación,
 pertenencias por extremo, recuperación conservadora y evidencia CAD separada.
 Las pruebas nativas usan copias; las validaciones físicas siguen pendientes.
