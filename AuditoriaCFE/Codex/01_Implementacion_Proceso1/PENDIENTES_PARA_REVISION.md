@@ -1,5 +1,24 @@
 # Pendientes para revisión — Proceso 1
 
+## Extensión CP-01 vigente
+
+Código 0.2.0 y auditoría JS completados; **43 pruebas OK, sin fallos ni omisiones**. Los 29 del registro previo siguen intactos. CP-01 ya no queda oculto por P-03/P-06: 00 muestra 494/749 grupos históricos y5 de demo, sin aprobar CAD. Las clasificaciones inferiores siguen aplicando a las etapas indicadas, **no bloquean la exportación de grupos identificados a 00**.
+
+| Pendiente de esta extensión | Clase | Decisión exacta del responsable |
+|---|---|---|
+|P-09, contrato de 00 | NO BLOQUEANTE | Revisar/ratificar las 12 columnas propuestas, estados IDENTIFICADO/admisión/apto_csv_01, conteos aditivos y vistas de grupos, conforme a EXTENSION_ETL_UNIFICADO.md. No convertir CP-01 en aprobación CAD. |
+|Discrepancia JS frente aTO-BE:260 | NO BLOQUEANTE | Aprobar corrección documental separada: retorno al padre en ordenar.js, preorden con atajos entre ramas en trayectoria.js. La etapa afectada es futura generación CAD; no se replica ninguno como topología física ni se modifica norma aquí. |
+|Organización CP-01..CP-04 | NO BLOQUEANTE | Revisar PROPUESTA_CHECKPOINTS_CP01_CP04.md para futura incorporación normativa; no cambia los dos procesos ni autoriza SCR en esta entrega. |
+|P-01 producción | BLOQUEANTE | Fijar orden real de fuentes/hojas antes de CP-01 productivo. Las configuraciones de prueba no constituyen prioridad aprobada. |
+|P-03/P-06 | BLOQUEANTE | Aportar perímetro para admisión de01 y controles reales DWG para 02; CP-01 puede completarse con ambos pendientes. |
+|Entorno local previo | NO BLOQUEANTE | `.venv` apunta a un intérprete inaccesible; se conservó y se verificó con `.venv-cp01`. Opcionalmente reparar el entorno habitual fuera de este cambio. |
+|README.md raíz preexistente | NO BLOQUEANTE | Archivo del usuario sin seguimiento conservado por hash y excluido del commit; decidir separadamente si desea versionarlo. |
+|Dependencias de pruebas de auditoría | NO BLOQUEANTE | Node solo para reproducción de copias JS y Git con 7baa82c para oráculo de compatibilidad. Documentar instalación en otras máquinas si requiere ejecutar esas pruebas; el ETL no depende de Node. |
+
+No hay fallos técnicos abiertos atribuibles a esta extensión. P-02/P-04/P-05/P-07/P-08/P-10/P-11 conservan alcance y decisión inferior; ninguna se aprobó por alcanzar43 tests. Siguiente checkpoint: revisar CSV 00 y propuestas, publicar manualmente el commit local tras revisión y resolver precondiciones de CP-02. CP-03/CP-04 requieren otro encargo.
+
+## Registro y pendientes de la primera implementación
+
 Fecha: 2026-11-04. Estado: **implementación y pruebas completadas; checkpoint de revisión**. Sin aprobación de reglas nuevas ni inicio de Proceso 2. No hay fallos automatizados abiertos (29 pruebas OK); estos pendientes delimitan aceptación operativa, evidencia o mejoras.
 
 | Pendiente | Clase | Decisión requerida del responsable |

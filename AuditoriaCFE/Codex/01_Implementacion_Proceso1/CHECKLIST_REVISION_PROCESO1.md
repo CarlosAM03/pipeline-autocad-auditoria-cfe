@@ -30,3 +30,20 @@ Marcar cada ítem como `OK`, `NO`, `BLOQUEADO` y asociar prueba, comando o evide
 Solo dar visto bueno al código de Proceso 1 cuando R01–R20 cumplan o estén bloqueados **con razón correcta y sin falsear un producto**. En particular, R14 puede bloquear el CSV proyectado real mientras P-06 no tenga controles; eso **no** invalida el ETL 1A. No iniciar SCR ni CAD sin nuevo encargo.
 
 Corte de ejecución: 2026-11-04. Estados anteriores corresponden a evidencia técnica ejecutada, **no al visto bueno del responsable ni cierre de P-01..P-11**. La admisión geográfica real también está BLOQUEADA por P-03; los grupos se conservan en REVISAR. Evidencia detallada y comandos: [PRUEBAS_Y_VALIDACION.md](PRUEBAS_Y_VALIDACION.md).
+
+## Extensión CSV 00 y auditoría JS desde 7baa82c
+
+Los controles R01–R20 continúan vigentes y las 29 pruebas anteriores pasan sin modificarlas. Suite ampliada:43 OK,0 fallos,0 omitidas. CP-01 es un resultado adicional; no cierra bloqueos de CP-02 ni aprueba P-xx.
+
+| ID | Criterio adicional | Evidencia ejecutada | Estado |
+|---|---|---|---|
+|E01|00 funciona sin P-03/P-06|test_pending_p03_p06_identified_is_not_admitted; Mirador494/Otay749|OK|
+|E02|Una fila por ID identificado, sin inventar identidad para rechazos/ambigüedades|test_ids_and_unidentifiable_records_not_invented; invariantes y linaje real|OK|
+|E03|Precisión, precedencia, subrutas e IDs acreditados preservados|test_exact_identity_precision_subroutes_and_prevalence; tests de cajas originales y nuevos|OK|
+|E04|No promoción automática a 01/02, ni filtros de aislados|tests de estados/ámbito/aislados; demo5/4/4, reales494/0 y749/0|OK|
+|E05|Compatibilidad con artefactos anteriores|Oráculo reporting.py de 7baa82c y snapshot local de tres lotes; solo conteos y manifiestos ampliados|OK|
+|E06|00 integrado en hashes/conteos/verificador|43 tests + validar_extension_local.py, dos corridas idénticas por lote|OK|
+|E07|533/965 TXT y algoritmos JS verificados directamente|test_js_historicos.py; copias + fs restringido, nunca MAIN/generarSCR|OK|
+|E08|Retornos y ramas auditados sin perpetuar error documental|ordenar padre; trayectoria sin retorno; 13/15 atajos respecto de grafo; propuesta separada|OK|
+|E09|CP-01..CP-04 explícitos, sin alterar ADR/TO-BE|PROPUESTA_CHECKPOINTS_CP01_CP04 y manifest checkpoints; CP-03/04 futuros|OK|
+|E10|Commit local exclusivo, sin outputs/datos/recursos ajenos|Lista explícita de 18 archivos revisados; cierre por git diff --cached/git show y git status; README raíz ajeno excluido|OK en alcance; identidad de commit en cierre Git|

@@ -120,9 +120,15 @@ def execute(audit, root, cfg, testing, emit):
                         modulos_sha256=code, python=platform.python_version(),
                         fuentes_ordenadas=sources, entrada=str(root), config_hash=digest(cfg), configuracion=cfg,
                         crs=crs_info, crs_validado=projected is not None, baseline=baseline_info,
-                        maestro_ref=master_info, conteos=counts(records, uniques), advertencias=warnings,
+                        maestro_ref=master_info, conteos=counts(records, uniques, projected), advertencias=warnings,
                         topologia="NO_CONFIRMADA", aprobacion_humana="PENDIENTE", perfiles_hojas=profiles,
                         artefactos={p.name: dict(sha256=sha256(p), bytes=p.stat().st_size) for p in sorted(stage.iterdir())})
+        manifest["contrato_unificado"] = "PROPUESTA-P09-unificados-v1"
+        manifest["checkpoints"] = {
+            "CP-01": dict(estado="COMPLETADO", filas=manifest["conteos"]["filas_csv_00"]),
+            "CP-02": dict(normalizado="GENERADO_PRELIMINAR", proyectado=crs_info["estado"],
+                          admision_geografica="ACREDITADA_EN_CONFIG" if cfg["geografia_permitida"] and cfg["geografia_permitida"].get("aprobada") else "PENDIENTE_P03"),
+            "CP-03": dict(estado="NO_IMPLEMENTADO"), "CP-04": dict(estado="NO_IMPLEMENTADO")}
         try:
             import pyproj
             manifest["dependencias"] = dict(pyproj=pyproj.__version__, PROJ=pyproj.proj_version_str)

@@ -1,12 +1,35 @@
 """Identidad exacta y prevalencia en orden declarado; ninguna arista inferida."""
 from collections import defaultdict
 from decimal import Decimal
-from .util import decimal_key, digest
+from .util import PipelineError, decimal_key, digest
 
 
 def key(record):
     return (record["tipo_canonico"], decimal_key(Decimal(record["latitud"])),
             decimal_key(Decimal(record["longitud"])))
+
+
+def identified_groups(records):
+    """Prevalentes identificados, incluidos REVISAR, en orden de fuente.
+
+    Vista del resultado de consolidate; no deduplica de nuevo ni cambia estados.
+    Un caso sin identidad acreditada nunca recibe aquí un ID artificial.
+    """
+    groups = defaultdict(list)
+    for record in records:
+        if record["elemento_id"]:
+            groups[record["elemento_id"]].append(record)
+    result = []
+    for occurrences in groups.values():
+        prevalent = [r for r in occurrences if r["ocurrencia_id"] == r["prevalente_id"]]
+        if len(prevalent) != 1 or prevalent[0]["estado"] not in ("VALIDO", "REVISAR"):
+            raise PipelineError("Grupo identificado sin prevalente único de preparación")
+        first = prevalent[0]
+        if any(r["prevalente_id"] != first["ocurrencia_id"] or key(r) != key(first)
+               for r in occurrences):
+            raise PipelineError("Grupo identificado con referencias o coordenadas inconsistentes")
+        result.append(first)
+    return result
 
 
 def consolidate(records, audit):

@@ -2,6 +2,15 @@
 
 Implementación local Python >=3.10. No genera ni ejecuta CAD. ADR-000 gobierna las reglas; esquemas auxiliares implementados como **PROPUESTA P-09**. Todas las corridas quedan PRELIMINAR hasta definición de liberación P-04.
 
+Extensión **0.2.0 / CP-01**: se genera `00_elementos_unificados.csv` con los prevalentes identificados, incluso con geografía y CRS pendientes. Cada fila distingue `estado_preparacion=IDENTIFICADO`, admisión geográfica y `apto_csv_01`; deduplicar no aprueba dibujo. Se conservan los contratos de 01/02 y reportes. Contrato propuesto, flujo y conteos: [EXTENSION_ETL_UNIFICADO.md](Codex/01_Implementacion_Proceso1/EXTENSION_ETL_UNIFICADO.md). Auditoría de funciones JS y contraste 533/965: [AUDITORIA_JS_HISTORICOS.md](Codex/01_Implementacion_Proceso1/AUDITORIA_JS_HISTORICOS.md).
+
+| Checkpoint funcional | Resultado / estado |
+|---|---|
+| CP-01 | CSV 00 implementado, visible sin P-03/P-06; sin inferir topología. |
+| CP-02 | CSV 01 conserva admisión P-03; CSV 02 conserva gate P-06. Probado sintéticamente, bloqueado para validación real pendiente. |
+| CP-03 | Futuro 01_configurar_plano.scr; no implementado. |
+| CP-04 | Futuro 02_dibujar_auditoria.scr; no implementado. |
+
 Desde la raíz del repositorio, PowerShell:
 
 ```powershell
@@ -10,6 +19,18 @@ python -m venv AuditoriaCFE/.venv
 & ./AuditoriaCFE/.venv/Scripts/python.exe -m unittest discover -s AuditoriaCFE/tests -v
 & ./AuditoriaCFE/.venv/Scripts/python.exe AuditoriaCFE/preparar_auditoria.py --help
 ```
+
+En esta extensión el entorno `.venv` preexistente apunta a un Python 3.11 de WindowsApps inaccesible. Se conservó intacto y se verificó en un entorno aislado adicional, ignorado por Git:
+
+```powershell
+& 'C:/Users/Carl0/AppData/Local/Programs/Thonny/python.exe' -m venv AuditoriaCFE/.venv-cp01
+& ./AuditoriaCFE/.venv-cp01/Scripts/python.exe -m pip install -r AuditoriaCFE/requirements.txt
+& ./AuditoriaCFE/.venv-cp01/Scripts/python.exe -m unittest discover -s AuditoriaCFE/tests -v
+& ./AuditoriaCFE/.venv-cp01/Scripts/python.exe -m compileall -q AuditoriaCFE/src AuditoriaCFE/tests AuditoriaCFE/preparar_auditoria.py
+& ./AuditoriaCFE/.venv-cp01/Scripts/python.exe -m pip check
+```
+
+La suite ampliada tiene 43 pruebas (29 originales intactas + 9 de unificación + 5 de JS). Solo las cinco de auditoría JS necesitan Node.js en PATH y los históricos exactos; no es dependencia del ETL. La auditoría ejecuta funciones sobre copias temporales sin MAIN ni escrituras JS, nunca genera SCR ni ejecuta AutoCAD. Si falta Node o histórico se marca omisión, no aprobación simulada. La prueba de compatibilidad de reportes lee `reporting.py` del commit `7baa82c` mediante `git show`; necesita ese historial local.
 
 Si `python` es un alias de Windows inaccesible, usar la ruta explícita al intérprete instalado. En esta máquina se utilizó `C:/Users/Carl0/AppData/Local/Programs/Thonny/python.exe` para crear el entorno. La extracción y pruebas sin proyección usan biblioteca estándar. `pyproj` es necesario para las pruebas geodésicas obligatorias, proyección acreditada y cercanía optativa. No requiere Excel, openpyxl, pandas, Pillow ni AutoCAD.
 
@@ -48,6 +69,8 @@ La proyección usa `Transformer.from_crs(..., always_xy=True)` y `errcheck=True`
 
 En `auditorias/<nombre>/salida/`: `01_elementos_normalizados.csv` (tres columnas exactas UTF-8 sin BOM, coma/CRLF), `summary.csv`, `linaje_y_calidad.jsonl`, `reporte_incidencias.csv`, `asociaciones_elemento_ruta.csv`, `resumen_conteos.csv`, `topologia_propuesta.csv` (solo cabecera), `perfiles_hojas.jsonl`, `filas_no_operativas.jsonl`, `coordenadas_cercanas.csv` y, únicamente con CRS acreditado y controles correctos, `02_elementos_proyectados.csv`.
 
+Además se genera `00_elementos_unificados.csv`, con una fila por prevalente identificable en el mismo ETL. No incluye rechazos, exclusiones ni ambigüedades sin identidad, que permanecen en los reportes. Sin perímetro los grupos identificados aparecen en 00 como pendientes, aunque 01 contenga solo cabecera. No usa el maestro ni cercanía como filtros. `filas_csv_00`, `filas_csv_01`, `filas_csv_02` y `csv_02_generado` se reconcilian con los productos y hashes. Las métricas anteriores se conservan con sus valores; las nuevas separan grupos pendientes de revisiones sin identidad.
+
 El manifiesto activo está en `auditorias/<nombre>/manifiesto_ejecucion.json` y su archivo por hash en `manifiestos/<ejecucion_id>.json`, **fuera de entrada/salida por AGENTS.md**. Contiene hashes de cada fuente/artefacto/configuración/código, versiones Python/pyproj/PROJ, conteos, decisiones, controles y referencias. No contiene reloj variable: repetir entradas, configuración y versión produce iguales bytes, incluido manifiesto. Cambiar de intérprete/dependencia cambia la identidad de ejecución; no cambia deliberadamente el dato geográfico.
 
 Cada ocurrencia operativa tiene un estado terminal y linaje exacto. Un duplicado puede apuntar a un prevalente REVISAR: se identifica el grupo pero no se habilita dibujo. `unicos_identificados` cuenta esos grupos; `unicos_exportables=VALIDO=POSTE+CAJA_EMP+EXCEDENTE`. Los rechazados/fuera de alcance permanecen individualmente trazables. `summary` contiene un caso por prevalente o incidente no agrupable; las asociaciones conservan cada ocurrencia y ruta, incluidas las pendientes.
@@ -70,6 +93,15 @@ $historicoOtay = 'Auditorias-20261104T035633Z-1-001/postes/CFE POSTES OTAY-FLORI
 ```
 
 El modo PRUEBA registra la raíz externa explícita y no escribe allí. Cada inventario debe coincidir íntegramente con la lista declarada. Mirador incluye los 551 de la reconstrucción más la copia de 181 para probar versiones; Otay incluye 969. Sin geografía acreditada los dos CSV mínimos contienen solo encabezado, mientras linaje, identidad, comparaciones y conteos siguen disponibles. No se trata de resultados cartográficos validados.
+
+CP-01 hace visible esa identidad en 00: Mirador tiene 494 filas y Otay 749; no cambia su estado geográfico. La demo tiene 5 grupos en 00, de los que 4 son admitidos en 01 y 02. Para repetir la integración y verificar dos corridas con los mismos bytes:
+
+```powershell
+& ./AuditoriaCFE/.venv-cp01/Scripts/python.exe AuditoriaCFE/tests/validar_extension_local.py
+& ./AuditoriaCFE/.venv-cp01/Scripts/python.exe AuditoriaCFE/tests/audit_js_support.py
+```
+
+`validar_extension_local.py` actualiza exclusivamente las tres auditorías de prueba conocidas, verifica integridad antes de reemplazar el lote y no regenera entradas ni configuraciones. `--comparar-anterior` añade comparación contra el snapshot local previo a esta extensión, no versionado. No utilizar ese modo si falta el snapshot.
 
 Para revisar salidas completas sin usar datos de campo:
 

@@ -7,12 +7,14 @@ from contextlib import contextmanager
 from pathlib import Path
 
 from .util import PipelineError, digest, json_text, sha256, within, output_path
+from .dedup import identified_groups
 
 MINIMUM = ["Ruta", "Elemento de Red", "Coordenadas"]
 SUMMARY = "elemento_id,auditoria,tipo,ruta_prevalente,estado,coordenada,archivo_prevalente,hoja_prevalente,fila_prevalente,ocurrencias,coincide_maestro,novedad_vs_baseline,observaciones".split(",")
 INCIDENTS = "incidencia_id,codigo,severidad,archivo,hoja,fila,valor_original,valor_elegido,motivo,estado_revision".split(",")
 TOPOLOGY = "propuesta_id,origen_id,destino_id,ruta,tramo,distancia_plana_m,metodo,estado,justificacion".split(",")
 PROJECTED = "elemento_id,ruta_id,tipo,latitud,longitud,este_m,norte_m,crs".split(",")
+UNIFIED = "elemento_id,ruta_prevalente,tipo,coordenada_original,coordenada_interpretada,estado_preparacion,admision_geografica,apto_csv_01,archivo_prevalente,hoja_prevalente,fila_prevalente,ocurrencias".split(",")
 
 
 def csv_file(path, header, rows):
@@ -28,11 +30,12 @@ def jsonl_file(path, rows):
             stream.write(json.dumps(row, ensure_ascii=False, sort_keys=True, allow_nan=False) + "\n")
 
 
-def counts(records, uniques):
+def counts(records, uniques, projection_rows=None):
     counter = Counter(r["estado"] for r in records)
     result = dict(ocurrencias=len(records), unicos_exportables=len(uniques), **{s: counter[s] for s in
                   ("VALIDO", "DUPLICADO", "FUERA_ALCANCE", "REVISAR", "RECHAZADO")})
-    result["unicos_identificados"] = len({r["elemento_id"] for r in records if r["elemento_id"]})
+    identified = identified_groups(records)
+    result["unicos_identificados"] = len(identified)
     for typ in ("POSTE", "CAJA_EMP", "EXCEDENTE"):
         result[typ] = sum(r["tipo_canonico"] == typ for r in uniques)
     if result["ocurrencias"] != sum(counter.values()) or result["VALIDO"] != len(uniques) or sum(result[t] for t in ("POSTE", "CAJA_EMP", "EXCEDENTE")) != len(uniques):
@@ -42,7 +45,32 @@ def counts(records, uniques):
         raise PipelineError("IDs de ocurrencia no únicos")
     if any(r["prevalente_id"] not in prevalent for r in records if r["estado"] == "DUPLICADO"):
         raise PipelineError("Duplicado sin prevalente")
+    # Métricas aditivas: se conservan nombres, valores y orden de las anteriores.
+    pending = sum(r["estado"] == "REVISAR" for r in identified)
+    result.update(grupos_pendientes_revision=pending,
+                  ocurrencias_revision_sin_identidad=counter["REVISAR"] - pending,
+                  ocurrencias_con_identidad=sum(bool(r["elemento_id"]) for r in records),
+                  filas_csv_00=len(identified), filas_csv_01=len(uniques),
+                  csv_02_generado=int(projection_rows is not None),
+                  filas_csv_02=len(projection_rows) if projection_rows is not None else 0)
+    if (len(identified) != len(uniques) + pending or
+            result["ocurrencias_con_identidad"] != len(identified) + counter["DUPLICADO"] or
+            result["ocurrencias"] != len(identified) + counter["DUPLICADO"] + counter["RECHAZADO"] +
+            counter["FUERA_ALCANCE"] + result["ocurrencias_revision_sin_identidad"]):
+        raise PipelineError("Grupos identificados y ocurrencias no reconciliados")
+    if projection_rows is not None and len(projection_rows) != len(uniques):
+        raise PipelineError("Cardinalidad espacial inconsistente")
     return result
+
+
+def geographic_admission(record):
+    """Estado descriptivo; identificar no habilita la admisión para dibujo."""
+    codes = {event["codigo"] for event in record["incidencias"]}
+    if "GEOGRAFIA_PENDIENTE" in codes:
+        return "PENDIENTE_P03"
+    if "FUERA_AMBITO" in codes:
+        return "REVISAR_FUERA_AMBITO"
+    return "ADMITIDO_P03" if record["estado"] == "VALIDO" else "REVISAR"
 
 
 def generate(stage, records, uniques, audit, maestro, baseline, refinfo, projection_rows, warnings, profiles, auxiliary, near):
@@ -50,6 +78,12 @@ def generate(stage, records, uniques, audit, maestro, baseline, refinfo, project
     csv_file(stage / "01_elementos_normalizados.csv", MINIMUM,
              ([r["ruta_salida"], r["tipo_canonico"], r["coordenada_normalizada"]] for r in uniques))
     occurrences = Counter(r["elemento_id"] for r in records if r["elemento_id"])
+    admitted_ids = {r["elemento_id"] for r in uniques}
+    csv_file(stage / "00_elementos_unificados.csv", UNIFIED,
+             ([r["elemento_id"], r["ruta_salida"], r["tipo_canonico"], r["coordenada_original"],
+               r["coordenada_normalizada"], "IDENTIFICADO", geographic_admission(r),
+               "SI" if r["elemento_id"] in admitted_ids else "NO", r["archivo_relativo"],
+               r["hoja"], r["fila"], occurrences[r["elemento_id"]]] for r in identified_groups(records)))
     summarized = uniques + [r for r in records if r["estado"] not in ("VALIDO", "DUPLICADO")]
     summary = []
     for r in summarized:
@@ -83,7 +117,7 @@ def generate(stage, records, uniques, audit, maestro, baseline, refinfo, project
     csv_file(stage / "asociaciones_elemento_ruta.csv", ["elemento_id", "auditoria", "ruta_original", "archivo", "hoja", "fila"],
              ([r["elemento_id"], audit, r["ruta_original"], r["archivo_relativo"], r["hoja"], r["fila"]] for r in records if r["elemento_id"]))
     csv_file(stage / "topologia_propuesta.csv", TOPOLOGY, [])
-    csv_file(stage / "resumen_conteos.csv", ["metrica", "valor"], counts(records, uniques).items())
+    csv_file(stage / "resumen_conteos.csv", ["metrica", "valor"], counts(records, uniques, projection_rows).items())
     jsonl_file(stage / "perfiles_hojas.jsonl", profiles)
     jsonl_file(stage / "filas_no_operativas.jsonl", auxiliary)
     csv_file(stage / "coordenadas_cercanas.csv", ["origen_id", "destino_id", "distancia_geodesica_m", "estado"], near)
