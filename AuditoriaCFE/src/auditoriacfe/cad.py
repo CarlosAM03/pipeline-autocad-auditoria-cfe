@@ -3,6 +3,7 @@ import math
 import re
 import shutil
 from collections import Counter
+from decimal import Decimal
 from pathlib import Path
 
 from .projection import read_projected
@@ -26,6 +27,11 @@ def number(value):
     if not math.isfinite(result):
         raise PipelineError('Número CAD no finito')
     return repr(result)
+
+
+def geo_label(row):
+    lat,lon=Decimal(row['latitud']),Decimal(row['longitud'])
+    return f'{abs(lat)}{"N" if lat>=0 else "S"} {abs(lon)}{"E" if lon>=0 else "W"}'
 
 
 def static_check(text):
@@ -84,14 +90,17 @@ def package(stage, audit, cfg, crs_info, edges):
     setup += (' T' if spec.get('unidades_verificadas') else ' nil') + ')))\n'
     # Mantener exactamente dos SCR; si el gate impide dibujar, el segundo es seguro.
     commands = ['(datra:begin ' + ' '.join(common) + ')']
-    counts = Counter()
+    counts = Counter(); labels = set()
     index = {}
     for row in sorted(rows, key=lambda r: r['elemento_id']):
         kind = row['tipo']; counts[kind] += 1
-        label = TYPES[kind][0] + '-' + row['elemento_id']
+        # Número estable derivado del ID completo; colisión => bloquear, nunca ocultar.
+        label = TYPES[kind][0] + '-' + str(int(digest(row['elemento_id'])[:10],16))
+        if label in labels: raise PipelineError('Colisión de etiqueta CAD; ampliar numeración')
+        labels.add(label)
         x, y = number(row['este_m']), number(row['norte_m'])
         commands.append('(datra:point ' + ' '.join([literal(row['elemento_id']), literal(TYPES[kind][1]),
-                        literal(kind), x, y, literal(label), literal(row['latitud']+'N '+row['longitud']+'E')]) + ')')
+                        literal(kind), x, y, literal(label), literal(geo_label(row))]) + ')')
         index[row['elemento_id']] = row
     physical = set(); drawn_edges = []
     # Diagnóstico candidato siempre SOLO PUNTOS, incluso si hay una propuesta de red.
@@ -119,11 +128,11 @@ def package(stage, audit, cfg, crs_info, edges):
         # Símbolos/etiquetas en metros, tamaño de papel aproximado 1.8 mm.
         # Se declara estimación, no revisión visual ni promesa de legibilidad.
         commands.insert(1, f'(setq datra:*height* {number(max(scale*1.8,0.05))})')
-    summary = ' | '.join(f'{kind}: {counts[kind]}' for kind in TYPES)
-    commands.append('(datra:finish '+literal((destination/'resultados_cad/reporte_nativo.txt').as_posix())+
-                    f' {len(rows)} {len(drawn_edges)} '+literal(summary)+')')
+    expected_counts = "'("+' '.join(str(counts[kind]) for kind in TYPES)+')'
     if bounds:
         commands.append('(datra:viewport ' + ' '.join(number(v) for v in bounds) + ')')
+    commands.append('(datra:finish '+literal((destination/'resultados_cad/reporte_nativo.txt').as_posix())+
+                    f' {len(rows)} {len(drawn_edges)} '+expected_counts+')')
     drawing = header + "(datra:run '(lambda () " + ' '.join(commands) + '))\n'
     if not rows:
         drawing = header + '(alert "PENDIENTE_EVIDENCIA: no hay CSV02 habilitado para dibujo. No se inserto geometria.")\n'
@@ -144,6 +153,7 @@ def package(stage, audit, cfg, crs_info, edges):
                   archivo_base=base.name,base_sha256=sha256(base),copia_relativa='resultados_cad/'+copy_name,
                   elementos=len(rows),aristas=len(drawn_edges),distancias=drawn_edges,conteos=dict(counts),
                   controles_crs=crs_info['estado'],unidades_acreditadas=spec.get('unidades_verificadas',False),
+                  etiquetas='P/C/E + número estable digest40bits; ID completo conservado en XDATA, colisiones bloqueantes',
                   topologia='CONFIRMADA' if drawn_edges else 'SOLO_PUNTOS_PRELIMINAR',
                   recursos='Bloques esquemáticos v1; no homologan material ni cable',
                   instrucciones='Abrir SOLO la copia_relativa y ejecutar SCR01 y SCR02 con SCRIPT, en ese orden. Revisar antes de guardar/imprimir.')
