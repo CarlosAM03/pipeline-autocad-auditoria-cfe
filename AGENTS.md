@@ -1,31 +1,46 @@
-# AGENTS.md — PipeLineDeAuditoria (DATRA / CFE)
+# AGENTS.md — Pipeline de Auditorías CFE/DATRA — Arnés integral
 
-## Alcance y autoridad
-- Raíz de ejecución: `C:\Users\Carl0\Desktop\Datra\CFE\PipeLineDeAuditoria` (en otros equipos, resolver la raíz a partir del repositorio; **nunca** buscar carpetas alternativas automáticamente).
-- Código y salidas nuevas: **solo** en `AuditoriaCFE/`. Tratar `Auditorias-20261104T035633Z-1-001/` como **histórico inmutable y de solo lectura**. No modificarlo, renombrarlo, descomprimir respaldos ni ejecutar archivos históricos.
-- Precedencia para reglas aprobadas: `AuditoriaCFE/Docs/ADRs/ADR-000_Decisiones_Base_Pipeline_Auditorias_CFE.md`, después `AuditoriaCFE/Docs/Specs/Especificacion_Pipeline_Auditorias_CFE_TOBE_v0.2.md`, luego diagnósticos en `AuditoriaCFE/Codex/00_Diagnostico/`. Si hay contradicción, detener el cambio correspondiente, registrar la discrepancia y consultar al owner.
-- No convertir decisiones técnicas propuestas en reglas de negocio aprobadas; explicitar supuestos y controles pendientes P-01 a P-11.
+## Ámbito, corte y autoridad
 
-## Fase actualmente autorizada
-- Implementar **Proceso 1, preparación de información**, por etapas verificables: 1A XLSX→CSV normalizado y reportes; 1B proyección espacial a CSV **solamente si CRS verificado**, con topología propuesta NO confirmada.
-- No crear todavía `.scr`, `.dwg`, `.dwt`, PDF productivo ni ejecutar AutoCAD; son una fase distinta. No escribir ni modificar `recursos/` salvo instrucciones específicas del owner.
-- No inferir trayectorias por orden de Excel, proximidad, DFS o filtrado de aislados. Las conexiones solo pueden aparecer en el dibujo si están confirmadas.
+Raíz del repositorio = carpeta que contiene este `AGENTS.md`; no depender de ruta absoluta excepto para mostrar contexto. La rama autorizada es `codex/etl-unificado-auditoria-js`, HEAD de referencia `f3060742e9a2ce90d186802ab3de5a4ccd968633`. Respuestas Q01–Q75 del 2026-11-05 autorizan completar el pipeline por fases y hacer push en esa rama sin merge a `main`.
 
-## Datos y reproducibilidad
-- Procesar únicamente los XLSX contenidos en la `entrada/` de una auditoría seleccionada; la comparación con `Postes_CFE.xlsx` es separada e informativa, solo si su fuente de referencia se declara explícitamente.
-- La selección de auditoría debe funcionar por consola y con argumento no interactivo para pruebas. Mostrar previamente la cantidad y lista de XLSX.
-- Precedencia de fuentes obligatoria y explícita en configuración para corridas productivas; no usar `mtime`, orden del sistema de archivos ni orden geográfico como autoridad. Orden de hojas/filas determinista.
-- Los XLSX pueden contener imágenes masivas y dimensiones XML de un millón de filas: usar extracción secuencial OOXML y lectura de celdas con valor real, sin extraer fotografías, activar macros o cargar imágenes a memoria.
-- Normalizar `poste`→`POSTE`, `excedente`→`EXCEDENTE`, `cajadedmpalme`→`CAJA_EMP`. `Registro` es subterráneo: `FUERA_ALCANCE`, no dibujar ni contar como CFE.
-- Duplicado dentro de auditoría: mismo tipo canónico y coordenadas normalizadas exactamente iguales, sin redondeo; respetar excepción documentada de identificadores confiables de equipos distintos. Retener cada ocurrencia en linaje; solo un componente prevalente por grupo.
-- No corregir dígitos especulativamente; auxiliares N/W solo cuando sean inequívocos y registrar sustitución. Valores mundiales imposibles no entran al CSV dibujable; continuar preliminar con incidencia.
-- No confundir coincidencia con maestro con novedad respecto a auditoría previa. Si no hay baseline histórica declarada: `NO_DETERMINADO`.
-- CRS objetivo `EPSG:32611` es candidato, no autorización. Sin evidencia CAD de control, no producir `02_elementos_proyectados.csv` como validado; registrar bloqueo. Prohibido compensar manualmente ~11.5 m del algoritmo JS anterior.
+**Jerarquía:** `AuditoriaCFE/Docs/ADRs/ADR-000_...md` conserva las decisiones históricas; `ADR-001_Enmienda_Cierre_2026-11-05.md` prevalece **solo en los apartados expresamente enmendados**; después `Docs/Specs/Especificacion_Pipeline_Auditorias_CFE_TOBE_v0.3.md`, `Contrato_Salidas_Pipeline_P09_v1.md`, y `AuditoriaCFE/Codex/02_Harness_Integral/01_ACTA_CIERRE.md` + respuestas originales para resolver ambigüedades; v0.2, diagnósticos y JS como evidencia no autoritativa.
 
-## Contratos, pruebas y cambios
-- El CSV mínimo debe tener exactamente `Ruta,Elemento de Red,Coordenadas` en ese orden, UTF-8, escapado CSV correcto. Los metadatos extensos van a reportes auxiliares.
-- Salidas en `AuditoriaCFE/auditorias/<auditoria>/salida/`; configuraciones, manifiestos y topología confirmada **fuera** de `entrada/` y `salida/`.
-- Cada corrida debe producir un manifiesto reproducible de hashes/configuración, conteos reconciliables, summary, linaje e incidencias, aunque una corrida sea PRELIMINAR.
-- Pruebas unitarias con fixtures ligeros, pruebas sintéticas de gran dimensión y regresión sobre Mirador/Otay usando histórico solo de lectura. No añadir XLSX pesados ni salidas generadas a Git.
-- Antes de terminar: ejecutar pruebas disponibles y presentar archivos cambiados, comandos ejecutados, resultados, limitaciones, decisiones P-xx bloqueantes y propuesta de siguiente checkpoint. No declarar cobertura geográfica ni topológica validada sin evidencia.
-- No modificar ADR-000 ni TO-BE v0.2 sin autorización. Una corrección o propuesta puede registrarse en documento separado identificado como **propuesta**.
+## Autorización nueva
+
+Se autoriza el desarrollo end-to-end de CP-01, CP-02, CP-03 y CP-04: módulos ETL, geofences, resoluciones, KMZ/topología, generadores **exactamente dos SCR**, AutoLISP auxiliar empaquetado, recursos CAD/plantilla desde copias, CLI individual/batch, tests y CI. Se permite probar en AutoCAD 2026 **en copias** si existe acceso. La compilación de SCR ocurre fuera de AutoCAD; el operador luego abre una copia del DWG/DWT DATRA, ejecuta SCR01 y SCR02, revisa DWG/PDF A1.
+
+**Autonomía:** implementar y probar etapas independientes sin detenerse por datos externos faltantes. Codex puede escoger librerías, estrategias internas y fixtures sin alterar contratos aprobados. No puede inferir como verdad un inicio/final de ruta, conexión física, CRS validado, corrección de coordenada, detalle de instalación o permiso de publicar un recurso sin respaldo. Documentar gate y continuar el resto.
+
+## Custodia estricta
+
+- `Auditorias-20261104T035633Z-1-001/`: histórico **solo lectura**; jamás modificar, renombrar, ejecutar en sitio, reextraer ZIP o escribir dentro. Codex puede leer archivos exactos y crear **copias** bajo `AuditoriaCFE/auditorias/<nombre>/entrada/` con registro SHA-256.
+- `AuditoriaCFE/recursos/`: autorizado generar nuevos recursos canónicos en copias con respaldo. Base: `PlantillaMarcoDatraMapaTijuana.dwg`; CFE `146468_PLANOTIJUANA.dwg` es referencia; Mirador para contraste del histórico UTM84-11N/metros. No sobrescribir un original sin copia y plan de reversión.
+- Todos los datos operativos persistentes de una auditoría van bajo `entrada/` o `salida/`: XLSX/KMZ/topología/resoluciones y salidas CSV/SCR/reportes/manifiestos. Mantener `configuracion.json` estructural, fuentes Python, documentación oficial, plugins y herramientas en sus ubicaciones explícitas. `temporales/` solo efímero para publicación atómica.
+- Documentos generados por Codex, actas y evidencias de trabajo van bajo `AuditoriaCFE/Codex/`, no en raíz salvo README oficiales.
+- **Seguridad Git:** nunca `git add .` indiscriminadamente, nunca registrar la transcripción íntegra `00_RESPUESTAS_ORIGINALES.md`, XLSX, KMZ, planos de campo, entradas/salidas, claves o aristas privadas en un repo público. Antes de push consultar `git status`, `git ls-files`, `git check-ignore` y stage diff. El repo actual es público; no asumir que todos los archivos delicados ya están ignorados. Verificar permisos antes de publicar nuevos CAD binarios canónicos.
+- Nunca `git reset --hard`, `git clean`, borrar fuentes o mover sin preservar histórico.
+
+## Reglas de negocio no negociables
+
+- Misma auditoría lógica puede reunir varias rutas, tres tipos `POSTE/CAJA_EMP/EXCEDENTE`, `Registro` FUERA_ALCANCE.
+- Deduplicar tipo + coordenadas decimales exactas y preservar cada ocurrencia/prevalencia según orden técnico determinista; nunca ordenar coordenadas para suponer camino físico.
+- 00 es un inventario identificado y deduplicado; 00 revisión auxiliar separa problemas; 01 mínimo tiene exclusivamente `Ruta,Elemento de Red,Coordenadas`; 02 requiere control WCS real y versión de contrato.
+- Sin baseline de inventario acreditada, novedad NO_DETERMINADO. El DWG base no es baseline histórica de novedades.
+- Sin perímetro autorizado, no declarar los puntos de 01 productivos; rectángulo diagnóstico no es evidencia. Rechazos se excluyen de CAD pero quedan en linaje.
+- EPSG:32611 candidato, NO confirmado hasta dos controles WCS↔WGS84 distintos con residual dentro de tolerancia real. Cualquier modo de prueba sin validación produce SOLO archivos rotulados DIAGNÓSTICO, nunca salida 02 validada ni DWG FINAL.
+- Los tres anillos redundantes son contexto; aristas derivadas de proximidad o KMZ son propuestas hasta confirmación humana. Sin `topologia_confirmada.csv` aprobada dibujar solo PUNTOS PRELIMINARES.
+- AutoCAD convencional 2026 inglés, dos SCR operativos en orden, sin Map 3D, sin mapa duplicado, geometría en Model Space real y presentación A1 horizontal única. Si no se lee, no omitir etiquetas ni crear hojas extra sin enmienda.
+- Cajetín DATRA con datos acreditados y detalles constructivos solo confirmados. El owner revisa/acepta FINAL.
+
+## Trabajo y checkpoints
+
+Seguir `AuditoriaCFE/Codex/02_Harness_Integral/02_PLAN_IMPLEMENTACION.md` por fases 0–6 y `03_MATRIZ_PRUEBAS.md`. Mantener suite original de 43 tests y ampliar. Tests CI sintéticos no deben fingir inspección CAD/histórico. Reportar estado por CP con `COMPLETADO_TECNICO`, `PENDIENTE_EVIDENCIA`, `PRELIMINAR`, `FALLIDO`, `ACEPTADO_HUMANO` (este último solo tras autorización humana).
+
+La rama tiene un archivo rastreado reportado como **eliminado**: `README_ENTREGA_Y_PASOS.md`, actualmente copiado en `temp/`. No ocultar ni perderlo: restaurar o mover a diagnóstico con conservación de historial y registrar la decisión conservadora en el primer checkpoint.
+
+Crear commits locales por fase, pruebas, staging explícito, **push permitido** a `codex/etl-unificado-auditoria-js` y PR listo si existe acceso. **Nunca hacer merge a main por cuenta propia**. No esperar respuesta ante fallos de ingeniería solucionables; si no hay GUI/KMZ/controles, continuar módulos restantes y entregar reporte verificable de gates pendientes.
+
+---
+
+- ! nota: el kmz se encuentra en Auditorias-20261104T035633Z-1-001\Rutas Con nombre Ultima Version.kmz es una copia segura para lectura y manupulacion. !
