@@ -76,13 +76,19 @@
   (setvar "CTAB" name)
   lay)
 
-(defun datra:configure (expected owner layout mode meters / lay)
+(defun datra:configure (expected owner layout mode meters / lay layerdata)
   (datra:guard expected)
   (setq datra:*owner* owner datra:*layout* layout datra:*mode* mode)
   (foreach pair '(("DATRA_POSTE" . 1) ("DATRA_CAJA_EMP" . 3) ("DATRA_EXCEDENTE" . 5)
                   ("DATRA_TEXTO" . 7) ("DATRA_RUTA" . 2) ("DATRA_DISTANCIA" . 4)
                   ("DATRA_CONTROL" . 6))
     (datra:layer (car pair) (cdr pair)))
+  (datra:layer "DATRA_VIEWPORTS" 8)
+  (setq layerdata (entget (tblobjname "LAYER" "DATRA_VIEWPORTS")))
+  (if (assoc 290 layerdata)
+    (setq layerdata (subst '(290 . 0) (assoc 290 layerdata) layerdata))
+    (setq layerdata (append layerdata '((290 . 0)))))
+  (entmod layerdata)
   (if (not (tblsearch "STYLE" "DATRA_SIMPLE_V1"))
     (entmake '((0 . "STYLE") (100 . "AcDbSymbolTableRecord") (100 . "AcDbTextStyleTableRecord")
        (2 . "DATRA_SIMPLE_V1") (70 . 0) (40 . 0.0) (41 . 1.0) (50 . 0.0)
@@ -92,6 +98,9 @@
   (datra:block "DATRA_EXCEDENTE_V1" "EXCEDENTE")
   (if meters (setvar "INSUNITS" 6))
   (setvar "LUNITS" 2)
+  ; Evitar decenas de miles de anotaciones SHX que impiden abrir el PDF.
+  ; Conserva los glifos visibles; solo desactiva comentarios de texto SHX.
+  (setvar "PDFSHX" 0)
   (regapp "DATRA_CFE")
   (datra:layout layout)
   (setq datra:*ready* T)
@@ -144,7 +153,7 @@
      (list 10 x y 0.0) (cons 41 h) (cons 42 h) (cons 43 h) '(67 . 0) '(410 . "Model"))))
   (datra:tag entity id)
   (datra:text id "DATRA_TEXTO" (list (+ x h) (+ y h) 0.0) h label nil)
-  (datra:text id "DATRA_TEXTO" (list (+ x h) (- y h) 0.0) (* h 0.65) geo nil)
+  (datra:text id "DATRA_TEXTO" (list (+ x h) (- y h) 0.0) (* h (/ 2.5 3.0)) geo nil)
   (setq datra:*points* (1+ datra:*points*)))
 
 (defun datra:edge (id x1 y1 x2 y2 label / entity)
@@ -180,13 +189,14 @@
         (if (datra:owned (ssname selection i)) (setq actualedges (1+ actualedges)))
         (setq i (1+ i)))))
   (if (/= edges actualedges) (datra:fail "Conteo real de aristas no coincide"))
-  (datra:text "ESTADO" "DATRA_CONTROL" '(150.0 585.0 0.0) 3.0 datra:*mode* T)
-  (datra:text "CONTEOS" "DATRA_CONTROL" '(150.0 580.0 0.0) 2.5
+  (datra:text "ESTADO" "DATRA_CONTROL" '(150.0 557.0 0.0) 3.0 datra:*mode* T)
+  (datra:text "CONTEOS" "DATRA_CONTROL" '(150.0 552.0 0.0) 2.5
     (strcat "Componentes dibujados: " (itoa actual) " / Aristas: " (itoa edges)) T)
-  (datra:text "TIPOS" "DATRA_CONTROL" '(150.0 575.0 0.0) 2.0
+  (datra:text "TIPOS" "DATRA_CONTROL" '(150.0 547.0 0.0) 2.0
     (strcat "POSTE: " (itoa p) " | CAJA_EMP: " (itoa c) " | EXCEDENTE: " (itoa x)) T)
-  (datra:text "PROTOTIPO" "DATRA_CONTROL" '(150.0 570.0 0.0) 2.0
+  (datra:text "PROTOTIPO" "DATRA_CONTROL" '(150.0 542.0 0.0) 2.0
     "SIMBOLOS ESQUEMATICOS - MATERIALES NO HOMOLOGADOS - REVISION HUMANA PENDIENTE" T)
+  (if datra:*prototypes* (datra:details))
   (setq stream (open file "w"))
   (if (not stream) (datra:fail "No se pudo escribir evidencia nativa"))
   (write-line (strcat "modo=" datra:*mode*) stream)
@@ -197,6 +207,42 @@
   (write-line "CRS/legibilidad/FINAL=REQUIERE_APROBACION_HUMANA" stream)
   (close stream)
   (setq datra:*ready* nil))
+
+(defun datra:paper-line (id x1 y1 x2 y2)
+  (datra:tag (datra:make (list '(0 . "LINE") '(8 . "DATRA_CONTROL") '(67 . 1)
+    (cons 410 datra:*layout*) (list 10 x1 y1 0.0) (list 11 x2 y2 0.0))) id))
+
+(defun datra:details (/ index y occupied id added sel i entity data)
+  ; Solo esquemas ilustrativos en Paper, nunca instalaciones georreferenciadas.
+  ; Si la base ya contiene geometria de detalle, preservarla sin superponer.
+  (setq index 0)
+  (foreach y '(499.0 389.0 279.0 169.0 59.0)
+    (setq id (strcat "ESQUEMA-" (itoa index)))
+    (setq occupied (ssget "_W" (list 18.0 (- y 40.0)) (list 132.0 (+ y 35.0))
+      (list '(0 . "LINE,LWPOLYLINE,CIRCLE,INSERT,IMAGE") '(67 . 1) (cons 410 datra:*layout*))))
+    (if (not occupied)
+      (progn
+        (setq added T)
+        (datra:text id "DATRA_CONTROL" (list 23.0 (+ y 15.0) 0.0) 2.2 "PROTOTIPO NO HOMOLOGADO" T)
+        (datra:text id "DATRA_CONTROL" (list 23.0 (- y 20.0) 0.0) 1.8 "SIN MATERIAL/CABLE ACREDITADO" T)
+        (if (< index 4)
+          (progn
+            (datra:paper-line id 35.0 y 105.0 y)
+            (datra:tag (datra:make (list '(0 . "CIRCLE") '(8 . "DATRA_CONTROL") '(67 . 1)
+              (cons 410 datra:*layout*) (list 10 70.0 y 0.0) '(40 . 3.0))) id)
+            (if (= index 2) (datra:paper-line id 70.0 y 95.0 (- y 12.0)))
+            (if (= index 3)
+              (progn (datra:paper-line id 65.0 (+ y 5.0) 75.0 (+ y 5.0))
+                (datra:paper-line id 65.0 (- y 5.0) 75.0 (- y 5.0)))))
+          (datra:text id "DATRA_CONTROL" (list 35.0 y 0.0) 2.5 "DETALLE POR DEFINIR" T))))
+    (setq index (1+ index)))
+  (if added
+    (progn
+      (setq sel (ssget "_X" (list '(0 . "TEXT") '(1 . "DETALLES APROBADOS") (cons 410 datra:*layout*))) i 0)
+      (if sel
+        (repeat (sslength sel)
+          (setq entity (ssname sel i) i (1+ i) data (entget entity))
+          (entmod (subst '(1 . "ESQUEMAS EN REVISION") (assoc 1 data) data)))))))
 
 (defun datra:put (data code value)
   (if (assoc code data) (subst (cons code value) (assoc code data) data)
@@ -216,17 +262,17 @@
                (> (* (cdr (assoc 40 data)) (cdr (assoc 41 data))) area))
         (setq old obj area (* (cdr (assoc 40 data)) (cdr (assoc 41 data)))))))
   (if old (entdel old))
-  (setvar "CLAYER" "DATRA_CONTROL")
+  (setvar "CLAYER" "DATRA_VIEWPORTS")
   (command "_.UCS" "_World")
-  (command "_.MVIEW" "_non" '(145.0 70.0) "_non" '(675.0 560.0))
+  (command "_.MVIEW" "_non" '(145.0 70.0) "_non" '(675.0 535.0))
   (setq vp (entlast))
   (if (/= (cdr (assoc 0 (entget vp))) "VIEWPORT") (datra:fail "MVIEW no creo viewport"))
   (command "_.MSPACE")
   (setvar "CVPORT" (cdr (assoc 69 (entget vp))))
   (command "_.UCS" "_World")
   (command "_.PLAN" "_World")
-  (setq scale (* 1.1 (max (/ (- xmax xmin) 530.0) (/ (- ymax ymin) 490.0) 0.01)))
-  (command "_.ZOOM" "_Center" (list (/ (+ xmin xmax) 2.0) (/ (+ ymin ymax) 2.0)) (* 490.0 scale))
+  (setq scale (max (/ (- xmax xmin) 410.0) (/ (- ymax ymin) 445.0) 0.01))
+  (command "_.ZOOM" "_C" "_non" (list (/ (+ xmin xmax) 2.0) (/ (+ ymin ymax) 2.0)) (* 465.0 scale))
   (command "_.PSPACE")
   (command "_.MVIEW" "_Lock" "_On" vp "")
   (setvar "CLAYER" previous-layer)
@@ -235,7 +281,7 @@
 (defun datra:inspect (expected file / stream lay data b selection)
   (datra:guard expected)
   (setq stream (open file "w"))
-  (foreach variable '("DWGNAME" "DWGPREFIX" "INSUNITS" "UCSNAME" "WORLDUCS" "UCSORG" "UCSXDIR" "UCSYDIR" "CTAB" "TILEMODE")
+  (foreach variable '("DWGNAME" "DWGPREFIX" "INSUNITS" "UCSNAME" "WORLDUCS" "UCSORG" "UCSXDIR" "UCSYDIR" "CTAB" "TILEMODE" "PDFSHX")
     (write-line (strcat variable "=" (vl-princ-to-string (getvar variable))) stream))
   (foreach lay (datra:layouts)
     (setq data (entget (datra:layout-entity lay)))

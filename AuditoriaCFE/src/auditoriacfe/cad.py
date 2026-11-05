@@ -90,6 +90,8 @@ def package(stage, audit, cfg, crs_info, edges):
     setup += (' T' if spec.get('unidades_verificadas') else ' nil') + ')))\n'
     # Mantener exactamente dos SCR; si el gate impide dibujar, el segundo es seguro.
     commands = ['(datra:begin ' + ' '.join(common) + ')']
+    if type(spec.get('prototipos',True)) is not bool:raise PipelineError('prototipos requiere booleano')
+    commands.append('(setq datra:*prototypes* '+('T' if spec.get('prototipos',True) else 'nil')+')')
     counts = Counter(); labels = set()
     index = {}
     for row in sorted(rows, key=lambda r: r['elemento_id']):
@@ -124,16 +126,23 @@ def package(stage, audit, cfg, crs_info, edges):
     if rows:
         xs = [float(r['este_m']) for r in rows]; ys = [float(r['norte_m']) for r in rows]
         bounds = [min(xs),min(ys),max(xs),max(ys)]
-        scale = max((bounds[2]-bounds[0])/530,(bounds[3]-bounds[1])/490,0.01)*1.1
-        # Símbolos/etiquetas en metros, tamaño de papel aproximado 1.8 mm.
+        # Reservar papel para etiquetas al este de cada símbolo; no recortarlas
+        # en el borde cuando un punto esté en el extremo del inventario.
+        scale = max((bounds[2]-bounds[0])/410,(bounds[3]-bounds[1])/445,0.01)
+        # Propuesta visual: texto 3 mm y coordenada 2.5 mm en papel.
         # Se declara estimación, no revisión visual ni promesa de legibilidad.
-        commands.insert(1, f'(setq datra:*height* {number(max(scale*1.8,0.05))})')
+        commands.insert(1, f'(setq datra:*height* {number(max(scale*3.0,0.05))})')
     expected_counts = "'("+' '.join(str(counts[kind]) for kind in TYPES)+')'
     if bounds:
         commands.append('(datra:viewport ' + ' '.join(number(v) for v in bounds) + ')')
     commands.append('(datra:finish '+literal((destination/'resultados_cad/reporte_nativo.txt').as_posix())+
                     f' {len(rows)} {len(drawn_edges)} '+expected_counts+')')
-    drawing = header + "(datra:run '(lambda () " + ' '.join(commands) + '))\n'
+    # Evitar una línea SCRIPT de megabytes para General: el programa multílínea
+    # se carga como LISP. Sigue habiendo exactamente dos SCR operativos.
+    program='(defun datra:draw ()\n'+'\n'.join(commands)+'\n)\n(princ)\n'
+    static_check(program)
+    (stage/'cad_datos.lsp').write_text(program,encoding='utf-8',newline='\n')
+    drawing=header+'(load '+literal((destination/'cad_datos.lsp').as_posix())+')\n(datra:run \'datra:draw)\n'
     if not rows:
         drawing = header + '(alert "PENDIENTE_EVIDENCIA: no hay CSV02 habilitado para dibujo. No se inserto geometria.")\n'
     for name, text in [('01_configurar_plano.scr',setup),('02_dibujar_auditoria.scr',drawing)]:
@@ -142,12 +151,13 @@ def package(stage, audit, cfg, crs_info, edges):
     static_check(RUNTIME.read_text(encoding='utf-8'))
     shutil.copyfile(RUNTIME,stage/RUNTIME.name)
     paper = dict(formato='ISO_A1_841x594_MM',orientacion='HORIZONTAL',laminas=1,layout=layout,
-                 revision_nativa='PENDIENTE_EVIDENCIA',zona_mapa_mm=[145,70,675,560],
+                 revision_nativa='PENDIENTE_EVIDENCIA',zona_mapa_mm=[145,70,675,535],
                  escala_m_por_mm_estimada=scale,etiquetas_requeridas=len(rows),
                  estado_final='BLOQUEADO_HASTA_IMPRESION_Y_ACEPTACION',
                  alerta_densidad=bool(rows and len(rows)>530*490/(30*4)),
                  limite_densidad='Diagnóstico de ocupación; no umbral de aceptación',
                  evidencia_legibilidad=None)
+    paper.update(altura_etiqueta_papel_mm_propuesta=3.0,altura_coordenada_papel_mm_propuesta=2.5)
     report = dict(estado='COMPLETADO_TECNICO',ejecucion_nativa='PENDIENTE_EVIDENCIA',modo=mode,
                   cp04='COMPILADO_PRELIMINAR' if rows else 'PENDIENTE_EVIDENCIA',
                   archivo_base=base.relative_to(audit/'entrada').as_posix(),base_sha256=sha256(base),copia_relativa='resultados_cad/'+copy_name,

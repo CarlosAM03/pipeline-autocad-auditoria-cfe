@@ -14,6 +14,9 @@ Las tablas inferiores son evidencia de entregas anteriores; no reabren Q01–Q75
 
 Q24 se aplicó mediante resoluciones locales por hash/fila, preservando fuentes y descartes. P-11 56/58 se concilia por definiciones y evidencia histórica, no impide CP-02 ni autoriza modificar datos. Nuevos conteos y gates por auditoría en [acta fase 6](../02_Harness_Integral/acta_fase_6.md). Resultado del último ensayo nativo y CI/PR/protección: cierre del arnés; no se certifican aquí por anticipado.
 
+
+Cierre posterior: ensayo Core Console 2026 aprobado en fixture y cuatro auditorías, con repetición de SCR02, persistencia y cinco PDF de una A1. No acredita CRS real ni aceptación visual/productiva; General y Mirador presentan solapamientos por calidad geográfica y densidad. Detalles y gates vigentes: [cierre integral](../02_Harness_Integral/CIERRE_INTEGRAL_2026-11-05.md).
+
 ---
 
 # Pendientes para revisión — Proceso 1

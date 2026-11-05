@@ -2,7 +2,7 @@
 
 Pipeline local Python para preparar inventarios XLSX y compilar dos scripts para AutoCAD convencional 2026 en inglés. Trabaja sobre copias, conserva el linaje y separa identificación, admisión geográfica, proyección y aceptación humana.
 
-**Estado, 2026-11-05:** software CP-01 a CP-04 implementado; evidencia geográfica y aceptación de planos reales pendientes. La suite original de 43 pruebas se conserva: **79 pruebas locales aprobadas**, sin fallidas ni omitidas. Resultados ejecutados, conteos y gates: [acta integral](AuditoriaCFE/Codex/02_Harness_Integral/acta_fase_6.md). CI técnico no equivale a aprobación productiva.
+**Estado, 2026-11-05:** software CP-01 a CP-04 implementado; evidencia geográfica y aceptación de planos reales pendientes. La suite original de 43 pruebas se conserva: **80 pruebas locales aprobadas**, sin fallidas ni omitidas. Resultados ejecutados, conteos y gates: [acta integral](AuditoriaCFE/Codex/02_Harness_Integral/acta_fase_6.md). CI técnico no equivale a aprobación productiva.
 
 | Checkpoint | Producto | Condiciones |
 |---|---|---|

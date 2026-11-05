@@ -32,7 +32,7 @@ class CADIntegralTests(unittest.TestCase):
     def test_diagnostic_points_labeled_not_productive(self):
         m=self.execute(diagnostico=True,geografia_permitida=None)
         out=self.audit.path/'salida'
-        scr=(out/'02_dibujar_auditoria.scr').read_text()
+        scr=(out/'cad_datos.lsp').read_text()
         self.assertIn('DIAGNOSTICO_NO_VERIFICADO',scr)
         self.assertEqual(scr.count('(datra:point '),1)
         self.assertNotIn('(datra:edge ',scr)
@@ -77,7 +77,7 @@ class CADIntegralTests(unittest.TestCase):
                     evidencia='TEST ONLY',responsable='TEST',fecha_aprobacion='2026-11-05')
                for a,b in [('A','B'),('B','C'),('B','D'),('D','A'),('B','A')]]
         result=package(stage,self.audit.path,cfg,dict(estado='CONTROLES_VERIFICADOS'),edges)
-        scr=(stage/'02_dibujar_auditoria.scr').read_text()
+        scr=(stage/'cad_datos.lsp').read_text()
         self.assertEqual(scr.count('(datra:edge '),4)
         self.assertIn('"5.00 m"',scr)
         self.assertNotIn('"CD"',scr)
@@ -102,3 +102,14 @@ class CADIntegralTests(unittest.TestCase):
         self.assertNotIn('_.ERASE',runtime)
         self.assertIn('INSUNITS',runtime)
         self.assertIn('DATRACONTROLES',runtime)
+
+    def test_large_program_short_scr_lines_and_packaged_data(self):
+        stage=self.audit.path/'stage';stage.mkdir()
+        rows=[[str(n),route_id(self.audit.path.name,'R'),'R','POSTE','32.5','-117',500000+n,3600000,'EPSG:32611'] for n in range(4200)]
+        csv_file(stage/'02_elementos_proyectados.csv',PROJECTED_V2,rows)
+        report=package(stage,self.audit.path,dict(cad={**self.spec,'unidades_verificadas':True},diagnostico=False),dict(estado='CONTROLES_VERIFICADOS'),[])
+        self.assertEqual(report['elementos'],4200)
+        script=(stage/'02_dibujar_auditoria.scr').read_text()
+        self.assertLess(max(map(len,script.splitlines())),512)
+        self.assertIn('cad_datos.lsp',script)
+        self.assertEqual((stage/'cad_datos.lsp').read_text().count('(datra:point '),4200)

@@ -5,10 +5,13 @@ La sección original inferior conserva su fecha y evidencia; sus referencias a �
 - OK: CP-01/02, revisión/manual por hash/fila, cuatro familias, dedup exacta/IDs, linaje y múltiples rutas, geofence y reader 02 v1/v2.
 - OK: KMZ seguro y propuestas NO_CONFIRMADAS; aristas humanas verificables con ciclos/ramas y sin atajos DFS.
 - OK técnico: dos SCR, LISP empaquetado, guard de copia, bloques/capas/etiquetas/ID, conteos reales, distancias confirmadas, A1, idempotencia; falta aceptación CAD física.
-- OK: manifiestos v2 en salida, migración y fallos recuperables; CLI individual y batch independiente; 79 pruebas locales aprobadas, compile/lint/custodia.
+- OK: manifiestos v2 en salida, migración y fallos recuperables; CLI individual y batch independiente; 80 pruebas locales aprobadas, compile/lint/custodia.
 - OK local: Natura/Mirador/Otay/General con 438/493/747/4131 grupos y hashes reproducibles; 01 sin admitidos y 02 real ausente por gates acreditables.
 - PENDIENTE EVIDENCIA: P-03, P-06, aristas definitivas, impresión legible A1/DWT y aceptación humana. [Checklist CAD nativo](../02_Harness_Integral/CHECKLIST_CAD_NATIVO.md).
 - CI/PR/protección y último intento nativo: resultado final en cierre del arnés; no marcar OK sin ejecución.
+
+
+Cierre posterior: ensayo Core Console 2026 aprobado en fixture y cuatro auditorías, con repetición de SCR02, persistencia y cinco PDF de una A1. No acredita CRS real ni aceptación visual/productiva; General y Mirador presentan solapamientos por calidad geográfica y densidad. Detalles y gates vigentes: [cierre integral](../02_Harness_Integral/CIERRE_INTEGRAL_2026-11-05.md).
 
 ---
 

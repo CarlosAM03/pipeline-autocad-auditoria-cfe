@@ -78,3 +78,9 @@
 - No cambiar bytes de 01/02 existentes sin versión nueva, diff de esquema y prueba de migración.
 - Históricos 533/965 `POINT` sirven de regresión **histórica**, no son conteos de únicos ni autoridad geográfica; Mirador DWG tenía 527 POINT frente a TXT 533, dejar diferencia documentada.
 - Contar explícitamente pruebas omitidas si no existe KMZ/AutoCAD/histórico; en CI pública no enmascararlas como 43/43 regresiones reales.
+
+## Resultado del cierre integral
+
+80 pruebas locales aprobadas, 0 fallidas/omitidas; las 43 anteriores siguen intactas. T01–T20/T22–T38 y T43/T44: código, fixtures y regresiones ejecutados según [cierre](CIERRE_INTEGRAL_2026-11-05.md). T21 queda PENDIENTE_EVIDENCIA por controles reales ausentes. T27 KMZ real disponible y leído sin confirmar propuestas.
+
+T39: Core Console 2026 ejecutó ambos SCR, repetición/idempotencia y guardado en cinco copias (fixture + cuatro auditorías), con conteos reales; GUI no acreditada. T40 DWT canónica no creada/aceptada. T41 cinco PDF de una A1 comprobados con pdfinfo; no equivalen a impresión aceptada. T42 render de General/Mirador revela solapamientos, BLOQUEANTE FINAL. T45 CI de f22d886 verde; corte posterior de 80 casos se vuelve a comprobar en PR. T46 PR #1 y protección main verificados por API, sin merge. T47 ACEPTADO_HUMANO sigue pendiente. Los resultados detallados conservan hashes locales en cada salida/resultados_cad.
