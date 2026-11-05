@@ -1,7 +1,7 @@
 # TO-BE v0.3 — Implementación integral de Pipeline CFE/DATRA
 
-**Estado:** base de implementación aprobada por decisiones Q01–Q75 (2026-11-05), **con gates de evidencia**.  
-**Autoridad:** ADR-000 conservado + ADR-001 como enmienda para aspectos expresos + contrato P-09 v1.  
+**Estado:** base de implementación aprobada por decisiones Q01–Q75 (2026-11-05), **con gates de evidencia**.
+**Autoridad:** ADR-000 conservado + ADR-001 como enmienda para aspectos expresos + contrato P-09 v1.
 **Rama técnica:** `codex/etl-unificado-auditoria-js`, punto de partida `f306074`.
 
 ## 1. Objetivo, alcance y definición de terminado

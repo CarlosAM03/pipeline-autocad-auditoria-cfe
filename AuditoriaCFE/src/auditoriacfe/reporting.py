@@ -15,6 +15,20 @@ INCIDENTS = "incidencia_id,codigo,severidad,archivo,hoja,fila,valor_original,val
 TOPOLOGY = "propuesta_id,origen_id,destino_id,ruta,tramo,distancia_plana_m,metodo,estado,justificacion".split(",")
 PROJECTED = "elemento_id,ruta_id,tipo,latitud,longitud,este_m,norte_m,crs".split(",")
 UNIFIED = "elemento_id,ruta_prevalente,tipo,coordenada_original,coordenada_interpretada,estado_preparacion,admision_geografica,apto_csv_01,archivo_prevalente,hoja_prevalente,fila_prevalente,ocurrencias".split(",")
+REVISION = 'revision_id,elemento_id,ocurrencia_id,auditoria,archivo,hoja,fila,tipo_original,coordenada_original,codigo_incidencia,estado_actual,accion_requerida,fuente_evidencia,resolucion_id'.split(',')
+
+
+def revision_file(stage, records, audit):
+    rows = []
+    for r in records:
+        if r['estado'] in ('VALIDO','DUPLICADO'):
+            continue
+        for i,event in enumerate(r['incidencias']):
+            resolution = r.get('resolucion_manual',{})
+            rows.append(['R-'+digest([r['ocurrencia_id'],i]),r['elemento_id'],r['ocurrencia_id'],audit,
+                         r['archivo_relativo'],r['hoja'],r['fila'],r['tipo_original'],r['coordenada_original'],
+                         event['codigo'],r['estado'],'REVISAR_EVIDENCIA',resolution.get('evidencia',''),resolution.get('resolucion_id','')])
+    csv_file(stage/'00_elementos_revision.csv', REVISION,rows)
 
 
 def csv_file(path, header, rows):

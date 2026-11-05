@@ -1,12 +1,12 @@
 # Plan de implementación autónoma integral — Codex
 
-**Punto de partida:** rama existente `codex/etl-unificado-auditoria-js`, commit `f306074`.  
-**Criterio de avance:** tareas técnicas no bloqueadas continúan; los gates humanos de CRS, topología y AutoCAD se documentan sin inventar aprobación.  
+**Punto de partida:** rama existente `codex/etl-unificado-auditoria-js`, commit `f306074`.
+**Criterio de avance:** tareas técnicas no bloqueadas continúan; los gates humanos de CRS, topología y AutoCAD se documentan sin inventar aprobación.
 **No autoriza** merge a `main` ni modificación destructiva del histórico.
 
 ## Fase 0 — Preflight y congelación de contexto
 
-**Entrada:** Q01–Q75 y ADR-001/TO-BE v0.3/Contrato P09.  
+**Entrada:** Q01–Q75 y ADR-001/TO-BE v0.3/Contrato P09.
 **Tareas:** leer `AGENTS.md` actualizado, comprobar rama/HEAD/remoto, `git status`, `git ls-files`, `git check-ignore`; documentar archivo rastreado `README_ENTREGA_Y_PASOS.md` actualmente eliminado y copia en `temp/` ignorado. Decidir en esta fase una de dos opciones *conservadoras* sin pérdida: restaurar el archivo original o moverlo con `git mv` a `AuditoriaCFE/Codex/00_Diagnostico/` preservando el contenido; elegir movimiento documental solo si comprueba hash/contenido y deja historial recuperable. No usar git clean/reset destructivos. Auditar patrón gitignore respecto a topología/configs privadas; no incluir datos de campo en commit.
 
 **Resultado/commit:** `docs(harness): cierra decisiones e inicia plan integral`; acta y docs, diff revisado, baseline de 43 tests.
@@ -20,7 +20,7 @@
 5. Conciliar reportes/duplicados y asegurar que valores erróneos listados quedan fuera de dibujo con motivos. Conservar 494/749 grupos como controles históricos antes de aplicar nuevas resoluciones y cambios de alcance.
 6. Implementar esquema GeoJSON/KML de perímetro y opción de excepciones; no asumir polígono autorizado si todavía no existe archivo de zona acreditado.
 
-**Salida:** CP-01 + revisión claros, fixtures de prueba sintética y cuatro configuraciones declaradas, regresiones y manifiesto.  
+**Salida:** CP-01 + revisión claros, fixtures de prueba sintética y cuatro configuraciones declaradas, regresiones y manifiesto.
 **Commit:** `feat(cp01): incorpora resoluciones y bandeja de revision`.
 
 ## Fase 2 — Geodesia, CP-02 y compatibilidad
@@ -32,7 +32,7 @@
 5. Crear modo diagnóstico explícito CRS candidato sobre copia, con rótulo imposible de confundir con entrega final y SIN sustituir CSV02 validado.
 6. Migrar manifiestos para que los persistentes residan bajo salida y ampliar verificador, conservando lectura de ejecutados 0.2.0.
 
-**Commit:** `feat(cp02): valida geodesia y contratos versionados`.  
+**Commit:** `feat(cp02): valida geodesia y contratos versionados`.
 **Gate separado:** evidencia real de CRS. Si no existe, CP-02 productivo = PENDIENTE_EVIDENCIA, no falla del software.
 
 ## Fase 3 — Integración KMZ y topología auditada
@@ -44,7 +44,7 @@
 5. Cargar topologia_confirmada.csv aprobada humanamente y rechazar aristas inventadas/incompatibles; modo solo-puntos si ninguna arista acreditada.
 6. Probar bifurcaciones, cruces visuales sin unión, ciclos, subrutas compartidas, casos con extremos desconocidos y B06 como advertencia.
 
-**Commit:** `feat(topologia): integra KMZ y aristas verificables`.  
+**Commit:** `feat(topologia): integra KMZ y aristas verificables`.
 **Gate:** sin confirmaciones no se dibujan rutas definitivas.
 
 ## Fase 4 — Plantilla DATRA canónica y CP-03
@@ -55,7 +55,7 @@
 4. Crear `01_configurar_plano.scr` determinista, idempotencia/estado, comandos globales, LISP autoinvocado empaquetado cuando sea necesario. No duplicar mapa ni insertar postes.
 5. Validar en copia de DWG nacida de DWT, imprimir A1 si AutoCAD es accesible; documentar gate GUI de otro modo.
 
-**Commit:** `feat(cp03): configura plantilla DATRA AutoCAD`.  
+**Commit:** `feat(cp03): configura plantilla DATRA AutoCAD`.
 **Gate:** DWT canónica requiere prueba nativa real.
 
 ## Fase 5 — CP-04, símbolos, trazado y pruebas CAD

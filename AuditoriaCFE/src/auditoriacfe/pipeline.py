@@ -68,7 +68,11 @@ def execute(audit, root, cfg, testing, emit):
         profiles.extend(prof)
         auxiliary.extend(aux)
         sources.append(dict(archivo=name, sha256=file_hash, bytes=path.stat().st_size))
-    prepare(records, cfg)
+    from .resolutions import load_resolutions
+    from .geofence import load_geofence
+    resolutions_info = load_resolutions(audit, records)
+    area, area_info = load_geofence(audit,cfg['geografia_permitida'])
+    prepare(records, dict(cfg,_geofence=area))
     uniques = consolidate(records, audit.name)
     master, master_info = compare_reference(audit, cfg["maestro_informativo"])
     baseline, baseline_info = compare_reference(audit, cfg["baseline_historica"], baseline=True)
@@ -113,6 +117,8 @@ def execute(audit, root, cfg, testing, emit):
     try:
         generate(stage, records, uniques, audit.name, master, baseline, refinfo,
                  projected, warnings, profiles, auxiliary, near)
+        from .reporting import revision_file
+        revision_file(stage, records, audit.name)
         code = {p.name: sha256(p) for p in sorted(Path(__file__).parent.glob("*.py"))}
         code["preparar_auditoria.py"] = sha256(config.PROJECT / "preparar_auditoria.py")
         manifest = dict(auditoria=audit.name, estado="PRELIMINAR", modo="PRUEBA" if testing else "OPERATIVO",
@@ -124,6 +130,8 @@ def execute(audit, root, cfg, testing, emit):
                         topologia="NO_CONFIRMADA", aprobacion_humana="PENDIENTE", perfiles_hojas=profiles,
                         artefactos={p.name: dict(sha256=sha256(p), bytes=p.stat().st_size) for p in sorted(stage.iterdir())})
         manifest["contrato_unificado"] = "PROPUESTA-P09-unificados-v1"
+        manifest['resoluciones'] = resolutions_info
+        manifest['ambito'] = area_info
         manifest["checkpoints"] = {
             "CP-01": dict(estado="COMPLETADO", filas=manifest["conteos"]["filas_csv_00"]),
             "CP-02": dict(normalizado="GENERADO_PRELIMINAR", proyectado=crs_info["estado"],

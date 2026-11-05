@@ -1,7 +1,7 @@
 # Acta de cierre funcional y técnico — 75 respuestas
 
-**Fecha:** 2026-11-05. **Rama/commit de referencia:** `codex/etl-unificado-auditoria-js` / `f306074`.  
-**Fuente primaria:** `00_RESPUESTAS_ORIGINALES.md`, preservada textualmente; este acta resume e interpreta las respuestas y NO suplanta el texto de origen.  
+**Fecha:** 2026-11-05. **Rama/commit de referencia:** `codex/etl-unificado-auditoria-js` / `f306074`.
+**Fuente primaria:** `00_RESPUESTAS_ORIGINALES.md`, preservada textualmente; este acta resume e interpreta las respuestas y NO suplanta el texto de origen.
 **Autoridad:** responsable del pipeline, conforme a las respuestas Q01–Q75. Contradicciones con ADR-000 se registran como enmienda explícita en ADR-001.
 
 ## Resultado del cierre

@@ -1,6 +1,6 @@
 # P-09 — Contratos operativos versionados de Pipeline CFE/DATRA
 
-**Estado:** reglas funcionales ratificadas Q10–Q19, Q72; detalles internos pendientes de implementación y prueba de compatibilidad.  
+**Estado:** reglas funcionales ratificadas Q10–Q19, Q72; detalles internos pendientes de implementación y prueba de compatibilidad.
 **Precedencia:** ADR-000 + ADR-001. El archivo v0.2 existente sirve como oráculo, no se reescribe silenciosamente.
 
 ## 1. Compatibilidad y reglas comunes
