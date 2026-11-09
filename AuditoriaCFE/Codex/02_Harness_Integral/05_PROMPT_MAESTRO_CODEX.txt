@@ -1,0 +1,78 @@
+ENCARGO AUTÓNOMO — COMPLETAR PIPELINE CFE/DATRA (CP-01 A CP-04)
+CORTE DE REFERENCIA: f3060742e9a2ce90d186802ab3de5a4ccd968633
+RAMA DESTINO: codex/etl-unificado-auditoria-js (CONTINUAR EN ESTA RAMA)
+FECHA DE DECISIONES: 2026-11-05, RESPUESTAS Q01–Q75
+
+MISIÓN
+
+Completa la implementación integral y verificable del pipeline de auditorías CFE/DATRA sobre los módulos Python existentes. Debe poder seleccionar una auditoría, procesar en copia XLSX originales ignorados por Git, obtener CSV 00/01/02 cuando cumpla sus condiciones, verificar fuentes y topología, compilar exactamente los dos scripts AutoCAD y permitir dibujar en una COPIA del DWG DATRA existente con una sola lámina A1. Implementa CI, pruebas, documentación, checklists y modo batch. Trabaja autónomamente en tareas de ingeniería sin detenerte por un problema técnicamente resoluble. Si falta un dato físico que solo pueda acreditar el responsable, no inventes su respuesta: deja un gate verificable y termina todo lo demás.
+
+1) LECTURA OBLIGATORIA Y PRECEDENCIA
+
+- AGENTS.md (versión del paquete de arnés que acaba de colocarse en raíz; si no está actualizada, NO sobreescribir silenciosamente: comparar y adoptar la versión del paquete para esta fase).
+- AuditoriaCFE/Docs/ADRs/ADR-000_Decisiones_Base_Pipeline_Auditorias_CFE.md.
+- AuditoriaCFE/Docs/ADRs/ADR-001_Enmienda_Cierre_2026-11-05.md.
+- AuditoriaCFE/Docs/Specs/Especificacion_Pipeline_Auditorias_CFE_TOBE_v0.2.md (histórico que no se borra) y v0.3 (nueva autoridad técnica).
+- AuditoriaCFE/Docs/Specs/Contrato_Salidas_Pipeline_P09_v1.md.
+- AuditoriaCFE/Codex/02_Harness_Integral/00_RESPUESTAS_ORIGINALES.md y 01_ACTA_CIERRE.md.
+- AuditoriaCFE/Codex/02_Harness_Integral/02_PLAN_IMPLEMENTACION.md, 03_MATRIZ_PRUEBAS.md, 04_REGISTRO_RIESGOS.md.
+- Todos los módulos Python bajo src/auditoriacfe, tests existentes y diagnósticos/recursos CAD en Codex/00_Diagnostico y 01_Implementacion_Proceso1.
+
+No interpretes archivos históricos JS como fuente de verdad. Ante conflicto entre ADR-000 y decisiones de noviembre 5, ADR-001 prevalece SOLO en enmiendas explícitas. Si detectas otra contradicción, regístrala e implementa la alternativa compatible más conservadora sin cambiar una regla de negocio silenciosamente.
+
+2) PRE-FLIGHT INMEDIATO
+
+Comprueba Git (HEAD, rama, estado, .gitignore, f306074 y commits existentes). NO crear rama nueva. No ejecutar reset --hard/clean ni perder el README_ENTREGA_Y_PASOS.md rastreado que hoy figura eliminado, aunque exista copia en temp/ ignorado. Resuélvelo por restauración o traslado versionado a Codex, preservando bytes y explicando la elección. No hacer git add .; no cambiar tags ni reescribir commits anteriores.
+
+El histórico bajo Auditorias-20261104T035633Z-1-001 es SOLO LECTURA. Identifica fuentes por rutas exactas y hashes; copia a AuditoriaCFE/auditorias/<auditoria>/entrada y trabaja allí. Nunca ejecutes JS antiguo sobre originales ni abras DWG histórico para guardar sobre él. Si un KMZ citado por el owner no está entre paths explícitos, no adivines ubicación ni explores directorios privados: registra su ausencia y desarrolla importación con fixtures sintéticos.
+
+Los recursos base locales autorizados son:
+- AuditoriaCFE/recursos/PlantillaMarcoDatraMapaTijuana.dwg (BASE DATRA de trabajo para esta ejecución).
+- AuditoriaCFE/recursos/MARCO_DATRA_A1_EMPRESA_v0_2.dxf (cajetín/marco editable).
+- AuditoriaCFE/recursos/146468_PLANOTIJUANA.dwg (original CFE de referencia).
+- AuditoriaCFE/recursos/logo_datra.png y MapaTijuanaParaMARCO.png.
+- AuditoriaCFE/recursos/PlantillaMarcoDatraMapaTijuana.pdf (referencia de diseño).
+- Históricos Auditoria-STD-MIRADOR.dwg y Otay como comparativos; Mirador UTM84-11N y metros nominales.
+
+Antes de generar configuraciones de producción, comprueba cuáles de esos archivos realmente existen localmente y conserva sus SHA. El repo público puede carecer de los binarios ignorados. No declares fallido todo el encargo si un recurso CAD físico falta: documenta gate y avanza compiladores/fixtures.
+
+3) EJECUCIÓN POR CHECKPOINTS — SIN PAUSAS DE CONSULTA TÉCNICA
+
+Completa fases 0 a 6 del PLAN_IMPLEMENTACION.md. Resuelve fallos unitarios, refactoriza con prudencia, añade nuevos módulos y pruebas, y ejecuta regresiones después de cada checkpoint. El orden de implementación puede optimizarse por dependencias, sin saltarse ningún objetivo. Al finalizar cada fase: actualizar documentación de Codex, ejecutar pruebas, crear commit pequeño y dejar SHA verificable.
+
+CP-01: conservar CSV 00 original de 12 columnas y CSV 01 literal de 3 columnas; agregar bandeja 00_elementos_revision.csv separada, resolución manual por fila/archivo/hash/evidencia y normalización de variantes de tipos. Los 494 grupos Mirador y 749 Otay son referencia de la situación anterior, no necesariamente totales finales después de resoluciones. Q05 significa que el orden de las coordenadas no es conectividad; mantener precedencia de fuentes estable A05 para el registro prevalente. Natura un solo XLSX/14 rutas, Mirador STD+Canal+copia, Otay Vía Rápida+FLO final+Protección Civil, General solo Postes_CFE.xlsx. Bomberos únicamente candidato futuro. Todos los errores históricos enumerados en el acta deben excluirse de geometría con informe, sin alterar XLSX.
+
+CP-02: ampliar geofences a GeoJSON/KML aprobados con excepciones y retrocompatibilidad rectangular; conservar sin admisión los casos remotos/inciertos. Mantener pyproj y gate P-06: dos controles reales distintos WCS↔WGS84 y tolerancia acreditada. Mirador muestra UTM84-11N y metros, pero base DATRA aún no tiene CRS geográfico acreditado. EPSG:32611 sigue candidato; no reutilices offset ~11.5m. Crear CSV02 v2 con ruta_id real + ruta_nombre, reader legacy v1 y esquema claramente versionado. Cualquier modo de prueba CRS no validado se ejecuta en COPIA y se rotula DIAGNOSTICO, no se presenta como CSV02 productivo.
+
+TOPOLOGÍA: diseñar importador seguro de KMZ/KML y archivos de aristas confirmadas, con mapa de IDs externos de postes y trazos. La infraestructura global tiene tres anillos, pero **NO se dibujan por esa mera afirmación**. Inicios/finales desconocidos, B06 solo diagnóstico. Grafo de postes físicos con ciclos/desconexiones/ramas; las cajas y excedentes no son conectores por defecto. Generar propuestas verificables sin confirmación automática. El archivo topologia_confirmada.csv firmado en entrada es la única autoridad para líneas físicas. Si no hay KMZ o aprobación, probar con fixtures y emitir SOLO PUNTOS PRELIMINAR.
+
+PLANTILLA: trabajar desde copia de PlantillaMarcoDatraMapaTijuana.dwg, sin redibujar Tijuana. Inspeccionar y documentar Model/Paper, INSUNITS, UCS/WCS, capas, bloques, contenido de los paneles TENSION/SUSPENSION/DERIVACION/EMPALME/OTROS, logo, papel A1 e imágenes/estilos. Aprovechar marco DXF. Permitir esquemas prototipo sin afirmar material/cable real. La DWT nativa no queda aprobada si no se guardó/abrió con AutoCAD real y se verificó WCS + papel, aun cuando el diseño esté al 90%.
+
+CP-03: compilar 01_configurar_plano.scr determinista para AutoCAD convencional 2026 inglés, con capas, estilos, bloques y unidades verificables. Puede auto-invocar LISP empaquetado, pero dos SCR son los únicos pasos de usuario. NO insertar mapa ni puntos en este SCR.
+
+CP-04: compilar 02_dibujar_auditoria.scr desde 02 válido y topología CONFIRMADA, o desde datos diagnósticos solo para prueba rotulada sobre copia; bloques POSTE/CAJA_EMP/EXCEDENTE, etiquetas P/C/E e ID estable, coordenada WGS84 textual, tabla conteos dibujados; polilíneas de aristas confirmadas sin saltos/retornos falsos DFS. Distancias entre postes conectados en metros planimétricos. Una sola A1 horizontal: si General no permite etiquetas legibles, registrar bloqueo FINAL y propuesta de excepción, nunca ocultar requisitos ni crear hojas extras unilateralmente.
+
+OPERACIÓN: generar outputs persistentes dentro de salida/ y entradas en entrada/; mantener código, config, docs oficiales y material Codex en sus carpetas respectivas. Migrar manifiestos antiguos fuera de salida sin pérdida y con test de recuperación/crash. Añadir --batch para las cuatro auditorías y resumen separado, GitHub Actions sin fuentes privadas y benchmarks RSS/tiempo/IO. Mantener suite 43 tests, oráculo congelado con hash y tests originales con distinción OMITIDO/OK. Añadir en tests escenarios de KMZ, geofence, CRS, topología, AutoCAD SCR, idempotencia, impreso y manifest migrado.
+
+4) CAD, PERMISOS Y PUBLICACIÓN
+
+Autorizado a usar AutoCAD 2026 local, si puedes hacerlo, solo sobre COPIAS. Si no tienes control GUI, NO te detengas ni declares ejecución CAD; termina compiladores, validación estática, perfiles, fixtures y checklist manual de pruebas nativas pendientes. No diseñes ni certifiques capturas o métricas inexistentes. No prometas DWT/DWG/PDF de AutoCAD si no pudiste generarlos.
+
+La rama seguirá pública salvo cambio posterior. La transcripción `00_RESPUESTAS_ORIGINALES.md` está intencionalmente ignorada por el `.gitignore` del arnés y NO debe forzarse al índice. `.gitignore` existente no siempre ignora configuraciones de auditoría ni topología fuera de entrada/salida: valida `git ls-files`, staged diff y patrones antes de push; nunca subas XLSX, KMZ, aristas de infraestructura, resoluciones con coordenadas reales ni nuevos DWG/DWT propietarios sin licencia/permiso de difusión acreditado. Código, documentación y fixtures ficticios sí pueden versionarse. Si un binario canónico no es publicable, conservar versión local con hash y registrar cómo obtenerlo sin añadirlo al commit.
+
+5) CRITERIOS DE ÉXITO Y REPORTE FINAL
+
+EJECUTA las pruebas y reporta resultados reales, con total aprobado/fallido/omitido. CI GitHub Actions con tests portables; los históricos/CAD se verifican localmente solo si disponibles. Ejecuta ensayo de una carpeta, luego batch y las cuatro auditorías. No declarar las cuatro pruebas reales completadas si no se dispone de fuentes/perímetros/controles CAD. Producir `acta_checkpoint.md` por CP y auditoría, manifiestos, conteos y PR listo.
+
+Cada checkpoint debe tener:
+- código, scripts, fixtures y documentación actualizados;
+- tests, coverage cualitativo y SHA/manifest de entradas y salidas;
+- pruebas negativas de anomalías y seguridad;
+- gates: TECNICAMENTE_COMPLETO / PENDIENTE_EVIDENCIA / PRELIMINAR / FALLIDO / ACEPTADO_HUMANO;
+- riesgos residuales y manual CAD mínimo que quedará para owner.
+
+GIT: crea commits por fase en la rama codex/etl-unificado-auditoria-js y push de cambios permitidos. Prepara PR hacia main si tienes permiso; NO LO FUSIONES ni modifiques main, no rebase destructivo ni force-push. Si no hay permiso de PR, entrega URL exacta de comparación o procedimiento UI y el estado remoto. Intenta configurar protecciones de rama y checks si tu permiso lo permite; si no, deja guía manual precisa sin afirmar éxito.
+
+NO DETENERTE por decisiones YA CONTESTADAS (Q01–Q75), por ausencia de KMZ/GUI que permiten seguir módulos independientes ni por problemas técnicos reparables. Solo detén el subproducto que no pueda acreditarse; continúa todo lo demás. En tu respuesta final, distingue: (A) implementación terminada, (B) verificación real ejecutada, (C) trabajo listo pero pendiente de evidencia CAD/KMZ/owner, (D) datos que no pueden entregarse aún, (E) commits/PR/CI y su estado real.
+
+No entregues una "IMPLEMENTACIÓN COMPLETA FINAL" si falta la aceptación humana o el CRS real; entrega en cambio software integral concluido con gates explícitos, que podrá validarse cuando la evidencia exista.

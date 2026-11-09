@@ -1,0 +1,66 @@
+{
+  "corte_codigo": "f3060742e9a2ce90d186802ab3de5a4ccd968633",
+  "fecha_decisiones": "2026-11-05",
+  "archivos": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "52d6715dba9c6b47bfaeaf9ea28a5aabe7734c5b87edee94ae4ca49e23674874",
+      "bytes": 6212
+    },
+    {
+      "path": "AuditoriaCFE/Codex/02_Harness_Integral/.gitignore",
+      "sha256": "d7af3d77ce323e7c2c0803b949756d0efb3fe2a96912d33bc1954ccefa02e1ad",
+      "bytes": 29
+    },
+    {
+      "path": "AuditoriaCFE/Codex/02_Harness_Integral/00_RESPUESTAS_ORIGINALES.md",
+      "sha256": "1c6d2c8878a4765cb6b96647a62f10e3961ddd07e5ce083a97732e71f9cb911c",
+      "bytes": 32492
+    },
+    {
+      "path": "AuditoriaCFE/Codex/02_Harness_Integral/01_ACTA_CIERRE.md",
+      "sha256": "fd20d7b42d0cd79a64ba4658dbb8eeee238f1d751cb5a6751cbe4646549ac4c3",
+      "bytes": 15978
+    },
+    {
+      "path": "AuditoriaCFE/Codex/02_Harness_Integral/02_PLAN_IMPLEMENTACION.md",
+      "sha256": "e042ee331e11322a3f5dd6f3b91016cdf531982eb0531ab4cd2c28b482ec8318",
+      "bytes": 9764
+    },
+    {
+      "path": "AuditoriaCFE/Codex/02_Harness_Integral/03_MATRIZ_PRUEBAS.md",
+      "sha256": "37406cb6e2fea53600bb9b25dbc8f47a99ad73e8f21b7c8bd06c3f14f00c0667",
+      "bytes": 7417
+    },
+    {
+      "path": "AuditoriaCFE/Codex/02_Harness_Integral/04_REGISTRO_RIESGOS.md",
+      "sha256": "27a57ee1f5ddf30d19b249aba5ba3e118a17f1f1a1e599cc897971b6643f8f6a",
+      "bytes": 4310
+    },
+    {
+      "path": "AuditoriaCFE/Codex/02_Harness_Integral/05_PROMPT_MAESTRO_CODEX.txt",
+      "sha256": "59d08020abfb348dc0008a5cd6803a39a4a072e897740ee8fe71e0569cfe01cc",
+      "bytes": 11655
+    },
+    {
+      "path": "AuditoriaCFE/Docs/ADRs/ADR-001_Enmienda_Cierre_2026-11-05.md",
+      "sha256": "1b34772d328ffca0a265eaa89e6f011354544f4b4626b8491d35e0c98fcbc8f9",
+      "bytes": 6950
+    },
+    {
+      "path": "AuditoriaCFE/Docs/Specs/Contrato_Salidas_Pipeline_P09_v1.md",
+      "sha256": "12b78c0ee745c6164d60702590973316dd1d3839a49732a89adcefba253c9906",
+      "bytes": 7986
+    },
+    {
+      "path": "AuditoriaCFE/Docs/Specs/Especificacion_Pipeline_Auditorias_CFE_TOBE_v0.3.md",
+      "sha256": "2303fe9a816ee73951485dc3ed200ddb96028cd2331b7a2dffa523052e392b23",
+      "bytes": 12953
+    },
+    {
+      "path": "README_INSTALACION.md",
+      "sha256": "a7ca748e6689782da90e44786256ce859ad9542048023939dfce2d8cba89ee36",
+      "bytes": 3264
+    }
+  ]
+}
