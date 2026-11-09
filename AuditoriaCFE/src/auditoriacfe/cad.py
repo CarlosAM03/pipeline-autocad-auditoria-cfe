@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .projection import read_projected
 from . import cad_presentation
+from . import cad_review
 from .presentation import Profile
 from .util import PipelineError, digest, json_text, sha256, within
 
@@ -183,6 +184,10 @@ def package(stage, audit, cfg, crs_info, edges, *, experiment=None):
         commands.insert(1, f'(setq datra:*height* {number(max(scale*3.0,0.05))})')
     expected_counts = "'("+' '.join(str(counts[kind]) for kind in TYPES)+')'
     page_data = None
+    review = spec.get('revision_documental')
+    if review is not None and (not bounds or presentation is None or drawn_edges or not diagnostic
+                               or cfg.get('crs_candidato') != 'EPSG:32611'):
+        raise PipelineError('Revisión documental requiere diagnóstico EPSG:32611 con puntos y sin aristas')
     if bounds and presentation is not None:
         check, views, sizes, page_data = cad_presentation.compile_pages(
             stage, rows, presentation, layout, owner, audit_name, label_index, literal, number)
@@ -190,10 +195,13 @@ def package(stage, audit, cfg, crs_info, edges, *, experiment=None):
         commands.insert(2, "(setq datra:*symbol-scales* '(" + ' '.join(
             f'({literal(kind)} . {number(size)})' for kind,size in sizes.items()) + '))')
         detail_count = "(datra:cajetin " + expected_counts + ")"
+        review_call = cad_review.compile_review(stage, review, rows, visibility, literal) if review is not None else None
         for line in views:
             commands.append(line)
             if line.startswith('(datra:page '):
                 commands.append(detail_count)
+            if review_call and line.startswith('(datra:sheet-title '):
+                commands.append(review_call)
     elif bounds:
         commands.append('(datra:viewport ' + ' '.join(number(v) for v in bounds) + ')')
     commands.append('(datra:finish '+literal((destination/'resultados_cad/reporte_nativo.txt').as_posix())+
@@ -208,6 +216,11 @@ def package(stage, audit, cfg, crs_info, edges, *, experiment=None):
         helper = cad_presentation.RUNTIME
         static_check(helper.read_text(encoding='utf-8'))
         shutil.copyfile(helper,stage/helper.name)
+        drawing = f'(load {literal((destination/helper.name).as_posix())})\n'+drawing
+    if review is not None:
+        helper = cad_review.RUNTIME
+        static_check(helper.read_text(encoding='utf-8'))
+        shutil.copyfile(helper, stage/helper.name)
         drawing = f'(load {literal((destination/helper.name).as_posix())})\n'+drawing
     if not rows:
         drawing = header + '(alert "PENDIENTE_EVIDENCIA: no hay CSV02 habilitado para dibujo. No se inserto geometria.")\n'

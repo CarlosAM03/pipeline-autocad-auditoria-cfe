@@ -14,7 +14,8 @@
 
 (defun datra:snapshot (/ s i e d a result)
   (setq s (ssget "_X" '((-4 . "<OR") (-3 ("DATRA_CFE"))
-    (0 . "VIEWPORT") (2 . "DATRA_CAJETIN_A1") (-4 . "OR>"))) i 0)
+    (0 . "VIEWPORT") (2 . "DATRA_CAJETIN_A1")
+    (8 . "DATRA_A1_SIMBOLOS,DATRA_A1_TEXTO") (-4 . "OR>"))) i 0)
   (if s (repeat (sslength s)
     (setq e (ssname s i) i (1+ i) d (entget e '("DATRA_CFE")) result (cons (cons e d) result))
     (if (and (= (cdr (assoc 0 d)) "INSERT") (= (cdr (assoc 66 d)) 1))
@@ -234,7 +235,7 @@
   (if (or (/= points datra:*points*) (/= edges datra:*edges*))
     (datra:fail "Conteos de insercion no coinciden"))
   (setq actual 0 p 0 c 0 x 0 actualedges 0
-        selection (ssget "_X" '((0 . "INSERT") (-3 ("DATRA_CFE")))))
+        selection (ssget "_X" '((0 . "INSERT") (410 . "Model") (-3 ("DATRA_CFE")))))
   (if selection
     (progn (setq i 0)
       (repeat (sslength selection)

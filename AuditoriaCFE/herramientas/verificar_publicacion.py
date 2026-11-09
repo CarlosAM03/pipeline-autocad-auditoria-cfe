@@ -16,7 +16,8 @@ def violations(paths, *, staged=False):
             (staged and path.name.lower() in ('logo_datra.png','mapatijuanaparamarco.png')) or
             name.startswith('Auditorias-20261104T035633Z-1-001/') or
             name.startswith('AuditoriaCFE/auditorias/_comparativa_A4_1_1/') or
-            name.startswith(('AuditoriaCFE/auditorias/_a4_2/', 'AuditoriaCFE/auditorias/_a4_2_1/')) or
+            name.startswith(('AuditoriaCFE/auditorias/_a4_2/', 'AuditoriaCFE/auditorias/_a4_2_1/',
+                             'AuditoriaCFE/auditorias/_a4_2_2/')) or
             any(part in ('.venv','.venv-cp01','entrada','salida','temporales','_runtime','__pycache__') for part in path.parts) or
             (name.startswith('AuditoriaCFE/auditorias/') and path.name in
              ('configuracion.json','topologia_confirmada.csv','resoluciones_manual.csv'))):
