@@ -145,3 +145,5 @@ AuditoriaCFE/recursos/FASE3B_Integracion_Desde_PlanoTijuana/
 /AuditoriaCFE/auditorias/*/resoluciones_manual.csv
 /AuditoriaCFE/recursos/*.dwg
 /AuditoriaCFE/recursos/*.dwt
+
+/CFE_CONTINUIDAD_PRESENTACION_CAD_0267abf_v1/*.pdf
