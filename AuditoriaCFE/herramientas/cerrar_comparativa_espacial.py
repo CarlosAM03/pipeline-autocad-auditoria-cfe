@@ -125,14 +125,17 @@ def finish(name,radius):
     summary['conservados_fuera_ambito_candidato']=summary['fuera_ambito_candidato']-summary['excluidos_fuera_ambito_candidato']
     save(variant/'RESUMEN_VARIANTE.json',summary)
     extras=[r for r in read(variant/'SUMMARY_COORDENADAS_DESCARTADAS.csv') if '::' in r['metrica']]
-    extras=[r for r in extras if not r['metrica'].startswith('subruta_asociada::')]
+    extras=[r for r in extras if not r['metrica'].startswith(('subruta_asociada::','microcomponente::'))]
     excluded_ids={r['elemento_id'] for r in excluded}
     associated=Counter(route for _,route in {(r['elemento_id'],r['ruta_original'])
         for r in read(variant/'asociaciones_elemento_ruta.csv') if r['elemento_id'] in excluded_ids})
+    groups=json_read(variant/'COMPONENTES_ESPACIALES.json')
+    micro=[(f"microcomponente::{g['componente']}",json.dumps(dict(posiciones=g['posiciones'],
+            poste_conservado_id=g.get('poste_conservado_id'),distancia_m=g.get('distancia_conservado'))))
+           for g in groups if not g['conservado']]
     csv_file(variant/'SUMMARY_COORDENADAS_DESCARTADAS.csv',['metrica','valor'],
              [*summary.items(),*((r['metrica'],r['valor']) for r in extras),
-              *((f'subruta_asociada::{k}',v) for k,v in sorted(associated.items()))])
-    groups=json_read(variant/'COMPONENTES_ESPACIALES.json')
+              *((f'subruta_asociada::{k}',v) for k,v in sorted(associated.items())),*micro])
     lines=[f'# {name} · {radius} m · diagnóstico experimental','',
         f"Identidades de referencia {summary['total_original']}. Conservadas {len(retained)}. "
         f"Excluidas de la vista {len(excluded)} ({summary['porcentaje_excluido']:.2f} %).",
@@ -160,7 +163,7 @@ def finish(name,radius):
     for filename in ('RESUMEN_VARIANTE.md','SUMMARY_COORDENADAS_DESCARTADAS.md'):
         (variant/filename).write_text(text,encoding='utf-8')
     files={p.relative_to(variant).as_posix():sha256(p) for p in sorted(variant.rglob('*'))
-           if p.is_file() and p.name not in ('SHA256SUMS.txt','MANIFIESTO_VARIANTE.json')
+           if p.is_file() and p not in (variant/'SHA256SUMS.txt',variant/'MANIFIESTO_VARIANTE.json')
            and p.suffix.lower() not in ('.bak','.dwl','.dwl2')}
     manifest.update(artefactos=files,resultado=summary['cad'],aceptacion_humana='PENDIENTE')
     save(variant/'MANIFIESTO_VARIANTE.json',manifest)
