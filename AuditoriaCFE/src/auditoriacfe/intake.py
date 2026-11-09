@@ -4,11 +4,11 @@ import shutil
 from .config import AUDITS, PROJECT
 from .util import PipelineError, output_path, sha256, json_text, within
 
-PREFIX = 'CFE POSTES OTAY-FLORIDO_STD PLAYAS MIRADOR/'
+BOMBEROS = 'CFE FLO-OTAY-BOMBEROS.xlsx'
 SOURCES = {
     'Natura':['CFE Natura  - Datra/Natura  - Datra.xlsx'],
-    'Mirador':[PREFIX+'Mirador/'+n for n in ('STD HACIA CNAL 12.xlsx','Ruta canal 12 level antes 2014 Completo.xlsx','Copy of STD HACIA CNAL 12.xlsx')],
-    'Otay-Florido':[PREFIX+'Otay - Florido/'+n for n in ('ruta via rapida interc STD CC CALZ DEL TECNOLOGICO FO72.xlsx','RUTA FLO-OTAY FO96 final.xlsx','ruta proteccion civil-blvr industrial-blvr industrial-esq blvr teran teran.xlsx')],
+    'Mirador':['Mirador/'+n for n in ('STD HACIA CNAL 12.xlsx','Ruta canal 12 level antes 2014 Completo.xlsx','Copy of STD HACIA CNAL 12.xlsx')],
+    'Otay-Florido':['Otay - Florido/'+n for n in ('ruta via rapida interc STD CC CALZ DEL TECNOLOGICO FO72.xlsx','RUTA FLO-OTAY FO96 final.xlsx','ruta proteccion civil-blvr industrial-blvr industrial-esq blvr teran teran.xlsx',BOMBEROS)],
     'Tijuana-General':['Postes_CFE.xlsx']}
 
 

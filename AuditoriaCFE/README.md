@@ -1,6 +1,6 @@
 # Pipeline local CFE / DATRA
 
-Python >=3.10, extracción OOXML secuencial sin imágenes. CP-01/02 y compiladores CP-03/04 integrados bajo ADR-000 + ADR-001, TO-BE v0.3 y contrato P-09 v1. La aprobación de evidencia y el plano FINAL siguen siendo humanos. No se ejecuta AutoCAD al correr el ETL.
+Python >=3.10, extracción OOXML secuencial sin imágenes. CP-01/02 y compiladores CP-03/04 integrados bajo ADR-000 + ADR-001, TO-BE v0.3 y contrato P-09 v1. [ADR-002](Docs/ADRs/ADR-002_Presentacion_Multipagina_Y_Rutas_v1.md) enmienda rutas y presentación para A4.1. La aprobación de evidencia y el plano FINAL siguen siendo humanos. No se ejecuta AutoCAD al correr el ETL.
 
 ## Instalación y pruebas
 
@@ -31,7 +31,7 @@ python AuditoriaCFE/preparar_auditoria.py --batch --diagnostico
 
 Sin `--auditoria` se selecciona por consola. `--dry-run` inventaría y muestra XLSX y precedencia sin abrir celdas ni escribir. `--entrada-prueba` conserva pruebas históricas readonly y estado PRUEBA; no se admite junto a batch. Códigos: 0 ejecución técnica (puede estar PRELIMINAR), 2 fallo, 130 interrupción. Batch continúa después de un fallo y devuelve 2 si cualquiera falla.
 
-Las cuatro auditorías son Natura (un XLSX, 14 subrutas), Mirador (STD, Canal, copia), Otay-Florido (Vía Rápida, FLO final, Protección Civil) y Tijuana-General (solo Postes_CFE). Bomberos no se incorpora. `intake.py` contiene las rutas exactas, copia sin sobreescribir cambios y registra SHA. No busca directorios privados ni descomprime respaldos. Maestro derivado separado en CSV informativo; su fecha de copia no se presenta como fecha del levantamiento ni baseline histórica.
+Las cuatro auditorías son Natura (un XLSX, 14 subrutas), Mirador (STD, Canal, copia), Otay-Florido (Vía Rápida, FLO final, Protección Civil y Bomberos, en ese orden) y Tijuana-General (solo Postes_CFE). `intake.py` contiene las rutas exactas, copia sin sobreescribir cambios y registra SHA. No busca directorios privados ni descomprime respaldos. Maestro derivado separado en CSV informativo; su fecha de copia no se presenta como fecha del levantamiento ni baseline histórica.
 
 ```text
 auditorias/<auditoria>/
@@ -77,6 +77,12 @@ Conservar `configuracion.ejemplo.json` como perfil legacy; para arnés integral 
 El 02 v1 sigue leyéndose: su ruta_id era el nombre literal, se interpreta bajo versión 1; v2 tiene ID estable separado del nombre. El esquema se declara en manifiesto. Los 00/01 no cambian de encabezado ni cardinalidad por incorporar CAD.
 
 La única autoridad de líneas es `entrada/topologia_confirmada.csv` con contrato de P-09: arista_id,origen_id,destino_id,ruta_id,tramo_id,clase,evidencia,responsable,fecha_aprobacion,estado. Solo CONFIRMADA, extremos POSTE admitidos, sin autobucles ni desconocidos; conserva subrutas pero dibuja cada par físico una sola vez. Cajas/excedentes no son conectores por defecto. Segmentos independientes representan ciclos/ramas sin saltos falsos DFS ni retornos duplicados. Distancia plana no equivale al metraje real de cable.
+
+## Presentación A1 para las rutas prioritarias
+
+En el perfil CAD, `"presentacion":{}` habilita ADR-002. Los perfiles sin esa clave conservan el comportamiento anterior. Se puede configurar `escala_detalle` (unidades de Model por mm de papel), `poste_mm`, `caja_mm`, `excedente_mm`, `coordenada_mm`, `identificador_mm` (cero oculta el ID gráfico), `separacion_mm`, `margen_mm` y `lider_max_mm`.
+
+El compilador intenta una hoja. Cuando la extensión o la colocación de etiquetas exige dividir el inventario, crea una vista general y hojas de detalle. `presentacion_paginas.json` contiene las cámaras y el orden para publicar. `indice_presentacion.csv` conserva ID completo, tipo, coordenada y página primaria. Para repetir un plan distinto de hojas, generar una nueva copia del DWG. Publicar los layouts declarados, en ese orden, como un solo PDF A1 horizontal. Consultar las [instrucciones A4.1](Codex/04_Diagnostico_Presentacion_CAD/A4_1_Presentacion_Rutas/INSTRUCCIONES_OPERADOR.md).
 
 ## Operación AutoCAD
 

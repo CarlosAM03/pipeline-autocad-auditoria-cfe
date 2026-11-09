@@ -7,6 +7,8 @@ from decimal import Decimal
 from pathlib import Path
 
 from .projection import read_projected
+from . import cad_presentation
+from .presentation import Profile
 from .util import PipelineError, digest, json_text, sha256, within
 
 RUNTIME = Path(__file__).with_name('cad_runtime.lsp')
@@ -71,6 +73,9 @@ def package(stage, audit, cfg, crs_info, edges):
     if type(spec.get('unidades_verificadas', False)) is not bool:
         raise PipelineError('unidades_verificadas requiere booleano')
     diagnostic = cfg['diagnostico']
+    presentation = spec.get('presentacion')
+    if presentation is not None:
+        Profile.parse(presentation)
     productive = crs_info['estado'] == 'CONTROLES_VERIFICADOS' and not diagnostic
     if productive and spec.get('unidades_verificadas') is not True:
         productive = False
@@ -103,6 +108,7 @@ def package(stage, audit, cfg, crs_info, edges):
     commands.append('(setq datra:*prototypes* '+('T' if spec.get('prototipos',True) else 'nil')+')')
     counts = Counter(); labels = set()
     index = {}
+    label_index = {}
     for row in sorted(rows, key=lambda r: r['elemento_id']):
         kind = row['tipo']; counts[kind] += 1
         # Número estable derivado del ID completo; colisión => bloquear, nunca ocultar.
@@ -113,6 +119,7 @@ def package(stage, audit, cfg, crs_info, edges):
         commands.append('(datra:point ' + ' '.join([literal(row['elemento_id']), literal(TYPES[kind][1]),
                         literal(kind), x, y, literal(label), literal(geo_label(row))]) + ')')
         index[row['elemento_id']] = row
+        label_index[row['elemento_id']] = label
     physical = set(); drawn_edges = []
     # Diagnóstico candidato siempre SOLO PUNTOS, incluso si hay una propuesta de red.
     if productive:
@@ -142,7 +149,19 @@ def package(stage, audit, cfg, crs_info, edges):
         # Se declara estimación, no revisión visual ni promesa de legibilidad.
         commands.insert(1, f'(setq datra:*height* {number(max(scale*3.0,0.05))})')
     expected_counts = "'("+' '.join(str(counts[kind]) for kind in TYPES)+')'
-    if bounds:
+    page_data = None
+    if bounds and presentation is not None:
+        check, views, sizes, page_data = cad_presentation.compile_pages(
+            stage, rows, presentation, layout, owner, audit.name, label_index, literal, number)
+        commands.insert(0, check)
+        commands.insert(2, "(setq datra:*symbol-scales* '(" + ' '.join(
+            f'({literal(kind)} . {number(size)})' for kind,size in sizes.items()) + '))')
+        detail_count = "(datra:cajetin " + expected_counts + ")"
+        for line in views:
+            commands.append(line)
+            if line.startswith('(datra:page '):
+                commands.append(detail_count)
+    elif bounds:
         commands.append('(datra:viewport ' + ' '.join(number(v) for v in bounds) + ')')
     commands.append('(datra:finish '+literal((destination/'resultados_cad/reporte_nativo.txt').as_posix())+
                     f' {len(rows)} {len(drawn_edges)} '+expected_counts+')')
@@ -152,6 +171,11 @@ def package(stage, audit, cfg, crs_info, edges):
     static_check(program)
     (stage/'cad_datos.lsp').write_text(program,encoding='utf-8',newline='\n')
     drawing=header+'(load '+literal((destination/'cad_datos.lsp').as_posix())+')\n(datra:run \'datra:draw)\n'
+    if page_data is not None:
+        helper = cad_presentation.RUNTIME
+        static_check(helper.read_text(encoding='utf-8'))
+        shutil.copyfile(helper,stage/helper.name)
+        drawing = f'(load {literal((destination/helper.name).as_posix())})\n'+drawing
     if not rows:
         drawing = header + '(alert "PENDIENTE_EVIDENCIA: no hay CSV02 habilitado para dibujo. No se inserto geometria.")\n'
     for name, text in [('01_configurar_plano.scr',setup),('02_dibujar_auditoria.scr',drawing)]:
@@ -167,6 +191,11 @@ def package(stage, audit, cfg, crs_info, edges):
                  limite_densidad='Diagnóstico de ocupación; no umbral de aceptación',
                  evidencia_legibilidad=None)
     paper.update(altura_etiqueta_papel_mm_propuesta=3.0,altura_coordenada_papel_mm_propuesta=2.5)
+    if page_data is not None:
+        paper.update(laminas=len(page_data['hojas']), hojas=page_data['hojas'],
+                     escala_m_por_mm_estimada=None,
+                     altura_etiqueta_papel_mm_propuesta=page_data['perfil']['identificador_mm'],
+                     altura_coordenada_papel_mm_propuesta=page_data['perfil']['coordenada_mm'])
     report = dict(estado='COMPLETADO_TECNICO',ejecucion_nativa='PENDIENTE_EVIDENCIA',modo=mode,
                   cp04='COMPILADO_PRELIMINAR' if rows else 'PENDIENTE_EVIDENCIA',
                   archivo_base=base.relative_to(audit/'entrada').as_posix(),base_sha256=sha256(base),copia_relativa='resultados_cad/'+copy_name,
@@ -176,6 +205,8 @@ def package(stage, audit, cfg, crs_info, edges):
                   topologia='CONFIRMADA' if drawn_edges else 'SOLO_PUNTOS_PRELIMINAR',
                   recursos='Bloques esquemáticos v1; no homologan material ni cable',
                   instrucciones='Abrir SOLO la copia_relativa y ejecutar SCR01 y SCR02 con SCRIPT, en ese orden. Revisar antes de guardar/imprimir.')
+    if page_data is not None:
+        report.update(presentacion='ADR-002', etiquetas='Coordenadas e IDs opcionales en Paper; índice y XDATA conservan ID completo')
     (stage/'reporte_validacion_cad.json').write_text(json_text(report),encoding='utf-8')
     (stage/'reporte_papel_A1.json').write_text(json_text(paper),encoding='utf-8')
     return report

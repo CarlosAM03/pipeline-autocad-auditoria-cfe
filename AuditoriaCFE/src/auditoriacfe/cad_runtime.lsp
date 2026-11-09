@@ -34,9 +34,10 @@
     (if (/= "VIEWPORT" (cdr (assoc 0 d))) (entmod d)))
   (command "_.REGENALL"))
 
-(defun datra:run (fn / result snapshot)
+(defun datra:run (fn / result snapshot name)
   (setq datra:*ready* nil datra:*failure* nil)
-  (setq snapshot (datra:snapshot) datra:*created* nil)
+  (setq snapshot (datra:snapshot) datra:*created* nil datra:*new-layouts* nil
+        datra:*symbol-scales* nil datra:*main-layout* nil)
   (command "_.UNDO" "_Begin")
   (setq result (vl-catch-all-apply fn nil))
   (command "_.UNDO" "_End")
@@ -44,6 +45,9 @@
     (progn (setq datra:*ready* nil)
       (command "_.U")
       (datra:restore snapshot)
+      (foreach name datra:*new-layouts*
+        (if (member name (datra:layouts))
+          (progn (setvar "CTAB" "Model") (command "_.-LAYOUT" "_Delete" name))))
       (alert (strcat "DATRA FALLIDO: " (if datra:*failure* datra:*failure* (vl-catch-all-error-message result))
         ". Geometria propia restaurada por diario; no guardar como FINAL. Revisar reporte."))))
   (princ))
@@ -147,7 +151,17 @@
   (setq x (assoc -3 (entget entity '("DATRA_CFE"))))
   (and x (= datra:*owner* (cdr (assoc 1000 (cdr (cadr x)))))))
 
-(defun datra:begin (expected owner layout mode / sel i entity)
+(defun datra:erase-owned (space / sel i entity)
+  (setq sel (ssget "_X" (append '((-3 ("DATRA_CFE"))) (if space (list (cons 410 space))))))
+  (if sel
+    (progn
+      (if space (setvar "CTAB" space))
+      (setq i 0)
+      (repeat (sslength sel)
+        (setq entity (ssname sel i) i (1+ i))
+        (if (datra:owned entity) (entdel entity))))))
+
+(defun datra:begin (expected owner layout mode / space)
   (datra:guard expected)
   (if (or (not (tblsearch "BLOCK" "DATRA_POSTE_V1"))
           (not (tblsearch "STYLE" "DATRA_SIMPLE_V1"))
@@ -156,12 +170,9 @@
   (setq datra:*owner* owner datra:*layout* layout datra:*mode* mode
         datra:*points* 0 datra:*edges* 0 datra:*ready* T)
   (regapp "DATRA_CFE")
-  (setq sel (ssget "_X" '((-3 ("DATRA_CFE")))))
-  (if sel
-    (progn (setq i 0)
-      (repeat (sslength sel)
-        (setq entity (ssname sel i) i (1+ i))
-        (if (datra:owned entity) (entdel entity)))))
+  (if datra:*main-layout*
+    (foreach space (datra:layouts) (datra:erase-owned space))
+    (datra:erase-owned nil))
   (setvar "CTAB" "Model"))
 
 (defun datra:text (id layer point height value paper / entity)
@@ -173,12 +184,14 @@
 
 (defun datra:point (id block kind x y label geo / entity h)
   (if (not datra:*ready*) (datra:fail "Sesion DATRA no habilitada"))
-  (setq h datra:*height*)
+  (setq h (if datra:*symbol-scales* (cdr (assoc kind datra:*symbol-scales*)) datra:*height*))
   (setq entity (datra:make (list '(0 . "INSERT") (cons 2 block) (cons 8 (strcat "DATRA_" kind))
      (list 10 x y 0.0) (cons 41 h) (cons 42 h) (cons 43 h) '(67 . 0) '(410 . "Model"))))
   (datra:tag entity id)
-  (datra:text id "DATRA_TEXTO" (list (+ x h) (+ y h) 0.0) h label nil)
-  (datra:text id "DATRA_TEXTO" (list (+ x h) (- y h) 0.0) (* h (/ 2.5 3.0)) geo nil)
+  (if (not datra:*symbol-scales*)
+    (progn
+      (datra:text id "DATRA_TEXTO" (list (+ x h) (+ y h) 0.0) h label nil)
+      (datra:text id "DATRA_TEXTO" (list (+ x h) (- y h) 0.0) (* h (/ 2.5 3.0)) geo nil)))
   (setq datra:*points* (1+ datra:*points*)))
 
 (defun datra:edge (id x1 y1 x2 y2 label / entity)
@@ -299,7 +312,11 @@
   (if (assoc code data) (subst (cons code value) (assoc code data) data)
     (append data (list (cons code value)))))
 
-(defun datra:viewport (xmin ymin xmax ymax / sel i obj old area data vp scale previous-layer)
+(defun datra:viewport (xmin ymin xmax ymax / scale)
+  (setq scale (max (/ (- xmax xmin) 410.0) (/ (- ymax ymin) 445.0) 0.01))
+  (datra:camera (+ (/ (+ xmin xmax) 2.0) (* 50.0 scale)) (/ (+ ymin ymax) 2.0) scale))
+
+(defun datra:camera (x y scale / sel i obj old area data vp previous-layer)
   ; AutoCAD prohíbe crear/modificar VIEWPORT mediante entmake/entmod.
   ; Crear por MVIEW y ajustar cámara con comandos globales; sin COM.
   (setvar "CTAB" datra:*layout*)
@@ -312,6 +329,16 @@
       (if (and (> (cdr (assoc 69 data)) 1) (> (cdr (assoc 40 data)) 100.0)
                (> (* (cdr (assoc 40 data)) (cdr (assoc 41 data))) area))
         (setq old obj area (* (cdr (assoc 40 data)) (cdr (assoc 41 data)))))))
+  (setq data (if old (entget old)))
+  (if (not (and datra:*symbol-scales* old
+            (= (cdr (assoc 8 data)) "DATRA_VIEWPORTS")
+            (equal (cdr (assoc 10 data)) '(410.0 302.5 0.0) 0.000001)
+            (equal (cdr (assoc 40 data)) 530.0 0.000001)
+            (equal (cdr (assoc 41 data)) 465.0 0.000001)
+            (equal (cdr (assoc 12 data)) (list x y 0.0) 0.000001)
+            (equal (cdr (assoc 45 data)) (* 465.0 scale) 0.000001)
+            (= (logand 16384 (cdr (assoc 90 data))) 16384)))
+   (progn
   (if old (entdel old))
   (setvar "CLAYER" "DATRA_VIEWPORTS")
   (command "_.UCS" "_World")
@@ -323,15 +350,11 @@
   (setvar "CVPORT" (cdr (assoc 69 (entget vp))))
   (command "_.UCS" "_World")
   (command "_.PLAN" "_World")
-  (setq scale (max (/ (- xmax xmin) 410.0) (/ (- ymax ymin) 445.0) 0.01))
-  ; Reservar el margen al este, donde se colocan etiqueta y WGS84 textual.
-  ; Centrar solo el bbox repartia el margen y recortaba texto del ultimo poste.
-  (command "_.ZOOM" "_C" "_non" (list (+ (/ (+ xmin xmax) 2.0) (* 50.0 scale))
-    (/ (+ ymin ymax) 2.0)) (* 465.0 scale))
+  (command "_.ZOOM" "_C" "_non" (list x y) (* 465.0 scale))
   (command "_.PSPACE")
   (command "_.MVIEW" "_Lock" "_On" vp "")
   (setvar "CLAYER" previous-layer)
-  (command "_.REGENALL"))
+  (command "_.REGENALL"))))
 
 (defun datra:inspect (expected file / stream lay data b selection)
   (datra:guard expected)

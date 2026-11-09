@@ -29,7 +29,15 @@ SOURCES = {"CFE FLO-OTAY-BOMBEROS.xlsx": 494, "CFE Natura  - Datra/Natura  - Dat
            COPY: 181, CANAL: 347, STD: 204, FLO: 622, CIVIL: 303, VIA: 44, "Postes_CFE.xlsx": 4341}
 CSVS = {"STD-MIRADOR.csv": "46c62d0670e715dae2e0b9a4a306e591c2cbf98a066797f6b8d9aa0d5e583a17",
         "STD-OTAY-FLORIDO.csv": "aa509d2928f9a51133f6b8e25d683411067ba7a1d97ed0cfbfa4c7a08510cf56"}
-AVAILABLE = all((RAW / n).is_file() for n in SOURCES) and all((HISTORY / "Auditorias" / n).is_file() for n in CSVS)
+def raw_path(name):
+    # Se conservan las claves y SHA del oráculo aunque el owner movió las carpetas.
+    current = ('Otay - Florido/' + name if name == 'CFE FLO-OTAY-BOMBEROS.xlsx'
+               else name.removeprefix(BASE))
+    path = RAW / current
+    return path if path.is_file() else RAW / name
+
+
+AVAILABLE = all(raw_path(n).is_file() for n in SOURCES) and all((HISTORY / "Auditorias" / n).is_file() for n in CSVS)
 
 
 @unittest.skipUnless(AVAILABLE, "Originales históricos exactos no disponibles; regresión NO ejecutada")
@@ -41,7 +49,7 @@ class HistoricalTests(unittest.TestCase):
         inventory = (PROJECT / "Codex/00_Diagnostico/01_Excel_Origen/01_inventario_xlsx.md").read_text(encoding="utf-8")
         expected = dict(re.findall(r"\| ([^|]+\.xlsx) \| `([0-9a-f]{64})`", inventory))
         for name in SOURCES:
-            path = RAW / name
+            path = raw_path(name)
             before = sha256(path)
             if before != expected[name]:
                 raise AssertionError(f"Hash histórico no coincide con diagnóstico: {name}")
@@ -57,7 +65,7 @@ class HistoricalTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         for name, before in cls.hashes.items():
-            if sha256(RAW / name) != before:
+            if sha256(raw_path(name)) != before:
                 raise AssertionError("Fuente histórica alterada durante tests")
 
     def triples(self, names):
