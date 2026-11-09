@@ -21,6 +21,9 @@ class PresentationTests(unittest.TestCase):
         self.assertEqual(pages,plan(list(reversed(points)),profile,'DATRA_A1'))
         self.assertEqual(pages[0]['vista'],'GENERAL')
         self.assertEqual(pages[0]['bbox'][-2],10000)
+        sectors = pages[0]['sectores']
+        self.assertEqual(len(sectors),len(pages)-1)
+        self.assertFalse(any(overlaps(a['caja'],b['caja']) for a,b in combinations(sectors,2)))
         assigned = []
         for page in pages:
             labels = page['etiquetas']

@@ -1,5 +1,5 @@
 """Encuadre y colocación de anotaciones en papel, sin editar puntos Model."""
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import math
 
 from .util import PipelineError
@@ -125,7 +125,16 @@ def plan(points, profile, layout):
     if len(pages) > 1:
         box = bounds(points)
         center, scale = camera(box, profile.escala_detalle, profile.margen_mm+10)
-        pages.insert(0,dict(bbox=box,centro=center,escala=scale,etiquetas=[]))
+        markers = [dict(id=f'SECTOR_A4-{i}',x=detail['centro'][0],y=detail['centro'][1],
+                        geo=f'D{i}',label='') for i,detail in enumerate(pages,2)]
+        marker_profile = replace(profile, coordenada_mm=2.3, identificador_mm=0)
+        marks = placement(markers, center, scale, marker_profile)
+        if marks is None and marker_profile.lider_max_mm < 100:
+            # La general admite llamadas más largas que las etiquetas de campo.
+            marks = placement(markers, center, scale, replace(marker_profile, lider_max_mm=100))
+        if marks is None:
+            raise PipelineError('Las referencias de sectores no caben en la vista general')
+        pages.insert(0,dict(bbox=box,centro=center,escala=scale,etiquetas=[],sectores=marks))
     for index,page in enumerate(pages,1):
         page.update(numero=index,layout=layout if index==1 else f'DATRA_A4_{index:03d}',
                     vista='GENERAL' if not page['etiquetas'] else 'DETALLE',

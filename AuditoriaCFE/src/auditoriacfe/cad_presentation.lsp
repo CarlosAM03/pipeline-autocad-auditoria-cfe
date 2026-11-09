@@ -60,10 +60,6 @@
       (datra:text "NOTA_A4" "DATRA_CONTROL" '(150.0 550.0 0.0) 2.4
         "Conteos del cajetin: inventario total de la auditoria. Lideres: anotaciones, no conexiones." T))))
 
-(defun datra:sector (num x y)
-  (datra:text "SECTOR_A4" "DATRA_A4_ETIQUETA" (list (+ x 1.0) (+ y 1.0) 0.0) 2.3
-    (strcat "D" (rtos num 2 0)) T))
-
 (defun datra:annotation (id geo label ax ay ex ey x y h hi / entity)
   (setq entity (datra:make (list '(0 . "LINE") '(8 . "DATRA_A4_LIDER")
     (list 10 ax ay 0.0) (list 11 ex ey 0.0))))

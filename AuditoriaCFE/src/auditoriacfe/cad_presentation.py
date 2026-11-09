@@ -2,7 +2,7 @@
 import csv
 from pathlib import Path
 
-from .presentation import Profile, SYMBOL_WIDTH, paper, plan
+from .presentation import Profile, SYMBOL_WIDTH, plan
 from .util import json_text
 
 
@@ -25,10 +25,9 @@ def compile_pages(stage, rows, spec, layout, owner, audit_name, index, literal, 
         commands.append(call('datra:page', name, *page['centro'], page['escala']))
         commands.append(call('datra:sheet-title', audit_name, page['numero'], len(pages),
                              page['vista'], len(labels), page['escala']))
-        if page['vista']=='GENERAL':
-            for detail in pages[1:]:
-                x,y = paper(dict(x=detail['centro'][0],y=detail['centro'][1]),page['centro'],page['escala'])
-                commands.append(call('datra:sector', detail['numero'],x,y))
+        for marker in page.get('sectores', []):
+            commands.append(call('datra:annotation', marker['id'], marker['geo'], '',
+                                 *marker['ancla'], *marker['fin_lider'], *marker['caja'][:2], 2.3, 0))
         for row in labels:
             commands.append(call('datra:annotation', row['id'], row['geo'], row['label'], *row['ancla'],
                                  *row['fin_lider'], *row['caja'][:2], profile.coordenada_mm, profile.identificador_mm))
