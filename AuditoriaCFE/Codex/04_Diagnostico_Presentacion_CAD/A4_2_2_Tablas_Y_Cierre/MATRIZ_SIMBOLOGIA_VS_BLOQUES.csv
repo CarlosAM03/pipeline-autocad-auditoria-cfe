@@ -1,0 +1,6 @@
+tipo,bloque,geometria,capa
+POSTE,DATRA_POSTE_V1,círculo,DATRA_POSTE
+CAJA_EMP,DATRA_CAJA_EMP_V1,cuadrado,DATRA_CAJA_EMP
+EXCEDENTE,DATRA_EXCEDENTE_V1,círculo con barra,DATRA_EXCEDENTE
+RUTA CONFIRMADA,Sin INSERT ni arista,Sin muestra de línea,No aplica
+RAMAL CONFIRMADO,Sin INSERT ni arista,Sin muestra de línea,No aplica

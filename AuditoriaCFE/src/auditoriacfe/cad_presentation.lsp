@@ -58,7 +58,7 @@
     (progn
       (datra:text "ESTADO" "DATRA_CONTROL" '(150.0 557.0 0.0) 3.0 datra:*mode* T)
       (datra:text "NOTA_A4" "DATRA_CONTROL" '(150.0 550.0 0.0) 2.4
-        "Conteos del cajetin: inventario total de la auditoria. Lideres: anotaciones, no conexiones." T))))
+        "Conteos del cajetin: elementos dibujados. Lideres: anotaciones, no conexiones." T))))
 
 (defun datra:annotation (id geo label ax ay ex ey x y h hi / entity)
   (setq entity (datra:make (list '(0 . "LINE") '(8 . "DATRA_A4_LIDER")

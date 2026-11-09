@@ -59,10 +59,19 @@
   (datra:text "TABLA_CFE_VISIBILIDAD" "DATRA_A4_REVISION" '(427.0 25.0 0.0) 2.7
     "Visibilidad 300 m. Conteos del cajetin: dibujados." T))
 
+(defun datra:review-crs-caption (/ e d)
+  (setq e (entnext (tblobjname "BLOCK" "DATRA_CAJETIN_A1")))
+  (while (and e (/= "ENDBLK" (cdr (assoc 0 (setq d (entget e))))))
+    (if (and (= "TEXT" (cdr (assoc 0 d))) (= "CRS VALIDADO" (cdr (assoc 1 d))))
+      (if (not (entmod (subst '(1 . "CRS APLICADO") (assoc 1 d) d)))
+        (datra:fail "No se pudo corregir el encabezado CRS")))
+    (setq e (entnext e))))
+
 (defun datra:review (date author reviewer rows)
   (setvar "CTAB" datra:*layout*)
   (datra:layer "DATRA_A4_REVISION" 7)
   (datra:review-admin date author reviewer)
   (datra:review-legend)
-  (if (= datra:*layout* datra:*main-layout*) (datra:review-table rows)))
+  (if (= datra:*layout* datra:*main-layout*)
+    (progn (datra:review-crs-caption) (datra:review-table rows))))
 (princ)

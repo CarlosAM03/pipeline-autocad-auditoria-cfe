@@ -22,6 +22,15 @@
       (progn (setq a (entnext e))
         (while (and a (/= "SEQEND" (cdr (assoc 0 (entget a)))))
           (setq result (cons (cons a (entget a)) result) a (entnext a)))))))
+  (setq e (tblobjname "BLOCK" "DATRA_CAJETIN_A1"))
+  (if e
+    (progn
+      (setq e (entnext e))
+      (while (and e (/= "ENDBLK" (cdr (assoc 0 (setq d (entget e))))))
+        (if (and (= "TEXT" (cdr (assoc 0 d)))
+                 (member (cdr (assoc 1 d)) '("CRS VALIDADO" "CRS APLICADO")))
+          (setq result (cons (cons e d) result)))
+        (setq e (entnext e)))))
   result)
 
 (defun datra:restore (snapshot / e item d)

@@ -1,0 +1,20 @@
+tabla,campo,origen,unidad,fuente_interna,regla,alcance,confianza,estado,decision
+Resumen,Concepto,AB1C5 y PDF,identidad,CSV 00 y decisiones de visibilidad,Tipo canónico,Inventario identificado,Reconciliada,SOPORTADO,Incluir
+Resumen,Cantidad,AB1C6 y PDF,pieza,CSV diagnóstico y decisiones,Conteo único por tipo y estado,Inventario y dibujo,Reconciliada,SOPORTADO,Incluir
+Resumen,Unidad,PDF,pieza,Inventario por tipo,Cada identidad es una unidad contada,Tipos canónicos,Reconciliada,SOPORTADO,Implícita en conteos
+Resumen,Poste nuevo a instalar,PDF,pieza,Sin fuente,No hay levantamiento de instalación,Obra,Sin evidencia,REQUIERE_EVIDENCIA,Omitir
+Resumen,Instalación e inmersión de fibra,PDF,metros,Sin fuente,No convertir cercanía en metraje,Obra,Sin evidencia,NO_DISPONIBLE,Omitir
+Resumen,Acomodo de loop y reserva,PDF,pieza,Sin fuente,Excedente es identidad y no especificación de instalación,Obra,Sin evidencia,REQUIERE_EVIDENCIA,Omitir
+Resumen,Tierra física y guía de acero,PDF,pieza o metros,Sin fuente,Sin cálculo,Obra,Sin evidencia,NO_DISPONIBLE,Omitir
+Resumen,Herrajes y accesorios,PDF,pieza,Sin fuente,No inferir de paneles históricos,Obra,Sin evidencia,NO_DISPONIBLE,Omitir
+Resumen,Colocación de etiquetas,PDF,pieza,Sin fuente,Anotaciones CAD no representan etiquetas instaladas,Obra,Sin evidencia,NO_APLICA,Omitir
+Lista,Poste o identificador,AB1CA y PDF,ID,CSV diagnóstico,elemento_id estable,Inventario identificado,Reconciliada,SOPORTADO,Anexo CSV
+Lista,Material,AB1CA y PDF,texto,Sin fuente,Sin cálculo,Estructura,Sin evidencia,NO_DISPONIBLE,Omitir
+Lista,Coordenada X,AB1CA y PDF,grados,CSV diagnóstico,longitud decimal sin reproyección,Inventario identificado,Diagnóstica,SOPORTADO,Anexo CSV
+Lista,Coordenada Y,AB1CA y PDF,grados,CSV diagnóstico,latitud decimal sin reproyección,Inventario identificado,Diagnóstica,SOPORTADO,Anexo CSV
+Ficha,Tipo,AB200 y PDF,texto,Sin fuente,Sin cálculo,Cable,Sin evidencia,NO_DISPONIBLE,Omitir
+Ficha,Modelo,AB202 y PDF,texto,Sin fuente,Sin cálculo,Cable,Sin evidencia,NO_DISPONIBLE,Omitir
+Ficha,Marca,AB203 y PDF,texto,Sin fuente,Sin cálculo,Cable,Sin evidencia,NO_DISPONIBLE,Omitir
+Ficha,Peso,AB204 y PDF,kg/km,Sin fuente,Sin cálculo,Cable,Sin evidencia,NO_DISPONIBLE,Omitir
+Ficha,Longitud,PDF,km,Sin fuente,Sin cálculo,Cable,Sin evidencia,NO_DISPONIBLE,Omitir
+Ficha,Etiqueta exterior,PDF,texto,Sin fuente,Sin cálculo,Cable,Sin evidencia,NO_DISPONIBLE,Omitir
