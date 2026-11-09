@@ -1,0 +1,854 @@
+{
+  "fuente": {
+    "dwg": "AuditoriaCFE\\auditorias\\Mirador\\salida\\resultados_cad\\presentacion_4aae673bfc\\antes.dwg",
+    "sha256": "a9df3b5fbd40c59b0d0b9a642df4de0cfeee3c00452843f7d7c6df56f93f688b",
+    "csv": "AuditoriaCFE\\auditorias\\Mirador\\salida\\02_DIAGNOSTICO_NO_VERIFICADO.csv",
+    "csv_sha256": "df30cacc7280eea1cb9fb18c1691f6c1c5590b3dc5085f2a56082dde825b9498"
+  },
+  "layouts": [
+    {
+      "kind": "layout",
+      "name": "Model",
+      "device": "HP Deskjet 9800 Series",
+      "media": "Letter",
+      "paper_width": 215.8999938964844,
+      "paper_height": 279.3999938964844,
+      "units": 0,
+      "rotation": 1,
+      "plot_type": 4,
+      "plot_flags": 3764,
+      "plot_origin": 38.70145384484985,
+      "scale_numerator": 1.0,
+      "scale_denominator": 195.3971544750323
+    },
+    {
+      "kind": "layout",
+      "name": "Layout1",
+      "device": "AutoCAD PDF (High Quality Print).pc3",
+      "media": "ISO_expand_A1_(841.00_x_594.00_MM)",
+      "paper_width": 841.0,
+      "paper_height": 594.0,
+      "units": 1,
+      "rotation": 0,
+      "plot_type": 5,
+      "plot_flags": 672,
+      "plot_origin": 0.0,
+      "scale_numerator": 1.0,
+      "scale_denominator": 0.0393700787401575
+    },
+    {
+      "kind": "layout",
+      "name": "DATRA_A1",
+      "device": "DWG To PDF.pc3",
+      "media": "ISO A1 horizontal - DATRA_(841.00_x_594.00_MM)",
+      "paper_width": 841.0,
+      "paper_height": 594.0,
+      "units": 1,
+      "rotation": 0,
+      "plot_type": 5,
+      "plot_flags": 672,
+      "plot_origin": 0.0,
+      "scale_numerator": 1.0,
+      "scale_denominator": 1.0
+    }
+  ],
+  "viewports": [
+    {
+      "kind": "viewport",
+      "handle": "B125A",
+      "layout": "DATRA_A1",
+      "layer": "DATRA_VIEWPORTS",
+      "center_paper": [
+        409.9999999999999,
+        302.5,
+        0.0
+      ],
+      "width_paper": 529.9999999999999,
+      "height_paper": 465.0,
+      "view_center_dcs": [
+        466175.1555829574,
+        3614193.319909252,
+        0.0
+      ],
+      "direction_wcs": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "target_wcs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "view_height_model": 100318.5454542803,
+      "twist": 0.0,
+      "flags": 835680,
+      "status": 2,
+      "number": 2,
+      "lens": 50.0,
+      "frozen_layers": null
+    },
+    {
+      "kind": "viewport",
+      "handle": "AB6BE",
+      "layout": "DATRA_A1",
+      "layer": "VIEWPORTS",
+      "center_paper": [
+        1150.143361409085,
+        367.0428191218315,
+        0.0
+      ],
+      "width_paper": 2723.953846435258,
+      "height_paper": 1542.898406110513,
+      "view_center_dcs": [
+        1150.143361409085,
+        367.0428191218315,
+        0.0
+      ],
+      "direction_wcs": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "target_wcs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "view_height_model": 1542.898406110513,
+      "twist": 0.0,
+      "flags": 557088,
+      "status": 1,
+      "number": 1,
+      "lens": 50.0,
+      "frozen_layers": null
+    },
+    {
+      "kind": "viewport",
+      "handle": "ABD5F",
+      "layout": "Layout1",
+      "layer": "0",
+      "center_paper": [
+        0.2926063739251388,
+        0.2308289276990882,
+        0.0
+      ],
+      "width_paper": 0.3455180084669825,
+      "height_paper": 0.2669911866454254,
+      "view_center_dcs": [
+        303226.5342672529,
+        3623045.964882893,
+        0.0
+      ],
+      "direction_wcs": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "target_wcs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "view_height_model": 444.8330690479612,
+      "twist": 0.0,
+      "flags": 819296,
+      "status": 0,
+      "number": 0,
+      "lens": 50.0,
+      "frozen_layers": null
+    },
+    {
+      "kind": "viewport",
+      "handle": "AB4F4",
+      "layout": "Layout1",
+      "layer": "0",
+      "center_paper": [
+        16.14576760474696,
+        10.95335070149994,
+        0.0
+      ],
+      "width_paper": 21.60783727772726,
+      "height_paper": 21.06028652180629,
+      "view_center_dcs": [
+        500838.7629264849,
+        3594012.710819587,
+        0.0
+      ],
+      "direction_wcs": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "target_wcs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "view_height_model": 20793.52670333992,
+      "twist": 0.0,
+      "flags": 819296,
+      "status": 0,
+      "number": 0,
+      "lens": 50.0,
+      "frozen_layers": null
+    },
+    {
+      "kind": "viewport",
+      "handle": "A9AED",
+      "layout": "Layout1",
+      "layer": "0",
+      "center_paper": [
+        23.27288834084137,
+        15.96993541057695,
+        0.0
+      ],
+      "width_paper": 65.93633952120483,
+      "height_paper": 37.34757594559211,
+      "view_center_dcs": [
+        23.27288834084137,
+        15.96993541057695,
+        0.0
+      ],
+      "direction_wcs": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "target_wcs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "view_height_model": 37.34757594559211,
+      "twist": 0.0,
+      "flags": 819232,
+      "status": 0,
+      "number": 0,
+      "lens": 50.0,
+      "frozen_layers": null
+    },
+    {
+      "kind": "viewport",
+      "handle": "ABF4A",
+      "layout": "Model",
+      "layer": "0",
+      "center_paper": [
+        626918.1582490815,
+        3614740.306145224,
+        0.0
+      ],
+      "width_paper": 0.3455180084669825,
+      "height_paper": 0.2669911866454254,
+      "view_center_dcs": [
+        303226.5342672529,
+        3623045.964882893,
+        0.0
+      ],
+      "direction_wcs": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "target_wcs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "view_height_model": 444.8330690479612,
+      "twist": 0.0,
+      "flags": 819296,
+      "status": 0,
+      "number": 0,
+      "lens": 50.0,
+      "frozen_layers": null
+    }
+  ],
+  "viewport_principal": {
+    "kind": "viewport",
+    "handle": "B125A",
+    "layout": "DATRA_A1",
+    "layer": "DATRA_VIEWPORTS",
+    "center_paper": [
+      409.9999999999999,
+      302.5,
+      0.0
+    ],
+    "width_paper": 529.9999999999999,
+    "height_paper": 465.0,
+    "view_center_dcs": [
+      466175.1555829574,
+      3614193.319909252,
+      0.0
+    ],
+    "direction_wcs": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "target_wcs": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "view_height_model": 100318.5454542803,
+    "twist": 0.0,
+    "flags": 835680,
+    "status": 2,
+    "number": 2,
+    "lens": 50.0,
+    "frozen_layers": null
+  },
+  "viewport_papel_mm": [
+    144.99999999999994,
+    70.0,
+    674.9999999999998,
+    535.0
+  ],
+  "viewport_modelo_xy": [
+    409004.3716143842,
+    3564034.047182111,
+    523345.939551527,
+    3664352.592636391
+  ],
+  "mm_papel_por_unidad_modelo": 0.0046352346706611345,
+  "bbox_wgs84_lon_lat": [
+    -117.94593,
+    32.419607,
+    -117.004102201,
+    32.91112106
+  ],
+  "bbox_proyectado_diagnostico_xy": [
+    411161.7596886747,
+    3586952.161546665,
+    499614.6707343842,
+    3641434.478271839
+  ],
+  "bbox_simbolos_centros_papel_mm": [
+    155.00000000002217,
+    176.230838288762,
+    565.0000000000001,
+    428.7691617112455
+  ],
+  "bbox_centros_p1_p99_papel_mm": [
+    469.0710735735808,
+    215.86007689253353,
+    558.03110031951,
+    251.41276735897247
+  ],
+  "fraccion_viewport_bbox_centros": 0.4201286776352716,
+  "fraccion_viewport_bbox_p1_p99": 0.012833306126127611,
+  "regiones_recortes_pdf_pt": {
+    "densa": [
+      1309.8077676101502,
+      942.7669586674797,
+      1743.395245000186,
+      1105.9084434542358
+    ],
+    "cajetin_conteos": [
+      1958.740157480315,
+      924.0944881889765,
+      2364.0944881889764,
+      1646.9291338582677
+    ],
+    "cabecera_conteos": [
+      411.0236220472441,
+      85.03937007874016,
+      737.007874015748,
+      144.56692913385828
+    ],
+    "aislada_oeste": [
+      411.023622047307,
+      1001.9224585556514,
+      651.9685039370707,
+      1055.7807262721867
+    ],
+    "aislada_norte": [
+      1533.4013864464548,
+      442.85906916497345,
+      1774.3462683362186,
+      496.71733688150886
+    ]
+  },
+  "cajetin": [
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "NOMBRE_PLANO",
+      "value": "PENDIENTE",
+      "position": [
+        704.0,
+        254.0,
+        0.0
+      ],
+      "height": 3.2
+    },
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "AUDITORIA",
+      "value": "PENDIENTE",
+      "position": [
+        704.0,
+        229.0,
+        0.0
+      ],
+      "height": 3.2
+    },
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "ZONA",
+      "value": "TIJUANA, B.C.",
+      "position": [
+        704.0,
+        209.0,
+        0.0
+      ],
+      "height": 3.2
+    },
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "FECHA",
+      "value": "PENDIENTE",
+      "position": [
+        704.0,
+        189.0,
+        0.0
+      ],
+      "height": 3.2
+    },
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "ELABORO",
+      "value": "PENDIENTE",
+      "position": [
+        704.0,
+        169.0,
+        0.0
+      ],
+      "height": 3.2
+    },
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "REVISO",
+      "value": "PENDIENTE",
+      "position": [
+        704.0,
+        149.0,
+        0.0
+      ],
+      "height": 3.2
+    },
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "CRS",
+      "value": "POR VALIDAR",
+      "position": [
+        704.0,
+        129.0,
+        0.0
+      ],
+      "height": 3.2
+    },
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "TOTAL_POSTES",
+      "value": "414",
+      "position": [
+        782.0,
+        98.0,
+        0.0
+      ],
+      "height": 4.099999999999999
+    },
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "TOTAL_CAJAS",
+      "value": "20",
+      "position": [
+        782.0,
+        78.0,
+        0.0
+      ],
+      "height": 4.099999999999999
+    },
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "TOTAL_EXCEDENTES",
+      "value": "59",
+      "position": [
+        782.0,
+        58.0,
+        0.0
+      ],
+      "height": 4.099999999999999
+    },
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "ESTADO",
+      "value": "PRELIMINAR",
+      "position": [
+        754.0,
+        44.0,
+        0.0
+      ],
+      "height": 3.0
+    },
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "ESCALA",
+      "value": "S/E",
+      "position": [
+        752.0,
+        35.0,
+        0.0
+      ],
+      "height": 2.799999999999999
+    },
+    {
+      "kind": "attribute",
+      "layout": "DATRA_A1",
+      "tag": "NUM_PLANO",
+      "value": "01/01",
+      "position": [
+        793.0,
+        35.0,
+        0.0
+      ],
+      "height": 2.799999999999999
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "NOMBRE_PLANO",
+      "value": "PENDIENTE",
+      "position": [
+        27.62932124616255,
+        9.508702847436236,
+        0.0
+      ],
+      "height": 0.1256429149144915
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "AUDITORIA",
+      "value": "PENDIENTE",
+      "position": [
+        27.62932124616255,
+        8.527117574666773,
+        0.0
+      ],
+      "height": 0.1256429149144915
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "ZONA",
+      "value": "TIJUANA, B.C.",
+      "position": [
+        27.62932124616255,
+        7.7418493564512,
+        0.0
+      ],
+      "height": 0.1256429149144915
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "FECHA",
+      "value": "PENDIENTE",
+      "position": [
+        27.62932124616255,
+        6.956581138235629,
+        0.0
+      ],
+      "height": 0.1256429149144915
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "ELABORO",
+      "value": "PENDIENTE",
+      "position": [
+        27.62932124616255,
+        6.171312920020057,
+        0.0
+      ],
+      "height": 0.1256429149144915
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "REVISO",
+      "value": "PENDIENTE",
+      "position": [
+        27.62932124616255,
+        5.386044701804485,
+        0.0
+      ],
+      "height": 0.1256429149144915
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "CRS",
+      "value": "POR VALIDAR",
+      "position": [
+        27.62932124616255,
+        4.600776483588914,
+        0.0
+      ],
+      "height": 0.1256429149144915
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "TOTAL_POSTES",
+      "value": "--",
+      "position": [
+        30.69186729720328,
+        3.383610745354778,
+        0.0
+      ],
+      "height": 0.1609799847341922
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "TOTAL_CAJAS",
+      "value": "--",
+      "position": [
+        30.69186729720328,
+        2.598342527139206,
+        0.0
+      ],
+      "height": 0.1609799847341922
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "TOTAL_EXCEDENTES",
+      "value": "--",
+      "position": [
+        30.69186729720328,
+        1.813074308923635,
+        0.0
+      ],
+      "height": 0.1609799847341922
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "ESTADO",
+      "value": "PRELIMINAR",
+      "position": [
+        29.59249179170148,
+        1.263386556172734,
+        0.0
+      ],
+      "height": 0.1177902327323357
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "ESCALA",
+      "value": "S/E",
+      "position": [
+        29.51396496987992,
+        0.9100158579757275,
+        0.0
+      ],
+      "height": 0.10993755055018
+    },
+    {
+      "kind": "attribute",
+      "layout": "Layout1",
+      "tag": "NUM_PLANO",
+      "value": "01/01",
+      "position": [
+        31.12376481722185,
+        0.9100158579757275,
+        0.0
+      ],
+      "height": 0.10993755055018
+    }
+  ],
+  "variantes": {
+    "V1": {
+      "estado": "TRAZADA_Y_VERIFICADA",
+      "elementos": 493,
+      "tipos": {
+        "POSTE": 414,
+        "EXCEDENTE": 59,
+        "CAJA_EMP": 20
+      },
+      "etiquetas": {},
+      "altura_textos_papel_mm": {},
+      "pares_colision_aabb": {},
+      "textos_implicados": 0,
+      "centros_fuera_viewport": 0,
+      "cajas_texto_fuera_viewport": 0,
+      "nominal_simbolo_papel_mm": 2.7,
+      "ancho_excedente_mm": 3.9,
+      "residual_xy_max_modelo": 9.331397911231848e-10,
+      "atributos_conteo": {
+        "TOTAL_POSTES": "414",
+        "TOTAL_CAJAS": "20",
+        "TOTAL_EXCEDENTES": "59"
+      },
+      "pdf_mm": [
+        841.0222222222222,
+        594.0777777777778
+      ],
+      "paths": 191144,
+      "imagenes": 0,
+      "pixeles_grises_distintos_vs_v1_65dpi": 0,
+      "pdf_sha256": "f20e51c010b19944d92779d6f186886a58a4705ab0b5aeea30907d9f2553b21f",
+      "dwg_sha256": "c0fe9cd9a354b5d111e89ab88f83862b79246a5a3fb966089f70399fbcc6dd40",
+      "jsonl_sha256": "54910aea56e0ad5b11f66bab694c8e2fd630d8162af8503171e27c09cae1c188"
+    },
+    "V2": {
+      "estado": "TRAZADA_Y_VERIFICADA",
+      "elementos": 493,
+      "tipos": {
+        "POSTE": 414,
+        "EXCEDENTE": 59,
+        "CAJA_EMP": 20
+      },
+      "etiquetas": {
+        "id": 493
+      },
+      "altura_textos_papel_mm": {
+        "id": 3.0000000000000036
+      },
+      "pares_colision_aabb": {
+        "id+id": 45858
+      },
+      "textos_implicados": 488,
+      "centros_fuera_viewport": 0,
+      "cajas_texto_fuera_viewport": 0,
+      "nominal_simbolo_papel_mm": 2.7,
+      "ancho_excedente_mm": 3.9,
+      "residual_xy_max_modelo": 9.331397911231848e-10,
+      "atributos_conteo": {
+        "TOTAL_POSTES": "414",
+        "TOTAL_CAJAS": "20",
+        "TOTAL_EXCEDENTES": "59"
+      },
+      "pdf_mm": [
+        841.0222222222222,
+        594.0777777777778
+      ],
+      "paths": 199365,
+      "imagenes": 0,
+      "pixeles_grises_distintos_vs_v1_65dpi": 14570,
+      "pdf_sha256": "801ec1d40847df21eab61f0e435a235c3fbf7fd7f20aa2bd94d748797334c403",
+      "dwg_sha256": "b1d81ad4c5ddd90ab8d5f76f44bd0599e77d51a3fe54d66ffa49f9ff4651f753",
+      "jsonl_sha256": "eacc46af0dfe5bc49911aa49a763fcd6e8b8f9e9490f219f9dc60784b9f184cb"
+    },
+    "V3": {
+      "estado": "TRAZADA_Y_VERIFICADA",
+      "elementos": 493,
+      "tipos": {
+        "POSTE": 414,
+        "EXCEDENTE": 59,
+        "CAJA_EMP": 20
+      },
+      "etiquetas": {
+        "coord": 493
+      },
+      "altura_textos_papel_mm": {
+        "coord": 2.5000000000000036
+      },
+      "pares_colision_aabb": {
+        "coord+coord": 42360
+      },
+      "textos_implicados": 489,
+      "centros_fuera_viewport": 0,
+      "cajas_texto_fuera_viewport": 0,
+      "nominal_simbolo_papel_mm": 2.7,
+      "ancho_excedente_mm": 3.9,
+      "residual_xy_max_modelo": 9.331397911231848e-10,
+      "atributos_conteo": {
+        "TOTAL_POSTES": "414",
+        "TOTAL_CAJAS": "20",
+        "TOTAL_EXCEDENTES": "59"
+      },
+      "pdf_mm": [
+        841.0222222222222,
+        594.0777777777778
+      ],
+      "paths": 205102,
+      "imagenes": 0,
+      "pixeles_grises_distintos_vs_v1_65dpi": 17992,
+      "pdf_sha256": "3501d4c18a43ee7dfdaad89922a8c3411b903b037564fbbfe0d224e20249c233",
+      "dwg_sha256": "4f12ad0501fcc354928ed0aae5085a1f142ed8e97fa0aa30733b2baacf5ac4e5",
+      "jsonl_sha256": "ab903d5c4ee73ccb35988153eaca4932de4950c020eb3aa7c6c2c5000dfd9fa1"
+    },
+    "V4": {
+      "estado": "TRAZADA_Y_VERIFICADA",
+      "elementos": 493,
+      "tipos": {
+        "POSTE": 414,
+        "EXCEDENTE": 59,
+        "CAJA_EMP": 20
+      },
+      "etiquetas": {
+        "coord": 493,
+        "id": 493
+      },
+      "altura_textos_papel_mm": {
+        "coord": 2.5000000000000036,
+        "id": 3.0000000000000036
+      },
+      "pares_colision_aabb": {
+        "coord+coord": 42360,
+        "coord+id": 34223,
+        "id+id": 45858
+      },
+      "textos_implicados": 978,
+      "centros_fuera_viewport": 0,
+      "cajas_texto_fuera_viewport": 0,
+      "nominal_simbolo_papel_mm": 2.7,
+      "ancho_excedente_mm": 3.9,
+      "residual_xy_max_modelo": 9.331397911231848e-10,
+      "atributos_conteo": {
+        "TOTAL_POSTES": "414",
+        "TOTAL_CAJAS": "20",
+        "TOTAL_EXCEDENTES": "59"
+      },
+      "pdf_mm": [
+        841.0222222222222,
+        594.0777777777778
+      ],
+      "paths": 213323,
+      "imagenes": 0,
+      "pixeles_grises_distintos_vs_v1_65dpi": 26663,
+      "pdf_sha256": "190268fec3808ef40edcab44aa1723ff65886bd7318c92cb6f9862f9c0c66818",
+      "dwg_sha256": "9b39dc46b995b36f2bb272270ae5f54865b02396a4b16400a653ff799ca7aaae",
+      "jsonl_sha256": "311bf4ade17f86e9a0a04c23062bcc72005472bb7ef9e756efd7c1338796d567"
+    }
+  },
+  "custodia_sha_bytes_mtime": "IGUAL",
+  "densidad_centros": {
+    "centros_en_bbox_p1_p99": 473,
+    "celdas_25mm_ocupadas": 12,
+    "celdas_totales_incluyendo_bordes_parciales": 418,
+    "celda_maxima": [
+      16,
+      6
+    ],
+    "centros_maximo_por_celda": 182
+  }
+}
