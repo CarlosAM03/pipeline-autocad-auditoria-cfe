@@ -100,6 +100,13 @@ def package(stage, audit, cfg, crs_info, edges, *, experiment=None):
         rows = [row for row in rows if row['elemento_id'] in selected]
         if not selected or {row['elemento_id'] for row in rows} != selected:
             raise PipelineError('Selección experimental vacía o ajena al diagnóstico')
+    visibility = None
+    if experiment is None:
+        from .visibility import effective_radius, select
+        radius = effective_radius(audit_name, diagnostic, spec)
+        if radius is not None and source.exists():
+            rows, visibility = select(stage, rows, radius, audit_name)
+            mode = f'DIAGNOSTICO {radius} m - NO VERIFICADO'
     owner = 'AUD-' + digest(audit_name if experiment is None else [audit_name,experiment['radio_m']])
     copy_name = 'plano_' + sha256(base)[:16] + '.dwg'
     if spec.get('copia_nombre'):
@@ -218,6 +225,8 @@ def package(stage, audit, cfg, crs_info, edges, *, experiment=None):
                   instrucciones='Abrir SOLO la copia_relativa y ejecutar SCR01 y SCR02 con SCRIPT, en ese orden. Revisar antes de guardar/imprimir.')
     if page_data is not None:
         report.update(presentacion='ADR-002', etiquetas='Coordenadas e IDs opcionales en Paper; índice y XDATA conservan ID completo')
+    if visibility is not None:
+        report['visibilidad'] = visibility
     (stage/'reporte_validacion_cad.json').write_text(json_text(report),encoding='utf-8')
     (stage/'reporte_papel_A1.json').write_text(json_text(paper),encoding='utf-8')
     return report

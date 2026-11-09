@@ -126,8 +126,8 @@ class Inventory:
                         for b in self.by_position[q]:
                             yield a,b,meters,band
 
-    def classify(self, radius):
-        if radius not in RADII:
+    def classify(self, radius, *, experimental=True):
+        if experimental and radius not in RADII:
             raise PipelineError('Radio ajeno al experimento')
         adjacent = [[j for j,d in enumerate(self.distances[p]) if i!=j and within_radius(d,radius)]
                     for i,p in enumerate(self.posts)]

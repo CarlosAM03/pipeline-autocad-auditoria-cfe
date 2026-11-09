@@ -15,6 +15,7 @@ def violations(paths):
         if (path.suffix.lower() in FORBIDDEN or '00_RESPUESTAS_ORIGINALES' in name or
             name.startswith('Auditorias-20261104T035633Z-1-001/') or
             name.startswith('AuditoriaCFE/auditorias/_comparativa_A4_1_1/') or
+            name.startswith('AuditoriaCFE/auditorias/_a4_2/') or
             any(part in ('.venv','.venv-cp01','entrada','salida','temporales','_runtime','__pycache__') for part in path.parts) or
             (name.startswith('AuditoriaCFE/auditorias/') and path.name in
              ('configuracion.json','topologia_confirmada.csv','resoluciones_manual.csv'))):

@@ -205,8 +205,10 @@ def execute(audit, root, cfg, testing, emit):
             "CP-04": dict(estado=cad_report.get('cp04','PENDIENTE_EVIDENCIA') if cad_report else 'PENDIENTE_EVIDENCIA')}
         if cfg['pipeline_integral']:
             manifest['checkpoints']['CP-01']['estado']='COMPLETADO_TECNICO'
-            from .traceability import generate_workbooks
-            manifest['trazabilidad_xlsx']=generate_workbooks(stage,manifest,edges)
+            from .traceability import csv_rows, generate_workbooks
+            from .visibility import DECISIONS
+            visual = csv_rows(stage,DECISIONS,[]) if (cad_report or {}).get('visibilidad') else None
+            manifest['trazabilidad_xlsx']=generate_workbooks(stage,manifest,edges,visual_sheet=visual)
             from .checkpoints import write_acta
             write_acta(stage,manifest)
             manifest['artefactos']={p.name:dict(sha256=sha256(p),bytes=p.stat().st_size) for p in sorted(stage.iterdir()) if p.is_file()}

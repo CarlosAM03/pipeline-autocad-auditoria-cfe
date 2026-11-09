@@ -1,0 +1,6 @@
+id,panel,origen_editable,entidades,dim_model_aprox,dim_papel_mm_aprox,escala_uniforme,dependencias,estado_tecnico,aprobacion
+D01,Tensión,AuditoriaCFE2 Model Layout1 AB2E7 rótulo AADE7,126,258x140,104x56.43,0.403101,Capas y estilos históricos,RECUPERADO,PENDIENTE
+D02,Suspensión,AuditoriaCFE2 Model Layout1 AB2E7 rótulos AAD42 y AAD67,132,236x150,104x66.10,0.440678,Capas y estilos históricos,RECUPERADO,PENDIENTE
+D03,Derivación,Sin detalle inequívoco; cambio de dirección AA820 y AA821 archivado aparte,0,,,,"El detalle de cambio de dirección no acredita derivación",PENDIENTE_FUENTE,PENDIENTE
+D04,Empalme,AuditoriaCFE2 Model Layout1 AB2E7 rótulo AAD2B e inserción AA823,372,269x190,101.94x72,0.378947,Bloque anidado renombrado CFE_A42_D04_EMP_INTERNO,RECUPERADO,PENDIENTE
+D05,Otros,AuditoriaCFE2 Model Layout1 AB2E7 rótulos AAF9A y AAF9B,205,246x160,104x67.64,0.422764,Capas estilos y líderes históricos,RECUPERADO,PENDIENTE

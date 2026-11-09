@@ -80,6 +80,8 @@ La única autoridad de líneas es `entrada/topologia_confirmada.csv` con contrat
 
 ## Presentación A1 para las rutas prioritarias
 
+[ADR-003](Docs/ADRs/ADR-003_Visibilidad_Diagnostica_300m.md) aplica 300 m de visibilidad al perfil multipágina diagnóstico de Natura, Mirador y Otay-Florido. Se puede configurar `cad.radio_visibilidad_m` con un entero positivo, o `null` para conservar la presentación diagnóstica anterior. Los CSV y el manifiesto distinguen el inventario original de lo representado.
+
 En el perfil CAD, `"presentacion":{}` habilita ADR-002. Los perfiles sin esa clave conservan el comportamiento anterior. Se puede configurar `escala_detalle` (unidades de Model por mm de papel), `poste_mm`, `caja_mm`, `excedente_mm`, `coordenada_mm`, `identificador_mm` (cero oculta el ID gráfico), `separacion_mm`, `margen_mm` y `lider_max_mm`.
 
 El compilador intenta una hoja. Cuando la extensión o la colocación de etiquetas exige dividir el inventario, crea una vista general y hojas de detalle. `presentacion_paginas.json` contiene las cámaras y el orden para publicar. `indice_presentacion.csv` conserva ID completo, tipo, coordenada y página primaria. Para repetir un plan distinto de hojas, generar una nueva copia del DWG. Publicar los layouts declarados, en ese orden, como un solo PDF A1 horizontal. Consultar las [instrucciones A4.1](Codex/04_Diagnostico_Presentacion_CAD/A4_1_Presentacion_Rutas/INSTRUCCIONES_OPERADOR.md).
