@@ -51,10 +51,16 @@ def bootstrap(names=None):
         if name == 'Mirador':
             cfg['hojas_por_fuente']['Copy of STD HACIA CNAL 12.xlsx']=['Sheet1','Sheet2']
             cfg['excepciones_cabecera']['Ruta canal 12 level antes 2014 Completo.xlsx']={'Hoja1':'F3_D_VACIA'}
+        config_file = output_path(audit/'configuracion.json',audit)
+        configured_cad = (json.loads(config_file.read_text(encoding='utf-8')).get('cad')
+                          if config_file.exists() else None)
         extras=[]
         for source,target_name in [(history/'Rutas Con nombre Ultima Version.kmz','rutas_candidatas.kmz'),
                                    (PROJECT/'recursos/PlantillaMarcoDatraMapaTijuana.dwg','base_trabajo.dwg')]:
             if not source.is_file():continue
+            if source.suffix == '.dwg' and configured_cad and configured_cad.get('base_dwg') != target_name:
+                # Las bases versionadas de entrada se custodian aparte de la plantilla inicial.
+                continue
             target=output_path(entry/target_name,audit)
             if target.exists() and sha256(target)!=sha256(source):
                 raise PipelineError('Recurso operativo cambió: no sobrescribir copia')
@@ -63,7 +69,6 @@ def bootstrap(names=None):
             if source.suffix=='.kmz':cfg['kmz']=dict(archivo=target_name,tolerancia_m=0)
             else:cfg['cad']=dict(base_dwg=target_name,copia=True,unidades_verificadas=False,layout='DATRA_A1')
         (entry/'manifiesto_recursos.json').write_text(json_text(extras),encoding='utf-8')
-        config_file = output_path(audit/'configuracion.json',audit)
         if not config_file.exists():
             config_file.write_text(json_text(cfg),encoding='utf-8')
         reports[name]=copied

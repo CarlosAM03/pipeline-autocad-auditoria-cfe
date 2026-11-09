@@ -1,7 +1,7 @@
 import json
 import unittest
 from support import AuditFixture, record, xlsx
-from auditoriacfe.cad import literal, number, package, prepare_copy, static_check, RUNTIME
+from auditoriacfe.cad import literal, number, package, prepare_copy, static_check, RASTER_NAMES, RUNTIME
 from auditoriacfe.pipeline import run
 from auditoriacfe.reporting import verify, csv_file, PROJECTED_V2
 from auditoriacfe.projection import route_id
@@ -59,6 +59,30 @@ class CADIntegralTests(unittest.TestCase):
         for text in ['(foo','(foo))','("foo)']:
             with self.assertRaises(PipelineError):static_check(text)
         self.assertTrue(static_check(RUNTIME.read_text()))
+
+    def test_raster_package_requires_both_sources_and_preserves_operator_files(self):
+        self.spec['recursos_raster']=True
+        entry=self.audit.path/'entrada'
+        with self.assertRaisesRegex(PipelineError, 'Recurso raster CAD local ausente'):
+            self.execute()
+        for name in RASTER_NAMES:
+            (entry/name).write_bytes(name.encode())
+        manifest=self.execute()
+        self.assertEqual(set(manifest['cad']['recursos_raster']),set(RASTER_NAMES))
+        target=prepare_copy(self.audit.path,manifest)
+        self.assertEqual(len(list((self.audit.path/'salida').glob('*.scr'))),2)
+        for name in RASTER_NAMES:
+            self.assertEqual((target.parent/name).read_bytes(),(entry/name).read_bytes())
+        target.write_bytes(b'EDITED DWG')
+        self.assertEqual(prepare_copy(self.audit.path,manifest).read_bytes(),b'EDITED DWG')
+        edited=target.parent/RASTER_NAMES[0]
+        edited.write_bytes(b'EDITED PNG')
+        with self.assertRaisesRegex(PipelineError, 'Recurso raster existente distinto'):
+            prepare_copy(self.audit.path,manifest)
+        self.assertEqual(edited.read_bytes(),b'EDITED PNG')
+        (entry/RASTER_NAMES[1]).write_bytes(b'ALTERED SOURCE')
+        with self.assertRaisesRegex(PipelineError, 'Cambiaron los recursos raster'):
+            prepare_copy(self.audit.path,manifest)
 
     def test_incompatible_cad_profile_rejected(self):
         for change in [dict(copia=False),dict(layout='Bad");(quit)'),dict(base_dwg='../outside.dwg')]:

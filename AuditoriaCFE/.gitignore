@@ -2,6 +2,7 @@
 /.venv-cp01/
 /auditorias/_comparativa_A4_1_1/
 /auditorias/_a4_2/
+/auditorias/_a4_2_1/
 /auditorias/**/.proceso1.lock
 /auditorias/**/manifiestos/
 /auditorias/**/manifiesto_ejecucion.json

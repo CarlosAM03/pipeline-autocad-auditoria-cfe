@@ -12,6 +12,7 @@ from .presentation import Profile
 from .util import PipelineError, digest, json_text, sha256, within
 
 RUNTIME = Path(__file__).with_name('cad_runtime.lsp')
+RASTER_NAMES = ('logo_datra.png', 'MapaTijuanaParaMARCO.png')
 TYPES = {'POSTE': ('P', 'DATRA_POSTE_V1'), 'CAJA_EMP': ('C', 'DATRA_CAJA_EMP_V1'),
          'EXCEDENTE': ('E', 'DATRA_EXCEDENTE_V1')}
 
@@ -58,6 +59,16 @@ def static_check(text):
     return True
 
 
+def raster_resources(directory):
+    resources = {}
+    for name in RASTER_NAMES:
+        path = directory/name
+        if path.is_symlink() or not path.is_file():
+            raise PipelineError(f'Recurso raster CAD local ausente: {name}')
+        resources[name] = sha256(path)
+    return resources
+
+
 def package(stage, audit, cfg, crs_info, edges, *, experiment=None):
     spec = cfg.get('cad')
     if not spec:
@@ -67,6 +78,10 @@ def package(stage, audit, cfg, crs_info, edges, *, experiment=None):
     base = within(audit/'entrada'/spec.get('base_dwg', ''), audit/'entrada')
     if not base.is_file() or base.suffix.lower() != '.dwg':
         raise PipelineError('Base DWG en copia ausente')
+    raster = spec.get('recursos_raster', False)
+    if type(raster) is not bool:
+        raise PipelineError('recursos_raster requiere booleano')
+    resources = raster_resources(base.parent) if raster else None
     layout = spec.get('layout', 'DATRA_A1')
     if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]{0,30}', layout):
         raise PipelineError('Nombre de layout CAD inseguro')
@@ -227,6 +242,8 @@ def package(stage, audit, cfg, crs_info, edges, *, experiment=None):
         report.update(presentacion='ADR-002', etiquetas='Coordenadas e IDs opcionales en Paper; índice y XDATA conservan ID completo')
     if visibility is not None:
         report['visibilidad'] = visibility
+    if resources is not None:
+        report['recursos_raster'] = resources
     (stage/'reporte_validacion_cad.json').write_text(json_text(report),encoding='utf-8')
     (stage/'reporte_papel_A1.json').write_text(json_text(paper),encoding='utf-8')
     return report
@@ -239,7 +256,22 @@ def prepare_copy(audit, manifest):
     source = within(audit/'entrada'/report['archivo_base'],audit/'entrada')
     if sha256(source) != report['base_sha256']: raise PipelineError('Cambió la base CAD')
     target = within(audit/'salida'/report['copia_relativa'],audit/'salida')
+    resources = report.get('recursos_raster')
+    if resources is not None:
+        if raster_resources(source.parent) != resources:
+            raise PipelineError('Cambiaron los recursos raster de entrada CAD')
+        for name, expected in resources.items():
+            path = target.parent/name
+            if path.is_symlink() or (path.exists() and
+                                     (not path.is_file() or sha256(path) != expected)):
+                raise PipelineError(f'Recurso raster existente distinto: {name}')
     target.parent.mkdir(parents=True,exist_ok=True)
+    if resources is not None:
+        for name in resources:
+            path = target.parent/name
+            if not path.exists():
+                with (source.parent/name).open('rb') as src, path.open('xb') as dst:
+                    shutil.copyfileobj(src,dst)
     if not target.exists():
         # Modo exclusivo impide sobreescribir una edición del operador.
         with source.open('rb') as src, target.open('xb') as dst: shutil.copyfileobj(src,dst)
