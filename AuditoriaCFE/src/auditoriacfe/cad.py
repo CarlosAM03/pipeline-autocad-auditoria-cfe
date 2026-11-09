@@ -58,7 +58,7 @@ def static_check(text):
     return True
 
 
-def package(stage, audit, cfg, crs_info, edges):
+def package(stage, audit, cfg, crs_info, edges, *, experiment=None):
     spec = cfg.get('cad')
     if not spec:
         return dict(estado='PENDIENTE_EVIDENCIA', motivo='No se declaró base DATRA en copia')
@@ -73,6 +73,9 @@ def package(stage, audit, cfg, crs_info, edges):
     if type(spec.get('unidades_verificadas', False)) is not bool:
         raise PipelineError('unidades_verificadas requiere booleano')
     diagnostic = cfg['diagnostico']
+    if experiment is not None and (not diagnostic or edges or
+            experiment['radio_m'] not in (50,100,200,300)):
+        raise PipelineError('Experimento CAD requiere diagnóstico, radio autorizado y cero aristas')
     presentation = spec.get('presentacion')
     if presentation is not None:
         Profile.parse(presentation)
@@ -86,17 +89,25 @@ def package(stage, audit, cfg, crs_info, edges):
         if not audit.name.startswith('Fixture-') or spec['rotulo_fixture']!='SOLO_FIXTURE_SINTETICO':
             raise PipelineError('Rótulo fixture reservado a auditorías Fixture- ficticias')
         mode='SOLO_FIXTURE_SINTETICO'
+    if experiment is not None:
+        mode = f"DIAGNOSTICO EXPERIMENTAL {experiment['radio_m']} m - NO VERIFICADO"
+    audit_name = experiment['auditoria'] if experiment is not None else audit.name
     source = stage/('02_DIAGNOSTICO_NO_VERIFICADO.csv' if diagnostic else '02_elementos_proyectados.csv')
     rows = []
-    if source.exists() and (productive or diagnostic): rows, _ = read_projected(source, audit.name)
-    owner = 'AUD-' + digest(audit.name)
+    if source.exists() and (productive or diagnostic): rows, _ = read_projected(source, audit_name)
+    if experiment is not None:
+        selected = set(experiment['ids'])
+        rows = [row for row in rows if row['elemento_id'] in selected]
+        if not selected or {row['elemento_id'] for row in rows} != selected:
+            raise PipelineError('Selección experimental vacía o ajena al diagnóstico')
+    owner = 'AUD-' + digest(audit_name if experiment is None else [audit_name,experiment['radio_m']])
     copy_name = 'plano_' + sha256(base)[:16] + '.dwg'
     if spec.get('copia_nombre'):
         copy_name=spec['copia_nombre']
         if not isinstance(copy_name,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,100}\.dwg',copy_name):
             raise PipelineError('copia_nombre debe ser nombre DWG simple seguro')
-    target = audit/'salida/resultados_cad'/copy_name
-    destination = audit/'salida'
+    destination = stage if experiment is not None else audit/'salida'
+    target = destination/'resultados_cad'/copy_name
     header = f'(load {literal((destination/"cad_runtime.lsp").as_posix())})\n'
     common = [literal(target.as_posix()), literal(owner), literal(layout), literal(mode)]
     setup = header + "(datra:run '(lambda () (datra:configure " + ' '.join(common)
@@ -152,7 +163,7 @@ def package(stage, audit, cfg, crs_info, edges):
     page_data = None
     if bounds and presentation is not None:
         check, views, sizes, page_data = cad_presentation.compile_pages(
-            stage, rows, presentation, layout, owner, audit.name, label_index, literal, number)
+            stage, rows, presentation, layout, owner, audit_name, label_index, literal, number)
         commands.insert(0, check)
         commands.insert(2, "(setq datra:*symbol-scales* '(" + ' '.join(
             f'({literal(kind)} . {number(size)})' for kind,size in sizes.items()) + '))')

@@ -1,0 +1,8 @@
+# Enmienda experimental propuesta a ADR-002
+
+1. Las coordenadas se toman del diagnóstico verificado A4.1. Los pares decimales definen posiciones distintas para el conteo de postes. IDs, rutas, tipos y ocurrencias conservan su valor de origen.
+2. La distancia usa la inversa elipsoidal WGS84 de PROJ. En cada radio se relacionan posiciones POSTE hasta ese umbral inclusive. La tolerancia de 10 nanómetros solo absorbe el error numérico de borde. El DFS produce grupos conexos. Los de seis posiciones o más se muestran. Los de una a cinco se registran como MICROCOMPONENTE_ESPACIAL.
+3. Para caja y excedente, se registra el poste conservado más cercano. Se muestra el elemento si el apoyo está dentro del radio. Un empate numérico entre componentes queda en revisión. Las cajas y excedentes conservan su identidad, incluso al coincidir. En la comparación de proximidad se registran aparte coincidencia exacta, hasta 1 m, más de 1 hasta 5 m y más de 5 hasta 10 m.
+4. Se marcan como terminales los postes conservados de grado uno. Los extremos de aristas puente reciben PUENTE_ESPACIAL. Una cadena puede conservar extremos lejos de su centro. Las aristas auxiliares quedan fuera de la topología CAD.
+5. El contraste AGEM usa cobertura geométrica incluyendo el borde. FUERA_AMBITO_CANDIDATO se informa en campo separado. El filtro espacial mantiene sus decisiones independientemente de esa marca. Las ocurrencias sin identidad se reportan separadamente, distinguiendo coordenada inválida, fuera de alcance y revisión.
+6. La representación reutiliza los valores de A4.1 y recompila la paginación. Los conteos del cajetín corresponden a la selección representada y el resumen mantiene los totales originales. P-03, P-05 y P-06 conservan sus gates.

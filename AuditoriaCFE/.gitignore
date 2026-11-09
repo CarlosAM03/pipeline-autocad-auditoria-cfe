@@ -1,5 +1,6 @@
 /tests/_runtime/
 /.venv-cp01/
+/auditorias/_comparativa_A4_1_1/
 /auditorias/**/.proceso1.lock
 /auditorias/**/manifiestos/
 /auditorias/**/manifiesto_ejecucion.json

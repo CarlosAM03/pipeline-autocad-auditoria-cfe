@@ -74,7 +74,7 @@ def csv_rows(stage,name,empty_header):
     with path.open(encoding='utf-8-sig',newline='') as f:return list(csv.reader(f))
 
 
-def generate_workbooks(stage,manifest,edges):
+def generate_workbooks(stage,manifest,edges, *, visual_sheet=None):
     from .reporting import MINIMUM,PROJECTED_V2,PROJECTED
     from .network import CONFIRMED
     source_hashes=[[p.name,sha256(p),str(p.stat().st_size)] for p in sorted(stage.iterdir()) if p.is_file() and p.suffix in ('.csv','.jsonl','.json')]
@@ -90,5 +90,8 @@ def generate_workbooks(stage,manifest,edges):
     # de identidades dentro de una celda de resumen (límite Excel 32767).
     gates=[['control','estado'],['contrato','trazabilidad-xlsx-v1'],['auditoria',manifest['auditoria']],['fuentes_derivadas_id',source_id],['P03',manifest['checkpoints']['CP-02']['admision_geografica']],['P06',manifest['crs']['estado']],['Proyeccion_Validada','SIN FILAS: P03/P06 no acreditados' if not (stage/'02_elementos_proyectados.csv').exists() else 'CSV02 acreditado por controles; aceptación humana pendiente'],['Proyeccion_Diagnostica','DIAGNOSTICO_NO_VERIFICADO; no acredita CRS ni conectividad'],['P05',topology.get('estado','PENDIENTE_EVIDENCIA')],['P05_reporte_completo','reporte_topologia.json; consultar SHA en Fuentes_Hashes'],['P04/P07/P08','PENDIENTE_OWNER; BLOQUEADO_FINAL']]
     transform=[('Resumen_Gates',gates),('Admision_P03',csv_rows(stage,'01_elementos_normalizados.csv',MINIMUM)),('Proyeccion_Validada',csv_rows(stage,'02_elementos_proyectados.csv',PROJECTED_V2 if manifest['schema_version']['02']==2 else PROJECTED)),('Proyeccion_Diagnostica',csv_rows(stage,'02_DIAGNOSTICO_NO_VERIFICADO.csv',PROJECTED_V2)),('Asociaciones_Rutas',csv_rows(stage,'asociaciones_elemento_ruta.csv',[])),('Topologia_Propuesta',csv_rows(stage,'topologia_propuesta.csv',[])),('Topologia_Confirmada',[CONFIRMED]+[[row[k] for k in CONFIRMED] for edge in edges for row in edge.get('asociaciones',[edge])])]
+    if visual_sheet is not None:
+        clean.append(('Decision_Visual',visual_sheet))
+        transform.append(('Decision_Visual',visual_sheet))
     for name,sheets in zip(NAMES,(clean,transform)):workbook(stage/name,sheets)
     return dict(contrato='trazabilidad-xlsx-v1',fuentes_derivadas_id=source_id,archivos=list(NAMES),precision='TEXTO_EXACTO',formulas=0)
