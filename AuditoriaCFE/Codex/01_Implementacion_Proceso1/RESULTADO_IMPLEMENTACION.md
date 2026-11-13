@@ -1,4 +1,39 @@
+## Actualización integral — 2026-11-05 / v0.3.0
+
+Este apartado reemplaza el estado operativo de las entregas anteriores, que se conservan abajo como registro histórico. Autoridad nueva: ADR-001, TO-BE v0.3 y P-09 v1; ADR-000/v0.2 intactos.
+
+Implementados: resoluciones por SHA/fila/evidencia y revisión separada; GeoJSON/KML y corredores; CSV02 v2 con reader v1; migración de manifiestos a salida recuperable; KMZ seguro y mapa de IDs; grafo de aristas humanas con ciclos/ramas; compilador de exactamente dos SCR y LISP sin dependencia COM; bloques, etiquetas, distancias, conteos, copia protegida y A1; CLI individual/batch, actas y checklists; CI y benchmark RSS/CPU/IO.
+
+Instalación: `python -m pip install -r AuditoriaCFE/requirements.txt`. Ejecución desde raíz: `python AuditoriaCFE/preparar_auditoria.py --auditoria Natura`, `--batch`, `--batch --diagnostico`, `--batch --verificar-paquete`. Detalle en AuditoriaCFE/README.md.
+
+81 pruebas locales aprobadas. Cuatro auditorías corridas en diagnóstico: 438/493/747/4131 filas 00; CSV01 sin admitidos por P-03 pendiente; CSV02 productivo ausente por P-06. Se generan paquetes de puntos diagnósticos, reportes y manifiestos; no hay plano FINAL ni aceptación humana. Informe completo: [acta fase 6](../02_Harness_Integral/acta_fase_6.md). El último ensayo AutoCAD y estado remoto se registran en el cierre del arnés.
+
+
+Cierre posterior: ensayo Core Console 2026 aprobado en fixture y cuatro auditorías, con repetición de SCR02, persistencia y cinco PDF de una A1. No acredita CRS real ni aceptación visual/productiva; General y Mirador presentan solapamientos por calidad geográfica y densidad. Detalles y gates vigentes: [cierre integral](../02_Harness_Integral/CIERRE_INTEGRAL_2026-11-05.md).
+
+---
+
 # Resultado de implementación — Proceso 1
+
+## Extensión vigente desde 7baa82c — CSV 00 y auditoría JS
+
+**Versión 0.2.0 implementada y verificada.** El registro de la primera implementación se conserva debajo como antecedente. Este encargo sí autoriza un commit local específico; no autoriza push, PR ni generación CAD. Rama de trabajo: `codex/etl-unificado-auditoria-js`.
+
+Cambios de código limitados a `dedup.py` (vista de prevalentes identificados, sin modificar consolidate), `reporting.py` (CSV 00 y conteos aditivos), `pipeline.py` (manifiesto/estados CP-01..CP-04) y versión del paquete. Los extractores, quality, comparación y proyección mantienen sus reglas. CSV 00 usa `IDENTIFICADO` como preparación y expresa admisión geográfica separadamente; nunca es autorización CAD.
+
+Entregas nuevas: `AUDITORIA_JS_HISTORICOS.md`, `EXTENSION_ETL_UNIFICADO.md` y `PROPUESTA_CHECKPOINTS_CP01_CP04.md`. Se actualizan este resultado, pruebas, pendientes, checklist y README. Pruebas nuevas: `test_unificados.py`, `test_js_historicos.py`; herramientas de prueba: `js_audit_harness.cjs`, `audit_js_support.py`, `validar_extension_local.py`. `.gitignore` local excluye el entorno `.venv-cp01` sin modificar el `.venv` preexistente inaccesible. No cambian las configuraciones de las auditorías ni recursos CAD.
+
+Resultados ejecutados: **43 pruebas OK, 0 fallos y 0 omisiones**, incluidas las 29 originales sin editar. CSV 00: **Mirador 494, Otay 749, demo 5 grupos**. CSV 01 y 02 reales mantienen sus bloqueos; demo conserva 4/4. Comparación byte a byte contra productos anteriores: artefactos previos idénticos salvo conteos ampliados; métricas antiguas idénticas. Dos corridas consecutivas de cada lote y manifiesto activo verificadas.
+
+Auditoría JS ejecutada en copias: los 533/965 POINT se reconstruyen exactamente en secuencia; se documentan filtros, duplicados y errores de fórmula. Se confirmó que ordenar agrega padre al retorno y trayectoria hace preorden sin él, corrigiendo la atribución mediante propuesta separada, sin editar TO-BE. Ninguna reproducción genera SCR.
+
+CP-01 completado sin P-03/P-06; CP-02 conservado y condicionado; CP-03/CP-04 no implementados. Continúan P-01 productivo, P-02 opcional, P-03/P-04/P-06 para admisión/liberación y P-05/P-07/P-08/P-10 para CAD; P-09 requiere revisar contrato de 00 y propuestas; P-11 no se cierra silenciosamente.
+
+Custodia Git: única entrada previa ajena era `?? README.md` en raíz; se conserva por hash y queda fuera del commit. HEAD inicial 7baa82c y checkpoint 33364c1 no se alteran. Los productos, copias JS y snapshots permanecen ignorados; se hará staging explícito solo de los archivos de la extensión. El commit local de entrega se identifica con `git log -1`; mensaje requerido `feat(etl): agrega CSV unificado y auditoria de scripts historicos`.
+
+Comandos actuales: entorno Python 3.10.11+pyproj 3.6.1/PROJ 9.3.0 en `.venv-cp01`, Node 22.16.0 solo para auditoría. Ver README y PRUEBAS_Y_VALIDACION para comandos completos y evidencia. Siguiente checkpoint: revisar 00/P-09 y la discrepancia documental JS, resolver precondiciones de CP-02 y autorizar por separado CP-03/CP-04. Sin push automático.
+
+## Registro de la primera implementación (anterior a esta extensión)
 
 Fecha: 2026-11-04, America/Tijuana. **Primera implementación funcional terminada y probada; pendiente de aceptación de datos/reglas operativas.** Se detiene antes de Proceso 2/CAD. No se realizaron commits.
 

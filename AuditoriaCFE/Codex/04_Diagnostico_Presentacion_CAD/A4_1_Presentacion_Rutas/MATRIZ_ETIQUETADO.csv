@@ -1,0 +1,13 @@
+auditoria,variante,etiquetas,pares_aabb_modelados,evidencia
+Natura,T1_DESPLAZAMIENTO_FIJO,438,114,Cajas conservadoras; mismos sectores
+Natura,T2_REUBICACION,438,0,Cajas conservadoras sin cruces texto-texto
+Natura,T3_HOJAS_PRIMARIAS,438,0,Una asignacion por identidad; extremos incluidos
+Natura,T4_INDICE,438,NA,"ID, tipo, texto geográfico y layout exactos"
+Mirador,T1_DESPLAZAMIENTO_FIJO,493,664,Cajas conservadoras; mismos sectores
+Mirador,T2_REUBICACION,493,0,Cajas conservadoras sin cruces texto-texto
+Mirador,T3_HOJAS_PRIMARIAS,493,0,Una asignacion por identidad; extremos incluidos
+Mirador,T4_INDICE,493,NA,"ID, tipo, texto geográfico y layout exactos"
+Otay-Florido,T1_DESPLAZAMIENTO_FIJO,749,1206,Cajas conservadoras; mismos sectores
+Otay-Florido,T2_REUBICACION,749,0,Cajas conservadoras sin cruces texto-texto
+Otay-Florido,T3_HOJAS_PRIMARIAS,749,0,Una asignacion por identidad; extremos incluidos
+Otay-Florido,T4_INDICE,749,NA,"ID, tipo, texto geográfico y layout exactos"

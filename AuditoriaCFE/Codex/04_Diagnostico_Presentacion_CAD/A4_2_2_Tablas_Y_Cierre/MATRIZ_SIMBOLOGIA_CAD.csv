@@ -1,0 +1,6 @@
+concepto,anterior,modelo,ajuste
+POSTE,Círculo rojo, DATRA_POSTE_V1 círculo,INSERT del mismo bloque y capa
+CAJA_EMP,Cuadrado rojo,DATRA_CAJA_EMP_V1 cuadrado,INSERT del mismo bloque y capa
+EXCEDENTE,Triángulo rojo,DATRA_EXCEDENTE_V1 círculo con barra,INSERT del mismo bloque y capa
+RUTA CONFIRMADA,Línea roja,Sin aristas P-05,Retirar muestra y rotular ausencia
+RAMAL CONFIRMADO,Línea roja quebrada,Sin aristas P-05,Retirar muestra y rotular ausencia

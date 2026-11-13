@@ -135,3 +135,18 @@ AuditoriaCFE/recursos/FASE3B_Integracion_Desde_PlanoTijuana/
 #     AuditoriaCFE/Docs/ADRs/ y AuditoriaCFE/Docs/Specs/
 #     Archivos de código Python/JS, pruebas, configs, CSV de mapeo
 #     y las plantillas DWT/DWG canónicas de AuditoriaCFE/recursos/.
+
+# Arnés 2026-11-05: transcripción y datos operativos privados.
+/Harness_Autonomo_Pipeline_CFE_v1_2026-11-05/
+/AuditoriaCFE/Codex/02_Harness_Integral/00_RESPUESTAS_ORIGINALES.md
+*.kmz
+/AuditoriaCFE/auditorias/*/configuracion.json
+/AuditoriaCFE/auditorias/*/topologia_confirmada.csv
+/AuditoriaCFE/auditorias/*/resoluciones_manual.csv
+/AuditoriaCFE/recursos/*.dwg
+/AuditoriaCFE/recursos/*.dwt
+
+/CFE_CONTINUIDAD_PRESENTACION_CAD_0267abf_v1/*.pdf
+
+/CFE_CONTINUIDAD_PRESENTACION_CAD_0267abf_v1/CFE_EVIDENCIAS_A3_LIGERAS_REVISION_2026-11-08/
+/MANUAL_OPERACION_PIPELINE_CFE_DATRA_v1.pdf

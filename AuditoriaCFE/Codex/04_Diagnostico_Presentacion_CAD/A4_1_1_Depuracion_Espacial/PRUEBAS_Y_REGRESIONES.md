@@ -1,0 +1,8 @@
+# Pruebas y regresiones
+
+- Suite local completa. 101 aprobadas, 0 fallidas, 0 omitidas, 131,619 s. Incluye cinco pruebas nuevas para umbrales geodésicos inclusivos, grupos de 1/5/6 posiciones, duplicados de posición, terminales y puentes, asociaciones de equipos, coordenadas inválidas, frontera territorial independiente, monotonicidad e integración del compilador CAD. Se conservaron las pruebas históricas.
+- Compilación Python, pip check, comprobación de Git y guardia de publicación del índice ejecutados. El commit de implementación 0d478ac25c23b7677e39d4ea9b080dfdbd644818 obtuvo cuatro jobs verdes en Windows y Linux para Python 3.10/3.12 en el PR #1.
+- Ensayos nativos. 12 aprobados, 0 fallidos y 0 omitidos de la matriz. Cada DWG se ejecutó con los dos SCR sobre una copia DATRA, se repitió SCR02 y se reabrió. Se verificaron XDATA, posición, tipo, muestreo de entidades heredadas, cámara, numeración y cajetín. Residuo XY inferior a 9,4 × 10⁻¹⁰ unidades de Model.
+- PDF. 126 páginas en 12 PDF. Poppler y PyMuPDF abrieron y renderizaron todas. Formato 841,022 × 594,078 mm, horizontal, vectorial. Se inspeccionaron vistas generales y se archivaron los recortes representativos.
+- Datos. 12 inventarios y CSV de exclusiones reconciliados, 24 XLSX comprobados por CRC, XML y número de filas de Decision_Visual. SHA de CSV originales, linaje, incidencias y asociaciones idénticos a A4.1 en cada variante. 494 ocurrencias de Bomberos siguen en Otay–Florido. Tijuana-General conserva 52 hashes de su inventario anterior.
+- Omitidos. Impresión física, revisión GUI, comparación con distancia proyectada en CRS acreditado y aceptación humana. La ausencia de P-06 permite comparación geodésica sin acreditación proyectada.

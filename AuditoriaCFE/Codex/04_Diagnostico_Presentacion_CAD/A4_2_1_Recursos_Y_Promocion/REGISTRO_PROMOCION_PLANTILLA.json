@@ -1,0 +1,23 @@
+{
+  "estado": "PROMOVIDA_PRELIMINAR",
+  "fecha": "2026-11-09T05:22:36-08:00",
+  "ruta": "AuditoriaCFE/recursos/PlantillaMarcoDatraMapaTijuana.dwg",
+  "base_anterior": {
+    "bytes": 22950864,
+    "sha256": "8386c4c6d6bd05cb95a4d226fefc28e3c85276f149afde8abcfaa92c877f7a8a"
+  },
+  "base_nueva": {
+    "bytes": 23113177,
+    "sha256": "3e30879ad6894a04c87f9fc3a63b41f13487a39f296a9547d361c00b716bf7be",
+    "layout": "DATRA_A1",
+    "insunits": 4,
+    "recursos": {
+      "logo_datra.png": "6bca2b2cb9e283454d22f4575065a2b3dafeb2e398c75a6c9c8237d398e74205",
+      "MapaTijuanaParaMARCO.png": "2b254cef288e3e06d4055277964b10496766834a148e3441d46cd9017d04085b"
+    }
+  },
+  "dwt_nativa_sha256": "0ac4e931faefccaf3d28d22855ac3f470819307d24d7ae3708dad11aea63ad03",
+  "perfiles_migrados": ["Natura", "Mirador", "Otay-Florido"],
+  "rollback": "Verificar hashes posteriores y reponer la base y configuraciones desde los respaldos privados mediante sustitución atómica.",
+  "reapertura": "OK Core Console 2026. DATRA_A1, dos IMAGEDEF relativos y fixture ETL con ambos SCR desde la ruta contractual."
+}

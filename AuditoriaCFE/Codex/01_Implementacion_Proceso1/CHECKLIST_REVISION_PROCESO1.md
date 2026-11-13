@@ -1,3 +1,20 @@
+## Actualización del checklist — 2026-11-05
+
+La sección original inferior conserva su fecha y evidencia; sus referencias a “futuro SCR”, P-09 propuesto o manifiestos fuera de salida fueron sustituidas por ADR-001/P-09 v1.
+
+- OK: CP-01/02, revisión/manual por hash/fila, cuatro familias, dedup exacta/IDs, linaje y múltiples rutas, geofence y reader 02 v1/v2.
+- OK: KMZ seguro y propuestas NO_CONFIRMADAS; aristas humanas verificables con ciclos/ramas y sin atajos DFS.
+- OK técnico: dos SCR, LISP empaquetado, guard de copia, bloques/capas/etiquetas/ID, conteos reales, distancias confirmadas, A1, idempotencia; falta aceptación CAD física.
+- OK: manifiestos v2 en salida, migración y fallos recuperables; CLI individual y batch independiente; 81 pruebas locales aprobadas, compile/lint/custodia.
+- OK local: Natura/Mirador/Otay/General con 438/493/747/4131 grupos y hashes reproducibles; 01 sin admitidos y 02 real ausente por gates acreditables.
+- PENDIENTE EVIDENCIA: P-03, P-06, aristas definitivas, impresión legible A1/DWT y aceptación humana. [Checklist CAD nativo](../02_Harness_Integral/CHECKLIST_CAD_NATIVO.md).
+- CI/PR/protección y último intento nativo: resultado final en cierre del arnés; no marcar OK sin ejecución.
+
+
+Cierre posterior: ensayo Core Console 2026 aprobado en fixture y cuatro auditorías, con repetición de SCR02, persistencia y cinco PDF de una A1. No acredita CRS real ni aceptación visual/productiva; General y Mirador presentan solapamientos por calidad geográfica y densidad. Detalles y gates vigentes: [cierre integral](../02_Harness_Integral/CIERRE_INTEGRAL_2026-11-05.md).
+
+---
+
 # Checkpoint de revisión — Codex, Proceso 1
 
 Marcar cada ítem como `OK`, `NO`, `BLOQUEADO` y asociar prueba, comando o evidencia. **Ninguna casilla pasa por declaración del agente sin evidencia.**
@@ -30,3 +47,20 @@ Marcar cada ítem como `OK`, `NO`, `BLOQUEADO` y asociar prueba, comando o evide
 Solo dar visto bueno al código de Proceso 1 cuando R01–R20 cumplan o estén bloqueados **con razón correcta y sin falsear un producto**. En particular, R14 puede bloquear el CSV proyectado real mientras P-06 no tenga controles; eso **no** invalida el ETL 1A. No iniciar SCR ni CAD sin nuevo encargo.
 
 Corte de ejecución: 2026-11-04. Estados anteriores corresponden a evidencia técnica ejecutada, **no al visto bueno del responsable ni cierre de P-01..P-11**. La admisión geográfica real también está BLOQUEADA por P-03; los grupos se conservan en REVISAR. Evidencia detallada y comandos: [PRUEBAS_Y_VALIDACION.md](PRUEBAS_Y_VALIDACION.md).
+
+## Extensión CSV 00 y auditoría JS desde 7baa82c
+
+Los controles R01–R20 continúan vigentes y las 29 pruebas anteriores pasan sin modificarlas. Suite ampliada:43 OK,0 fallos,0 omitidas. CP-01 es un resultado adicional; no cierra bloqueos de CP-02 ni aprueba P-xx.
+
+| ID | Criterio adicional | Evidencia ejecutada | Estado |
+|---|---|---|---|
+|E01|00 funciona sin P-03/P-06|test_pending_p03_p06_identified_is_not_admitted; Mirador494/Otay749|OK|
+|E02|Una fila por ID identificado, sin inventar identidad para rechazos/ambigüedades|test_ids_and_unidentifiable_records_not_invented; invariantes y linaje real|OK|
+|E03|Precisión, precedencia, subrutas e IDs acreditados preservados|test_exact_identity_precision_subroutes_and_prevalence; tests de cajas originales y nuevos|OK|
+|E04|No promoción automática a 01/02, ni filtros de aislados|tests de estados/ámbito/aislados; demo5/4/4, reales494/0 y749/0|OK|
+|E05|Compatibilidad con artefactos anteriores|Oráculo reporting.py de 7baa82c y snapshot local de tres lotes; solo conteos y manifiestos ampliados|OK|
+|E06|00 integrado en hashes/conteos/verificador|43 tests + validar_extension_local.py, dos corridas idénticas por lote|OK|
+|E07|533/965 TXT y algoritmos JS verificados directamente|test_js_historicos.py; copias + fs restringido, nunca MAIN/generarSCR|OK|
+|E08|Retornos y ramas auditados sin perpetuar error documental|ordenar padre; trayectoria sin retorno; 13/15 atajos respecto de grafo; propuesta separada|OK|
+|E09|CP-01..CP-04 explícitos, sin alterar ADR/TO-BE|PROPUESTA_CHECKPOINTS_CP01_CP04 y manifest checkpoints; CP-03/04 futuros|OK|
+|E10|Commit local exclusivo, sin outputs/datos/recursos ajenos|Lista explícita de 18 archivos revisados; cierre por git diff --cached/git show y git status; README raíz ajeno excluido|OK en alcance; identidad de commit en cierre Git|

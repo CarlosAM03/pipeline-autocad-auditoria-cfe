@@ -1,0 +1,8 @@
+# Operación de los planos A4.1
+
+1. Mantener cada lote privado en su ubicación, con sus dos XLSX de trazabilidad y el manifiesto. Verificar el paquete antes de usarlo. Los SCR compilados contienen las rutas de esa corrida. Si se cambia de equipo o carpeta, regenerarlos con la ruta nueva desde la configuración del lote.
+2. Para una regeneración, preparar entradas con los XLSX en el orden declarado. Copiar la plantilla DATRA vigente a entrada con nombre propio. En CAD indicar ese archivo, copia=true, layout DATRA_A1 y presentacion={}. Usar un nombre de copia nuevo si cambió el plan. Preparar con dry-run y modo diagnóstico mientras P-03/P-06 estén pendientes.
+3. Abrir exclusivamente la copia editable indicada por el reporte CAD. En AutoCAD 2026 inglés ejecutar SCRIPT sobre 01_configurar_plano.scr y luego 02_dibujar_auditoria.scr. Autorizar la ruta local específica si AutoCAD lo solicita. El LISP auxiliar se carga dentro de los SCR.
+4. Revisar el layout principal y los detalles ordenados por presentacion_paginas.json. Verificar etiquetas y líderes con indice_presentacion.csv. Los líderes gráficos pertenecen al papel y representan llamadas de anotación.
+5. Guardar y reabrir la copia. En PUBLISH elegir los layouts declarados, en orden, con configuración DWG To PDF y PDF multipágina. Excluir Model y Layout1. Confirmar una A1 horizontal por layout. Core Console también permite trazar cada layout y consolidar el resultado sin rasterizar.
+6. Revisar al 100 % zonas densas, sectores aislados, márgenes, contraste y leyenda. Las dimensiones actuales son de ensayo. Registrar aprobación del responsable de los tres planos antes de plantear A4.2.

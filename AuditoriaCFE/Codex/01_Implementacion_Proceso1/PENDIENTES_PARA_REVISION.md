@@ -1,4 +1,44 @@
+## Pendientes vigentes — 2026-11-05 / ADR-001
+
+Las tablas inferiores son evidencia de entregas anteriores; no reabren Q01–Q75. P-01 fuentes/precedencia, P-09 contratos, P-10 AutoCAD 2026 inglés y autorización CP-03/04 quedaron definidos. El oráculo ya no requiere Git/historial y README raíz está versionado. Las nuevas funciones y migración ya están implementadas.
+
+| Clase | Gate vigente | Decisión o evidencia exacta del responsable |
+|---|---|---|
+| BLOQUEANTE para datos productivos | P-03 | Entregar y aprobar perímetro/corredor por auditoría y excepciones individuales justificadas. CP-01 no se bloquea. |
+| BLOQUEANTE para proyección real | P-06 | Identificar dos controles físicos distintos de la base DATRA en WCS y WGS84, metros efectivos y tolerancia medida; registrar fecha/aprobador/evidencia. INSUNITS=4 y WCS activo no acreditan CRS ni justifican escalar. |
+| BLOQUEANTE para líneas finales | P-05 | Aportar topologia_confirmada.csv con IDs, ruta/tramo y aprobación humana; validar correspondencias KMZ. Sin ello, puntos preliminares; no inventar tres anillos. |
+| BLOQUEANTE para FINAL | P-07/P-08/P-04 | Aceptar marco/detalles aplicables/estilos, ejecución y persistencia DWG/DWT y legibilidad PDF A1 único. General requiere comprobar miles de etiquetas; si falla, owner debe aprobar una excepción antes de cambiar la regla. |
+| NO BLOQUEANTE | P-02 | Aportar baseline histórica datada si requiere NUEVO/EXISTENTE; de lo contrario conservar NO_DETERMINADO. |
+| NO BLOQUEANTE para software | Publicación CAD | Acreditar licencia/permiso antes de publicar nuevos DWG/DWT/raster; se conservan localmente con hash. |
+| MEJORA | Rendimiento | Fijar SLA con mediciones representativas si se necesita; baseline medido, sin presupuesto inventado. |
+
+Q24 se aplicó mediante resoluciones locales por hash/fila, preservando fuentes y descartes. P-11 56/58 se concilia por definiciones y evidencia histórica, no impide CP-02 ni autoriza modificar datos. Nuevos conteos y gates por auditoría en [acta fase 6](../02_Harness_Integral/acta_fase_6.md). Resultado del último ensayo nativo y CI/PR/protección: cierre del arnés; no se certifican aquí por anticipado.
+
+
+Cierre posterior: ensayo Core Console 2026 aprobado en fixture y cuatro auditorías, con repetición de SCR02, persistencia y cinco PDF de una A1. No acredita CRS real ni aceptación visual/productiva; General y Mirador presentan solapamientos por calidad geográfica y densidad. Detalles y gates vigentes: [cierre integral](../02_Harness_Integral/CIERRE_INTEGRAL_2026-11-05.md).
+
+---
+
 # Pendientes para revisión — Proceso 1
+
+## Extensión CP-01 vigente
+
+Código 0.2.0 y auditoría JS completados; **43 pruebas OK, sin fallos ni omisiones**. Los 29 del registro previo siguen intactos. CP-01 ya no queda oculto por P-03/P-06: 00 muestra 494/749 grupos históricos y5 de demo, sin aprobar CAD. Las clasificaciones inferiores siguen aplicando a las etapas indicadas, **no bloquean la exportación de grupos identificados a 00**.
+
+| Pendiente de esta extensión | Clase | Decisión exacta del responsable |
+|---|---|---|
+|P-09, contrato de 00 | NO BLOQUEANTE | Revisar/ratificar las 12 columnas propuestas, estados IDENTIFICADO/admisión/apto_csv_01, conteos aditivos y vistas de grupos, conforme a EXTENSION_ETL_UNIFICADO.md. No convertir CP-01 en aprobación CAD. |
+|Discrepancia JS frente aTO-BE:260 | NO BLOQUEANTE | Aprobar corrección documental separada: retorno al padre en ordenar.js, preorden con atajos entre ramas en trayectoria.js. La etapa afectada es futura generación CAD; no se replica ninguno como topología física ni se modifica norma aquí. |
+|Organización CP-01..CP-04 | NO BLOQUEANTE | Revisar PROPUESTA_CHECKPOINTS_CP01_CP04.md para futura incorporación normativa; no cambia los dos procesos ni autoriza SCR en esta entrega. |
+|P-01 producción | BLOQUEANTE | Fijar orden real de fuentes/hojas antes de CP-01 productivo. Las configuraciones de prueba no constituyen prioridad aprobada. |
+|P-03/P-06 | BLOQUEANTE | Aportar perímetro para admisión de01 y controles reales DWG para 02; CP-01 puede completarse con ambos pendientes. |
+|Entorno local previo | NO BLOQUEANTE | `.venv` apunta a un intérprete inaccesible; se conservó y se verificó con `.venv-cp01`. Opcionalmente reparar el entorno habitual fuera de este cambio. |
+|README.md raíz preexistente | NO BLOQUEANTE | Archivo del usuario sin seguimiento conservado por hash y excluido del commit; decidir separadamente si desea versionarlo. |
+|Dependencias de pruebas de auditoría | NO BLOQUEANTE | Node solo para reproducción de copias JS y Git con 7baa82c para oráculo de compatibilidad. Documentar instalación en otras máquinas si requiere ejecutar esas pruebas; el ETL no depende de Node. |
+
+No hay fallos técnicos abiertos atribuibles a esta extensión. P-02/P-04/P-05/P-07/P-08/P-10/P-11 conservan alcance y decisión inferior; ninguna se aprobó por alcanzar43 tests. Siguiente checkpoint: revisar CSV 00 y propuestas, publicar manualmente el commit local tras revisión y resolver precondiciones de CP-02. CP-03/CP-04 requieren otro encargo.
+
+## Registro y pendientes de la primera implementación
 
 Fecha: 2026-11-04. Estado: **implementación y pruebas completadas; checkpoint de revisión**. Sin aprobación de reglas nuevas ni inicio de Proceso 2. No hay fallos automatizados abiertos (29 pruebas OK); estos pendientes delimitan aceptación operativa, evidencia o mejoras.
 

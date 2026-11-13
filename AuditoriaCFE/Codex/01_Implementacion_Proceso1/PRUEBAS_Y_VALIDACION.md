@@ -1,4 +1,69 @@
+## Actualización de pruebas — 2026-11-05
+
+Suite ampliada ejecutada: **81 aprobadas / 81 ejecutadas, 0 fallidas, 0 omitidas**, 60.929 s. Las 43 anteriores siguen intactas. Comando: `python -m unittest discover -s AuditoriaCFE/tests -v`. Se ejecutaron `compileall`, `pip check`, Ruff E9/F821/F822/F823 y verificador de custodia/oráculo. Logs locales en tests/_runtime; evidencias/errores corregidos en [acta fase 6](../02_Harness_Integral/acta_fase_6.md).
+
+Pruebas añadidas cubren resoluciones y conflictos de IDs, polígonos/huecos/corredor, v1/v2, diagnóstico, migración/rollback/crash, KMZ traversal/bomb/XML DTD incluso UTF-16, grafos, dos SCR, custodia de copia e idempotencia, batch y actualización legítima de entradas/configuración. La publicación conserva artefactos anteriores tras un fallo.
+
+Individual Natura, demo (01/02 de cuatro filas), cuatro auditorías batch y repetición reproducible ejecutados. 00: Natura 438, Mirador 493, Otay 747, General 4131; todos con 01=0 por P-03 y sin 02 productivo. Propuestas KMZ sin confirmar y sin líneas de producción. Regresiones históricas 533/965 y 494/749 son controles AS-IS, no cifras impuestas a los nuevos inventarios. Ver conciliación en acta.
+
+Benchmark 1M filas XML/10k componentes: 9.871 s, CPU 9.344 s, RSS pico 88,862,720 bytes. Native Core Console ensayado con errores descritos en fase 5; no equivale a prueba GUI ni impresión validada. CI pública debe mostrar explícitamente nueve omisiones sin originales. El resultado remoto y último ensayo nativo se anexan en el cierre del arnés.
+
+
+Cierre posterior: ensayo Core Console 2026 aprobado en fixture y cuatro auditorías, con repetición de SCR02, persistencia y cinco PDF de una A1. No acredita CRS real ni aceptación visual/productiva; General y Mirador presentan solapamientos por calidad geográfica y densidad. Detalles y gates vigentes: [cierre integral](../02_Harness_Integral/CIERRE_INTEGRAL_2026-11-05.md).
+
+---
+
 # Pruebas y validación — Proceso 1
+
+## Extensión 0.2.0 — verificación vigente
+
+Resultado ejecutado: **43 pruebas, 43 aprobadas, 0 fallidas, 0 omitidas**. La suite base de 29 se ejecutó antes de modificar código (32.438s, OK), y la ampliada de 43 después (36.613s, OK). Archivos de los 29 métodos anteriores sin cambios. El registro inferior de 29 corresponde al checkpoint previo, no al total actual.
+
+```powershell
+& ./AuditoriaCFE/.venv-cp01/Scripts/python.exe -m unittest discover -s AuditoriaCFE/tests -v
+& ./AuditoriaCFE/.venv-cp01/Scripts/python.exe AuditoriaCFE/tests/audit_js_support.py
+& ./AuditoriaCFE/.venv-cp01/Scripts/python.exe AuditoriaCFE/tests/validar_extension_local.py --comparar-anterior
+```
+
+Se creó `.venv-cp01` desde Thonny Python 3.10.11, pyproj 3.6.1/PROJ 9.3.0, conservando el `.venv` preexistente que refiere a un Python 3.11 de WindowsApps inaccesible. Node 22.16.0 disponible. No se alteraron instalaciones globales ni el entorno previo.
+
+| Prueba adicional | Evidencia ejecutada |
+|---|---|
+|00 sin P-03/P-06 | Una fila por identidad; IDENTIFICADO/PENDIENTE_P03/NO, sin promoción a 01 ni creación de02. |
+|Precisión/subrutas/prevalencia | Igualdad decimal exacta, diferencia más allá de 28 decimales conservada, primero z.xlsx declarado prevalece, todas las asociaciones y linajes presentes. |
+|Cajas con IDs y casos sin identidad | Dos cajas acreditadas distintas, tercera ambigua sin ID no entra a 00; desconocidos, imposibles y Registro siguen en reportes. |
+|Cuatro familias | Unificación sobre los adaptadores existentes, fuentes en orden inverso explícito, sin segundo ETL. |
+|Ámbito/aislados | Fuera de área acreditada sigue visible en 00 pero no01; separados más de 1 km no se filtran. |
+|Reproducibilidad | Todos los bytes, manifiesto completo y hashes iguales; ID estable cuando se habilita P-03. |
+|Compatibilidad con 7baa82c | Se carga su reporting.py real por git show; productos comunes idénticos byte a byte, con/sin 02. Solo conteos nuevos y00 adicionales. |
+|Invariantes | Un grupo huérfano se rechaza; se reconcilian grupos, duplicados, revisiones sin identidad y filas00/01/02. |
+|JS/TXT | Funciones sobre copias sin MAIN; 533/965 POINT+TEXT coinciden en orden/coordenadas, error 0 m; TXT sin PLINE. |
+|Retornos/cambios de rama | ordenar devuelve0,1,2,1,3,1,0; trayectoria0,1,2,3, creando atajo2→3 sin arista. En CSV reales hay 13/15 atajos en trayectoria. |
+|Parser/filtros/UTM histórico | Captura CSV entrecomillado perdido y regex permisiva sin incorporarlos a Python; límites estrictos500/1000/120, duplicados no eliminados y error Norte 11.479314342 m medidos. |
+
+Integración adicional realmente ejecutada, usando las entradas existentes sin regenerarlas y snapshots previos al cambio:
+
+| Lote | Filas00 | Filas01 | Filas02 | Grupos pendientes | Duplicados | Rechazados | Fuera alcance |
+|---|---:|---:|---:|---:|---:|---:|---:|
+|Mirador con copia |494|0|no generado|494|236|2|0|
+|Otay |749|0|no generado|749|217|2|1|
+|Demo |5|4|4|1|1|1|1|
+
+Todos los productos anteriores salvo resumen_conteos.csv mantienen sus hashes/tamaños exactos; todas las métricas previas conservan valores, y el conteo se amplía con campos aditivos. Todos los productos nuevos de las tres auditorías son reproducibles en dos corridas y `verify()` de cada activo pasó. Ningún grupo identificado anterior desaparece ni aparece uno nuevo por esta extensión.
+
+Los siete originales de auditoría JS/TXT/CSV mantienen hashes antes/después; además siguen pasando la regresión y custodia de nueve XLSX y dos CSV de la suite original. README.md raíz se conserva con SHA-256 `3b10e8d9af43da5a1aa2b3e1002b6ed2694efe8bf422d74afa704a434bbcdba5`, fuera del staging. Evidencia local completa de integración en `tests/_runtime/extension_validacion.json`, ignorada por Git; contrato y explicación de diferencias en EXTENSION_ETL_UNIFICADO y auditoría JS.
+
+Se mantienen explícitos los bloqueos de admisión/cartografía reales. No se ejecutaron pruebas AutoCAD ni se generaron SCR.
+
+Cierre técnico ejecutado: suite completa nuevamente **43 OK en 41.002 s**, 0 fallos/0 omitidas; `compileall` sin errores; `pip check` sin requisitos rotos; `node --check tests/js_audit_harness.cjs` sin errores; `git diff --check` sin errores. La advertencia de Git sobre conversión futura LF→CRLF no es un fallo de whitespace. Las tres integraciones se repitieron y verificaron otra vez con comparación anterior. IDs de manifiestos actuales:
+
+- Mirador: `fc96e44bd2d7bbf5c5c7ca93360f68301f2cceb51dce408c4029cdde20327e17`.
+- Otay: `e85a0796bf40baa0cf0a8b21d89ad373b2fe4bf96fb36448179e64367f13dd7f`.
+- Demo: `b1c8be4a97a4c4fd3f90b539ec123b709db12be7ddc2f7f7249369eef3916e69`.
+
+Se revisaron todos los archivos modificados/nuevos de la extensión. El staging y commit local se limitan a 18 archivos de código, pruebas y documentación, con exclusión de fuentes XLSX/ZIP, entornos, temporales, salidas y recursos CAD. El cierre Git se identifica por el único commit con mensaje `feat(etl): agrega CSV unificado y auditoria de scripts historicos`; README.md raíz permanece sin seguimiento y fuera de esa entrega. No se hace push ni PR.
+
+## Registro del checkpoint previo (29 pruebas)
 
 Fecha: 2026-11-04. **Resultado final: 29 pruebas ejecutadas, 29 aprobadas, 0 fallos y 0 omisiones.** No es aprobación geográfica, de topología ni de CAD.
 

@@ -46,12 +46,48 @@ def prepare_projection(cfg, audit):
         return None, dict(estado="CRS_PENDIENTE", motivo=str(exc))
 
 
-def project(records, transformer, crs):
+def route_id(audit, name):
+    from .util import digest
+    return 'R-' + digest(['ruta-v1',audit,name])
+
+
+def project(records, transformer, crs, schema=1, audit=''):
     rows = []
     for r in records:
         x, y = transformer.transform(float(r["longitud"]), float(r["latitud"]), errcheck=True)
         if not math.isfinite(x) or not math.isfinite(y):
             raise PipelineError("Proyección no finita; no publicar CSV parcial")
-        rows.append([r["elemento_id"], r["ruta_salida"], r["tipo_canonico"], r["latitud"],
-                     r["longitud"], repr(x), repr(y), crs])
+        head = [r['elemento_id'],r['ruta_salida']] if schema == 1 else [r['elemento_id'],route_id(audit,r['ruta_salida']),r['ruta_salida']]
+        rows.append(head + [r["tipo_canonico"], r["latitud"],r["longitud"], repr(x), repr(y), crs])
     return rows
+
+
+def read_projected(path, audit):
+    import csv
+    from .reporting import PROJECTED, PROJECTED_V2
+    with path.open(encoding='utf-8-sig',newline='') as stream:
+        reader=csv.DictReader(stream)
+        if reader.fieldnames not in (PROJECTED,PROJECTED_V2):
+            raise PipelineError('Esquema CSV02 desconocido')
+        version=2 if reader.fieldnames == PROJECTED_V2 else 1
+        rows=list(reader)
+    seen=set(); crs=set()
+    for row in rows:
+        if None in row or any(v is None for v in row.values()) or row['elemento_id'] in seen or not row['elemento_id']:
+            raise PipelineError('IDs/campos CSV02 inválidos')
+        seen.add(row['elemento_id']);crs.add(row['crs'])
+        if row['tipo'] not in ('POSTE','CAJA_EMP','EXCEDENTE'):
+            raise PipelineError('Tipo CSV02 inválido')
+        try:
+            values=[float(row[k]) for k in ('latitud','longitud','este_m','norte_m')]
+            if not all(math.isfinite(v) for v in values) or not (-90<=values[0]<=90 and -180<=values[1]<=180):
+                raise ValueError()
+        except ValueError as exc:
+            raise PipelineError('Valores CSV02 inválidos') from exc
+        if version == 1:
+            row['ruta_nombre']=row['ruta_id'];row['ruta_id']=route_id(audit,row['ruta_nombre'])
+        elif row['ruta_id'] != route_id(audit,row['ruta_nombre']):
+            raise PipelineError('ruta_id no corresponde a ruta_nombre/auditoría')
+    if len(crs)>1:
+        raise PipelineError('CSV02 mezcla CRS')
+    return rows,version

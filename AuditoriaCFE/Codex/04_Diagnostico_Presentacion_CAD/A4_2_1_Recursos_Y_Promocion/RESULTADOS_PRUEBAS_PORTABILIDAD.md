@@ -1,0 +1,5 @@
+# Portabilidad
+
+Se copiaron por separado la maestra DWG, la DWT y los tres planos DWG a carpetas nuevas. Cada carpeta recibió el DWG o DWT y los dos PNG verificables, sin compartir directorio con sus fuentes. Se abrieron mediante AutoCAD Core Console 2026. El ensayo de ausencia, ejecutado con una copia sin PNG, devolvió dos rutas locales ausentes. Las 76 referencias en las hojas de ruta indicaron carga activa, ruta relativa y resolución en la carpeta trasladada. Los tres PDF completos se trazaron desde esas copias. Los ensayos se realizaron en un equipo, sin comprobación interactiva en otro equipo.
+
+Para operar, copiar los dos PNG al lado del DWG tanto en entrada como cuando se traslade o entregue una copia editable. Declarar cad.recursos_raster=true para esa base; el compilador registra los SHA-256 y la preparación coloca los PNG junto al DWG mutable. El empaquetador rechaza faltantes y copias locales distintas. Ejecutar 01_configurar_plano.scr y después 02_dibujar_auditoria.scr. Para abrir un DWG ya dibujado basta trasladar el DWG y sus dos PNG. Para recompilar, conservar el lote completo y el procedimiento habitual de scripts.

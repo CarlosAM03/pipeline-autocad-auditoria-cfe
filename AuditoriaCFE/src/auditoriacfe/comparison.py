@@ -2,7 +2,7 @@
 import csv
 from .config import reference_path
 from .coordinates import parse
-from .quality import TYPES
+from .quality import canonical_type
 from .schemas import extract
 from .util import PipelineError, decimal_key, sha256
 
@@ -34,7 +34,7 @@ def compare_reference(audit, spec, baseline=False):
                 raise PipelineError(f"Referencia CSV: fila {i} no tiene tres campos")
             rows.append((i, row[1], row[2]))
     for number, typ, coord in rows:
-        canonical = TYPES.get(typ.strip().casefold())
+        canonical = canonical_type(typ)
         if canonical == "REGISTRO":
             continue
         try:
